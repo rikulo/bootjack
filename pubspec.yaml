@@ -1,0 +1,9 @@
+name: bootjack
+version: 0.5.0
+description: > 
+  Bootstrap ported to Dart world.
+authors:
+- Simon Pai <simonpai@rikulo.org>
+homepage: http://rikulo.org/
+dependencies:
+  browser: any
