@@ -1,30 +1,13 @@
-/* ===========================================================
- * bootstrap-popover.js v2.3.1
- * http://twitter.github.com/bootstrap/javascript.html#popovers
- * ===========================================================
- * Copyright 2012 Twitter, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * =========================================================== */
-
 part of bootjack;
 
+// required jQuery features:
+// classes
+// travering: find()
+// attr()
+// data()
+// on()/off()
+
 /*
-!function ($) {
-
-  "use strict"; // jshint ;_;
-
-
  // POPOVER PUBLIC CLASS DEFINITION
  // =============================== 
 
@@ -83,8 +66,6 @@ part of bootjack;
  // POPOVER PLUGIN DEFINITION
  // ======================= 
 
-  var old = $.fn.popover
-
   $.fn.popover = function (option) {
     return this.each(function () {
       var $this = $(this)
@@ -95,8 +76,6 @@ part of bootjack;
     })
   }
 
-  $.fn.popover.Constructor = Popover
-
   $.fn.popover.defaults = $.extend({} , $.fn.tooltip.defaults, {
     placement: 'right'
   , trigger: 'click'
@@ -104,14 +83,4 @@ part of bootjack;
   , template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
   })
 
-
- // POPOVER NO CONFLICT
- // =================== 
-
-  $.fn.popover.noConflict = function () {
-    $.fn.popover = old
-    return this
-  }
-
-}(window.jQuery);
 */

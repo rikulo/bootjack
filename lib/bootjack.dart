@@ -1,6 +1,12 @@
 library bootjack;
 
 import 'dart:html';
+import 'dart:async';
+import 'dart:collection';
+
+import 'package:dquery/dquery.dart' show $, DQueryEvent;
+
+part 'src/util/util.dart';
 
 part 'src/affix.dart';
 part 'src/alert.dart';
@@ -15,3 +21,12 @@ part 'src/tab.dart';
 part 'src/tooltip.dart';
 part 'src/transition.dart';
 part 'src/typeahead.dart';
+
+class Base {
+  
+  Element get element => _element;
+  final Element _element;
+  
+  Base(this._element);
+  
+}

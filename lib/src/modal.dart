@@ -1,30 +1,17 @@
-/* =========================================================
- * bootstrap-modal.js v2.3.1
- * http://twitter.github.com/bootstrap/javascript.html#modals
- * =========================================================
- * Copyright 2012 Twitter, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * ========================================================= */
-
 part of bootjack;
 
+// required jQuery features:
+// classes
+// traversing: find()
+// event: $.Event()/delegate()/trigger()/one()/show()/hide()/focus()
+// appendTo()/remove()
+// load()
+// $.support.transition
+// attr()
+// data()
+// on()/off()
+
 /*
-!function ($) {
-
-  "use strict"; // jshint ;_;
-
-
  // MODAL CLASS DEFINITION
  // ====================== 
 
@@ -197,8 +184,6 @@ part of bootjack;
  // MODAL PLUGIN DEFINITION
  // ======================= 
 
-  var old = $.fn.modal
-
   $.fn.modal = function (option) {
     return this.each(function () {
       var $this = $(this)
@@ -215,18 +200,6 @@ part of bootjack;
     , keyboard: true
     , show: true
   }
-
-  $.fn.modal.Constructor = Modal
-
-
- // MODAL NO CONFLICT
- // ================= 
-
-  $.fn.modal.noConflict = function () {
-    $.fn.modal = old
-    return this
-  }
-
 
  // MODAL DATA-API
  // ============== 
@@ -246,5 +219,4 @@ part of bootjack;
       })
   })
 
-}(window.jQuery);
 */

@@ -1,30 +1,17 @@
-/* =============================================================
- * bootstrap-typeahead.js v2.3.1
- * http://twitter.github.com/bootstrap/javascript.html#typeahead
- * =============================================================
- * Copyright 2012 Twitter, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * ============================================================ */
-
 part of bootjack;
 
+// required jQuery features:
+// classes
+// traversing: find()
+// focus()
+// attr()
+// insertAfter()/html()
+// val()/show()/css()
+// $.grep()
+// data()
+// on()
+
 /*
-!function($){
-
-  "use strict"; // jshint ;_;
-
-
  // TYPEAHEAD PUBLIC CLASS DEFINITION
  // ================================= 
 
@@ -293,8 +280,6 @@ part of bootjack;
   // TYPEAHEAD PLUGIN DEFINITION
   // =========================== 
 
-  var old = $.fn.typeahead
-
   $.fn.typeahead = function (option) {
     return this.each(function () {
       var $this = $(this)
@@ -313,18 +298,6 @@ part of bootjack;
   , minLength: 1
   }
 
-  $.fn.typeahead.Constructor = Typeahead
-
-
- // TYPEAHEAD NO CONFLICT
- // =================== 
-
-  $.fn.typeahead.noConflict = function () {
-    $.fn.typeahead = old
-    return this
-  }
-
-
  // TYPEAHEAD DATA-API
  // ================== 
 
@@ -334,5 +307,4 @@ part of bootjack;
     $this.typeahead($this.data())
   })
 
-}(window.jQuery);
 */

@@ -1,43 +1,27 @@
-/* ==========================================================
- * bootstrap-affix.js v2.3.1
- * http://twitter.github.com/bootstrap/javascript.html#affix
- * ==========================================================
- * Copyright 2012 Twitter, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * ========================================================== */
-
 part of bootjack;
 
-/*
-!function ($) {
+// required jQuery features:
+// dimensions: height()/scrollTop()/offset()/top()/bottom()
+// classes: removeClass()/addClass()
+// data()
+// on()
 
-  "use strict"; // jshint ;_;
+// TODO: require scroll spy
 
-
- // AFFIX CLASS DEFINITION
- // ====================== 
-
-  var Affix = function (element, options) {
+class Affix extends Base {
+  
+  Affix(Element element) : super(element) {
+    /*
     this.options = $.extend({}, $.fn.affix.defaults, options)
     this.$window = $(window)
       .on('scroll.affix.data-api', $.proxy(this.checkPosition, this))
       .on('click.affix.data-api',  $.proxy(function () { setTimeout($.proxy(this.checkPosition, this), 1) }, this))
-    this.$element = $(element)
-    this.checkPosition()
+    */
+    checkPosition();
   }
-
-  Affix.prototype.checkPosition = function () {
+  
+  void checkPosition() {
+    /*
     if (!this.$element.is(':visible')) return
 
     var scrollHeight = $(document).height()
@@ -64,9 +48,11 @@ part of bootjack;
     this.unpin = affix == 'bottom' ? position.top - scrollTop : null
 
     this.$element.removeClass(reset).addClass('affix' + (affix ? '-' + affix : ''))
+    */
   }
-
-
+  
+}
+/*
  // AFFIX PLUGIN DEFINITION
  // ======================= 
 
@@ -82,19 +68,8 @@ part of bootjack;
     })
   }
 
-  $.fn.affix.Constructor = Affix
-
   $.fn.affix.defaults = {
     offset: 0
-  }
-
-
- // AFFIX NO CONFLICT
- // ================= 
-
-  $.fn.affix.noConflict = function () {
-    $.fn.affix = old
-    return this
   }
 
 
@@ -115,6 +90,4 @@ part of bootjack;
     })
   })
 
-
-}(window.jQuery);
 */

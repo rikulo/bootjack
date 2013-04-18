@@ -1,35 +1,19 @@
-/* =============================================================
- * bootstrap-collapse.js v2.3.1
- * http://twitter.github.com/bootstrap/javascript.html#collapse
- * =============================================================
- * Copyright 2012 Twitter, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * ============================================================ */
-
 part of bootjack;
 
-/*
-!function ($) {
+// required jQuery features:
+// classes
+// traversing: find()
+// event: $.Event()/one()/trigger()
+// $.camelCase()
+// effect!
+// attr()
+// data()
+// on()
 
-  "use strict"; // jshint ;_;
-
-
- // COLLAPSE PUBLIC CLASS DEFINITION
- // ================================ 
-
-  var Collapse = function (element, options) {
-    this.$element = $(element)
+class Collapse extends Base {
+  
+  Collapse(Element element) : super(element) {
+    /*
     this.options = $.extend({}, $.fn.collapse.defaults, options)
 
     if (this.options.parent) {
@@ -37,95 +21,103 @@ part of bootjack;
     }
 
     this.options.toggle && this.toggle()
+    */
   }
+  
+  bool get transitioning => _transitioning;
+  bool _transitioning = false;
+  
+  String get dimension {
+    /*
+    var hasWidth = this.$element.hasClass('width')
+    return hasWidth ? 'width' : 'height'
+    */
+  }
+  
+  void show() {
+    /*
+    var dimension
+    , scroll
+    , actives
+    , hasData
 
-  Collapse.prototype = {
+    if (this.transitioning || this.$element.hasClass('in')) return
 
-    constructor: Collapse
+    dimension = this.dimension()
+    scroll = $.camelCase(['scroll', dimension].join('-'))
+    actives = this.$parent && this.$parent.find('> .accordion-group > .in')
 
-  , dimension: function () {
-      var hasWidth = this.$element.hasClass('width')
-      return hasWidth ? 'width' : 'height'
+    if (actives && actives.length) {
+      hasData = actives.data('collapse')
+          if (hasData && hasData.transitioning) return
+              actives.collapse('hide')
+              hasData || actives.data('collapse', null)
     }
 
-  , show: function () {
-      var dimension
-        , scroll
-        , actives
-        , hasData
+    this.$element[dimension](0)
+    this.transition('addClass', $.Event('show'), 'shown')
+    $.support.transition && this.$element[dimension](this.$element[0][scroll])
+    */
+  }
+  
+  void hide() {
+    /*
+    var dimension
+    if (this.transitioning || !this.$element.hasClass('in')) return
+    dimension = this.dimension()
+    this.reset(this.$element[dimension]())
+    this.transition('removeClass', $.Event('hide'), 'hidden')
+    this.$element[dimension](0)
+    */
+  }
+  
+  void reset(size) {
+    /*
+    var dimension = this.dimension()
 
-      if (this.transitioning || this.$element.hasClass('in')) return
+    this.$element
+    .removeClass('collapse')
+    [dimension](size || 'auto')
+    [0].offsetWidth
 
-      dimension = this.dimension()
-      scroll = $.camelCase(['scroll', dimension].join('-'))
-      actives = this.$parent && this.$parent.find('> .accordion-group > .in')
-
-      if (actives && actives.length) {
-        hasData = actives.data('collapse')
-        if (hasData && hasData.transitioning) return
-        actives.collapse('hide')
-        hasData || actives.data('collapse', null)
-      }
-
-      this.$element[dimension](0)
-      this.transition('addClass', $.Event('show'), 'shown')
-      $.support.transition && this.$element[dimension](this.$element[0][scroll])
-    }
-
-  , hide: function () {
-      var dimension
-      if (this.transitioning || !this.$element.hasClass('in')) return
-      dimension = this.dimension()
-      this.reset(this.$element[dimension]())
-      this.transition('removeClass', $.Event('hide'), 'hidden')
-      this.$element[dimension](0)
-    }
-
-  , reset: function (size) {
-      var dimension = this.dimension()
-
-      this.$element
-        .removeClass('collapse')
-        [dimension](size || 'auto')
-        [0].offsetWidth
-
-      this.$element[size !== null ? 'addClass' : 'removeClass']('collapse')
-
-      return this
-    }
-
-  , transition: function (method, startEvent, completeEvent) {
-      var that = this
+    this.$element[size !== null ? 'addClass' : 'removeClass']('collapse')
+    */
+  }
+  
+  void transition(method, startEvent, completeEvent) {
+    /*
+    var that = this
         , complete = function () {
             if (startEvent.type == 'show') that.reset()
             that.transitioning = 0
             that.$element.trigger(completeEvent)
           }
 
-      this.$element.trigger(startEvent)
+    this.$element.trigger(startEvent)
 
-      if (startEvent.isDefaultPrevented()) return
+    if (startEvent.isDefaultPrevented()) return
 
-      this.transitioning = 1
+    this.transitioning = 1
 
-      this.$element[method]('in')
+    this.$element[method]('in')
 
-      $.support.transition && this.$element.hasClass('collapse') ?
-        this.$element.one($.support.transition.end, complete) :
-        complete()
-    }
-
-  , toggle: function () {
-      this[this.$element.hasClass('in') ? 'hide' : 'show']()
-    }
-
+    $.support.transition && this.$element.hasClass('collapse') ?
+      this.$element.one($.support.transition.end, complete) :
+      complete()
+    */
   }
+  
+  void toggle() {
+    /*
+    this[this.$element.hasClass('in') ? 'hide' : 'show']()
+    */
+  }
+  
+}
 
-
+/*
  // COLLAPSE PLUGIN DEFINITION
  // ========================== 
-
-  var old = $.fn.collapse
 
   $.fn.collapse = function (option) {
     return this.each(function () {
@@ -141,18 +133,6 @@ part of bootjack;
     toggle: true
   }
 
-  $.fn.collapse.Constructor = Collapse
-
-
- // COLLAPSE NO CONFLICT
- // ==================== 
-
-  $.fn.collapse.noConflict = function () {
-    $.fn.collapse = old
-    return this
-  }
-
-
  // COLLAPSE DATA-API
  // ================= 
 
@@ -166,5 +146,4 @@ part of bootjack;
     $(target).collapse(option)
   })
 
-}(window.jQuery);
 */

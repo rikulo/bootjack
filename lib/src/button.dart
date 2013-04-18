@@ -1,72 +1,93 @@
-/* ============================================================
- * bootstrap-button.js v2.3.1
- * http://twitter.github.com/bootstrap/javascript.html#buttons
- * ============================================================
- * Copyright 2012 Twitter, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * ============================================================ */
-
 part of bootjack;
 
-/*
-!function ($) {
+// required jQuery features:
+// attr()/removeAttr()
+// classes
+// traversing: find()/closest()
+// data()
+// on()
 
-  "use strict"; // jshint ;_;
-
-
- // BUTTON PUBLIC CLASS DEFINITION
- // ============================== 
-
-  var Button = function (element, options) {
-    this.$element = $(element)
-    this.options = $.extend({}, $.fn.button.defaults, options)
-  }
-
-  Button.prototype.setState = function (state) {
-    var d = 'disabled'
-      , $el = this.$element
-      , data = $el.data()
-      , val = $el.is('input') ? 'val' : 'html'
-
-    state = state + 'Text'
-    data.resetText || $el.data('resetText', $el[val]())
-
-    $el[val](data[state] || this.options[state])
-
+class Button extends Base {
+  
+  static final Map<String, String> DEFAULT_TEXTS = {
+    'loadingText': 'loading...'
+  };
+  
+  /**
+   * 
+   */
+  final Map<String, String> texts;
+  
+  /**
+   * 
+   */
+  Button(Element element, [Map<String, String> texts]) : 
+  this.texts = _copy(DEFAULT_TEXTS, texts), 
+  super(element);
+  
+  /**
+   * 
+   */
+  Future setState(String state) {
+    final String d = 'disabled';
+    final Element el = element;
+    final Map space = $(el).data.space();
+    final bool isInput = el is InputElement;
+    final String value = isInput ? (el as InputElement).value : el.innerHtml;
+    
+    state = "${state}Text";
+    space.putIfAbsent('resetText', () => value);
+    final String newStateText = _fallback(space[state], () => texts[state]);
+    if (isInput)
+      (el as InputElement).value = newStateText;
+    else
+      el.innerHtml = newStateText;
+    
     // push to event loop to allow forms to submit
-    setTimeout(function () {
-      state == 'loadingText' ?
-        $el.addClass(d).attr(d, d) :
-        $el.removeClass(d).removeAttr(d)
-    }, 0)
+    return new Future.delayed(const Duration(), () {
+      if (state == 'loadingText') {
+        el.classes.add(d);
+        el.attributes[d] = d;
+      } else {
+        el.classes.remove(d);
+        el.attributes.remove(d);
+      }
+    });
+    
   }
-
-  Button.prototype.toggle = function () {
-    var $parent = this.$element.closest('[data-toggle="buttons-radio"]')
-
-    $parent && $parent
-      .find('.active')
-      .removeClass('active')
-
-    this.$element.toggleClass('active')
+  
+  /**
+   * 
+   */
+  void toggle() {
+    Element parent = _closest(element, 
+        (Element elem) => elem.attributes['data-toggle'] == 'buttons-radio');
+    if (parent != null)
+      for (Element c in parent.queryAll('.active'))
+        c.classes.remove('active');
+    element.classes.toggle('active');
   }
+  
+  // Data API //
+  /**
+   * 
+   */
+  static void register() {
+    $(document).on('click.button.data-api', (DQueryEvent e) {
+      if (!(e.target is Element))
+        return;
+      Element target = e.target as Element;
+      if (!target.classes.contains('btn'))
+        target = _closest(target, (Element elem) => elem.classes.contains('btn'));
+      $(target).data.space().putIfAbsent('button', () => new Button(target)).toggle();
+    }, selector: '[data-toggle^=button]');
+  }
+  
+}
 
-
+/*
  // BUTTON PLUGIN DEFINITION
  // ======================== 
-
-  var old = $.fn.button
 
   $.fn.button = function (option) {
     return this.each(function () {
@@ -78,31 +99,4 @@ part of bootjack;
       else if (option) data.setState(option)
     })
   }
-
-  $.fn.button.defaults = {
-    loadingText: 'loading...'
-  }
-
-  $.fn.button.Constructor = Button
-
-
- // BUTTON NO CONFLICT
- // ================== 
-
-  $.fn.button.noConflict = function () {
-    $.fn.button = old
-    return this
-  }
-
-
- // BUTTON DATA-API
- // =============== 
-
-  $(document).on('click.button.data-api', '[data-toggle^=button]', function (e) {
-    var $btn = $(e.target)
-    if (!$btn.hasClass('btn')) $btn = $btn.closest('.btn')
-    $btn.button('toggle')
-  })
-
-}(window.jQuery);
 */
