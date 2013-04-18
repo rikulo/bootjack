@@ -7,3 +7,6 @@ authors:
 homepage: http://rikulo.org/
 dependencies:
   browser: any
+  dquery:
+    git:
+      url: git://github.com/rikulo/dquery.git
