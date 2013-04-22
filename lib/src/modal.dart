@@ -1,186 +1,266 @@
 part of bootjack;
 
-// required jQuery features:
-// classes
-// traversing: find()
-// event: $.Event()/delegate()/trigger()/one()/show()/hide()/focus()
-// appendTo()/remove()
-// load()
-// $.support.transition
-// attr()
-// data()
-// on()/off()
-
-/*
- // MODAL CLASS DEFINITION
- // ====================== 
-
-  var Modal = function (element, options) {
-    this.options = options
+/**
+ * 
+ */
+class Modal extends Base {
+  
+  /**
+   * 
+   */
+  backdrop0;
+  
+  /**
+   * 
+   */
+  bool keyboard;
+  
+  /**
+   * 
+   */
+  bool show0; // TODO: rename, conflict with method name
+  
+  final ElementQuery _$element;
+  
+  /**
+   * 
+   */
+  Modal(Element element, {bool backdrop: true, bool keyboard: true, bool show: true}) :
+  this.backdrop0 = backdrop,
+  this.keyboard = keyboard,
+  this.show0 = show,
+  _$element = $(element),
+  super(element) {
+    // TODO
+    /*
     this.$element = $(element)
       .delegate('[data-dismiss="modal"]', 'click.dismiss.modal', $.proxy(this.hide, this))
     this.options.remote && this.$element.find('.modal-body').load(this.options.remote)
+    */
   }
-
-  Modal.prototype = {
-
-      constructor: Modal
-
-    , toggle: function () {
-        return this[!this.isShown ? 'show' : 'hide']()
+  
+  /**
+   * 
+   */
+  toggle() => _shown ? show() : hide();
+  
+  /**
+   * 
+   */
+  bool get isShown => _shown;
+  bool _shown;
+  
+  /**
+   * 
+   */
+  show() {
+    
+    DQueryEvent e = new DQueryEvent('show');
+    _$element.trigger(e); // TODO: trigger(event)
+    
+    if (_shown || e.isDefaultPrevented)
+      return;
+    _shown = true;
+    
+    escape();
+    
+    backdrop(() {
+      
+      final Element elem = element;
+      final bool transition = Transition.isUsed && element.classes.contains('fade');
+      
+      if (elem.parent == null)
+        document.body.append(elem);
+      
+      //that.$element.show()
+      
+      /*
+      if (transition) {
+        that.$element[0].offsetWidth // force reflow
       }
-
-    , show: function () {
-        var that = this
-          , e = $.Event('show')
-
-        this.$element.trigger(e)
-
-        if (this.isShown || e.isDefaultPrevented()) return
-
-        this.isShown = true
-
-        this.escape()
-
-        this.backdrop(function () {
-          var transition = $.support.transition && that.$element.hasClass('fade')
-
-          if (!that.$element.parent().length) {
-            that.$element.appendTo(document.body) //don't move modals dom position
-          }
-
-          that.$element.show()
-
-          if (transition) {
-            that.$element[0].offsetWidth // force reflow
-          }
-
-          that.$element
-            .addClass('in')
-            .attr('aria-hidden', false)
-
-          that.enforceFocus()
-
-          transition ?
-            that.$element.one($.support.transition.end, function () { that.$element.focus().trigger('shown') }) :
-            that.$element.focus().trigger('shown')
-
-        })
+      */
+      
+      elem.classes.add('in');
+      elem.attributes['aria-hidden'] = 'false';
+      
+      enforceFocus();
+      
+      if (transition) {
+        _$element.one(Transition.end, (DQueryEvent e) {
+          elem.focus(); // src: that.$element.focus()
+          _$element.trigger('shown');
+        });
+        
+      } else {
+        elem.focus(); // src: that.$element.focus()
+        _$element.trigger('shown');
+        
       }
-
-    , hide: function (e) {
-        e && e.preventDefault()
-
-        var that = this
-
-        e = $.Event('hide')
-
-        this.$element.trigger(e)
-
-        if (!this.isShown || e.isDefaultPrevented()) return
-
-        this.isShown = false
-
-        this.escape()
-
-        $(document).off('focusin.modal')
-
-        this.$element
-          .removeClass('in')
-          .attr('aria-hidden', true)
-
-        $.support.transition && this.$element.hasClass('fade') ?
-          this.hideWithTransition() :
-          this.hideModal()
+      
+    });
+    
+  }
+  
+  /**
+   * 
+   */
+  hide() {
+    final Element elem = element;
+    
+    DQueryEvent e = new DQueryEvent('hide');
+    _$element.trigger(e); // TODO: trigger(event)
+    
+    if (!_shown || e.isDefaultPrevented)
+      return;
+    _shown = false;
+    
+    escape();
+    
+    $document().off('focusin.modal');
+    
+    elem.classes.remove('in');
+    elem.attributes['aria-hidden'] = 'true';
+    
+    if (Transition.isUsed && elem.classes.contains('fade')) {
+      hideWithTransition();
+      
+    } else {
+      hideModal();
+      
+    }
+    
+  }
+  
+  _hide(DQueryEvent e) {
+    if (e != null)
+      e.preventDefault();
+    hide();
+  }
+  
+  void enforceFocus() {
+    $document().on('focusin.modal', (DQueryEvent e) { // TODO: may need to work on DQuery focus/blur
+      /*
+      if (that.$element[0] !== e.target && !that.$element.has(e.target).length) {
+        that.$element.focus()
       }
-
-    , enforceFocus: function () {
-        var that = this
-        $(document).on('focusin.modal', function (e) {
-          if (that.$element[0] !== e.target && !that.$element.has(e.target).length) {
-            that.$element.focus()
-          }
-        })
-      }
-
-    , escape: function () {
-        var that = this
-        if (this.isShown && this.options.keyboard) {
-          this.$element.on('keyup.dismiss.modal', function ( e ) {
-            e.which == 27 && that.hide()
-          })
-        } else if (!this.isShown) {
-          this.$element.off('keyup.dismiss.modal')
-        }
-      }
-
-    , hideWithTransition: function () {
-        var that = this
-          , timeout = setTimeout(function () {
-              that.$element.off($.support.transition.end)
-              that.hideModal()
-            }, 500)
-
-        this.$element.one($.support.transition.end, function () {
-          clearTimeout(timeout)
+      */
+    });
+  }
+  
+  void escape() {
+    if (_shown && keyboard) {
+      _$element.on('keyup.dismiss.modal', (DQueryEvent e) {
+        if ((e.originalEvent as KeyEvent).which == 27)
+          hide();
+      });
+      
+    } else if (!_shown) {
+      _$element.off('keyup.dismiss.modal');
+      
+    }
+  }
+  
+  void hideWithTransition() {
+    /*
+    var that = this
+        , timeout = setTimeout(function () {
+          that.$element.off($.support.transition.end)
           that.hideModal()
-        })
-      }
+        }, 500)
 
-    , hideModal: function () {
-        var that = this
-        this.$element.hide()
-        this.backdrop(function () {
-          that.removeBackdrop()
-          that.$element.trigger('hidden')
-        })
-      }
-
-    , removeBackdrop: function () {
-        this.$backdrop && this.$backdrop.remove()
-        this.$backdrop = null
-      }
-
-    , backdrop: function (callback) {
-        var that = this
-          , animate = this.$element.hasClass('fade') ? 'fade' : ''
-
-        if (this.isShown && this.options.backdrop) {
-          var doAnimate = $.support.transition && animate
-
-          this.$backdrop = $('<div class="modal-backdrop ' + animate + '" />')
-            .appendTo(document.body)
-
-          this.$backdrop.click(
-            this.options.backdrop == 'static' ?
+    this.$element.one($.support.transition.end, function () {
+      clearTimeout(timeout)
+      that.hideModal()
+    })
+    */
+  }
+  
+  void hideModal() {
+    // TODO
+    //this.$element.hide()
+    backdrop(() {
+      removeBackdrop();
+      _$element.trigger('hidden');
+    });
+  }
+  
+  Element _backdrop;
+  
+  void removeBackdrop() {
+    if (_backdrop != null)
+      _backdrop.remove();
+    _backdrop = null;
+  }
+  
+  void backdrop([void callback()]) {
+    
+    final bool fade = element.classes.contains('fade');
+    final bool animate = Transition.isUsed && fade;
+    bool transit = false;
+    
+    final DQueryEventListener listener = (DQueryEvent e) => callback();
+    
+    if (_shown && backdrop0 != null) {
+      
+      _backdrop = new DivElement();
+      _backdrop.classes.add('modal-backdrop');
+      if (fade)
+        _backdrop.classes.add('fade');
+      document.body.append(_backdrop);
+      
+      /*
+      this.$backdrop.click(
+          this.options.backdrop == 'static' ?
               $.proxy(this.$element[0].focus, this.$element[0])
             : $.proxy(this.hide, this)
           )
-
-          if (doAnimate) this.$backdrop[0].offsetWidth // force reflow
-
-          this.$backdrop.addClass('in')
-
-          if (!callback) return
-
-          doAnimate ?
-            this.$backdrop.one($.support.transition.end, callback) :
-            callback()
-
-        } else if (!this.isShown && this.$backdrop) {
-          this.$backdrop.removeClass('in')
-
-          $.support.transition && this.$element.hasClass('fade')?
-            this.$backdrop.one($.support.transition.end, callback) :
-            callback()
-
-        } else if (callback) {
-          callback()
-        }
+      */
+      
+      //if (animate) this.$backdrop[0].offsetWidth // force reflow
+      
+      _backdrop.classes.add('in');
+      transit = true;
+      
+    } else if (!_shown && _backdrop != null) {
+      _backdrop.classes.remove('in');
+      transit = true;
+      
+    }
+    
+    if (callback != null) {
+      if (animate) {
+        $(_backdrop).one(Transition.end, listener);
+        
+      } else {
+        callback();
+        
       }
+    }
+    
   }
+  
+  static void register() {
+    $document('click.modal.data-api', (DQueryEvent e) {
+      /*
+      var $this = $(this)
+          , href = $this.attr('href')
+          , $target = $($this.attr('data-target') || (href && href.replace(/.*(?=#[^\s]+$)/, ''))) //strip for ie7
+          , option = $target.data('modal') ? 'toggle' : $.extend({ remote:!/#/.test(href) && href }, $target.data(), $this.data())
 
+              e.preventDefault()
 
+              $target
+              .modal(option)
+              .one('hide', function () {
+                $this.focus()
+              })
+      */
+    }, selector: '[data-toggle="modal"]');
+  }
+  
+}
+
+/*
  // MODAL PLUGIN DEFINITION
  // ======================= 
 
@@ -194,29 +274,5 @@ part of bootjack;
       else if (options.show) data.show()
     })
   }
-
-  $.fn.modal.defaults = {
-      backdrop: true
-    , keyboard: true
-    , show: true
-  }
-
- // MODAL DATA-API
- // ============== 
-
-  $(document).on('click.modal.data-api', '[data-toggle="modal"]', function (e) {
-    var $this = $(this)
-      , href = $this.attr('href')
-      , $target = $($this.attr('data-target') || (href && href.replace(/.*(?=#[^\s]+$)/, ''))) //strip for ie7
-      , option = $target.data('modal') ? 'toggle' : $.extend({ remote:!/#/.test(href) && href }, $target.data(), $this.data())
-
-    e.preventDefault()
-
-    $target
-      .modal(option)
-      .one('hide', function () {
-        $this.focus()
-      })
-  })
 
 */

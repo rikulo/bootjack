@@ -1,12 +1,8 @@
 part of bootjack;
 
-// required jQuery features:
-// attr()/removeAttr()
-// classes
-// traversing: find()/closest()
-// data()
-// on()
-
+/**
+ * 
+ */
 class Button extends Base {
   
   static final Map<String, String> DEFAULT_TEXTS = {
@@ -73,7 +69,7 @@ class Button extends Base {
    * 
    */
   static void register() {
-    $(document).on('click.button.data-api', (DQueryEvent e) {
+    $document().on('click.button.data-api', (DQueryEvent e) {
       if (!(e.target is Element))
         return;
       Element target = e.target as Element;

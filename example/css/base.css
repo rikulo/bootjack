@@ -1,0 +1,15 @@
+body {
+  padding: 0 20px;
+}
+
+h2:nth-child(n+2) {
+  margin-top: 40px;
+}
+
+h2 {
+  border-bottom: 1px solid #999;
+}
+
+h4 {
+  margin-top: 20px;
+}

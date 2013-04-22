@@ -12,9 +12,9 @@ part of bootjack;
 
 class Alert {
   
-  // var dismiss = '[data-dismiss="alert"]'
+  static final String _DISMISS_SELECTOR = '[data-dismiss="alert"]';
   
-  Alert() {
+  Alert(Element element) {
     /*
     $(el).on('click', dismiss, this.close)
     */
@@ -55,6 +55,10 @@ class Alert {
     */
   }
   
+  static void register() {
+    // $(document).on('click.alert.data-api', dismiss, Alert.prototype.close)
+  }
+  
 }
 
 /*
@@ -69,10 +73,5 @@ class Alert {
       if (typeof option == 'string') data[option].call($this)
     })
   }
-
- // ALERT DATA-API
- // ============== 
-
-  $(document).on('click.alert.data-api', dismiss, Alert.prototype.close)
 
 */

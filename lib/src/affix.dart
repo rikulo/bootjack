@@ -1,5 +1,7 @@
 part of bootjack;
 
+// $(window)
+
 // required jQuery features:
 // dimensions: height()/scrollTop()/offset()/top()/bottom()
 // classes: removeClass()/addClass()
@@ -10,9 +12,12 @@ part of bootjack;
 
 class Affix extends Base {
   
-  Affix(Element element) : super(element) {
+  final int offset;
+  
+  Affix(Element element, {int offset : 0}) : 
+  this.offset = offset, 
+  super(element) {
     /*
-    this.options = $.extend({}, $.fn.affix.defaults, options)
     this.$window = $(window)
       .on('scroll.affix.data-api', $.proxy(this.checkPosition, this))
       .on('click.affix.data-api',  $.proxy(function () { setTimeout($.proxy(this.checkPosition, this), 1) }, this))
@@ -51,6 +56,24 @@ class Affix extends Base {
     */
   }
   
+  static void register() {
+    /*
+    $(window).on('load', function () {
+      $('[data-spy="affix"]').each(function () {
+        var $spy = $(this)
+            , data = $spy.data()
+
+            data.offset = data.offset || {}
+
+        data.offsetBottom && (data.offset.bottom = data.offsetBottom)
+        data.offsetTop && (data.offset.top = data.offsetTop)
+
+        $spy.affix(data)
+      })
+    })
+    */
+  }
+  
 }
 /*
  // AFFIX PLUGIN DEFINITION
@@ -67,27 +90,5 @@ class Affix extends Base {
       if (typeof option == 'string') data[option]()
     })
   }
-
-  $.fn.affix.defaults = {
-    offset: 0
-  }
-
-
- // AFFIX DATA-API
- // ============== 
-
-  $(window).on('load', function () {
-    $('[data-spy="affix"]').each(function () {
-      var $spy = $(this)
-        , data = $spy.data()
-
-      data.offset = data.offset || {}
-
-      data.offsetBottom && (data.offset.bottom = data.offsetBottom)
-      data.offsetTop && (data.offset.top = data.offsetTop)
-
-      $spy.affix(data)
-    })
-  })
 
 */

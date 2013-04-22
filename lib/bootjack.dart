@@ -1,10 +1,11 @@
 library bootjack;
 
 import 'dart:html';
+import 'dart:html_common';
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:dquery/dquery.dart' show $, DQueryEvent;
+import 'package:dquery/dquery.dart';
 
 part 'src/util/util.dart';
 
@@ -30,3 +31,16 @@ class Base {
   Base(this._element);
   
 }
+
+class Bootjack {
+  
+  /**
+   * 
+   */
+  void use() {
+    // TODO: batch register
+  }
+  
+}
+
+
