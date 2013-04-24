@@ -23,12 +23,16 @@ part 'src/tooltip.dart';
 part 'src/transition.dart';
 part 'src/typeahead.dart';
 
+// TODO: may need to wire up DQuery data-attributes
+
 class Base {
   
-  Element get element => _element;
-  final Element _element;
+  final Element element;
+  final ElementQuery $element;
   
-  Base(this._element);
+  Base(Element element) : 
+  this.element = element,
+  $element = $(element);
   
 }
 

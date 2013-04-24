@@ -26,27 +26,26 @@ class Button extends Base {
    */
   Future setState(String state) {
     final String d = 'disabled';
-    final Element el = element;
-    final Map space = $(el).data.space();
-    final bool isInput = el is InputElement;
-    final String value = isInput ? (el as InputElement).value : el.innerHtml;
+    final Map space = $element.data.space();
+    final bool isInput = element is InputElement;
+    final String value = isInput ? (element as InputElement).value : element.innerHtml;
     
     state = "${state}Text";
     space.putIfAbsent('resetText', () => value);
     final String newStateText = _fallback(space[state], () => texts[state]);
     if (isInput)
-      (el as InputElement).value = newStateText;
+      (element as InputElement).value = newStateText;
     else
-      el.innerHtml = newStateText;
+      element.innerHtml = newStateText;
     
     // push to event loop to allow forms to submit
     return new Future.delayed(const Duration(), () {
       if (state == 'loadingText') {
-        el.classes.add(d);
-        el.attributes[d] = d;
+        element.classes.add(d);
+        element.attributes[d] = d;
       } else {
-        el.classes.remove(d);
-        el.attributes.remove(d);
+        element.classes.remove(d);
+        element.attributes.remove(d);
       }
     });
     

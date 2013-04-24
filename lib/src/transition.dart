@@ -13,7 +13,7 @@ class Transition {
    * 
    */
   static bool get isUsed => _used;
-  static bool _used;
+  static bool _used = false;
   
   /**
    * 

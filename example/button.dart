@@ -4,6 +4,7 @@ import 'package:bootjack/bootjack.dart';
 void main() {
   
   Button.register();
+  Dropdown.register();
   
 }
 
