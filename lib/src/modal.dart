@@ -73,11 +73,7 @@ class Modal extends Base {
       
       $element.show();
       
-      /*
-      if (transition) {
-        that.$element[0].offsetWidth // force reflow
-      }
-      */
+      if (transition) element.offsetWidth; // force reflow
       
       element.classes.add('in');
       element.attributes['aria-hidden'] = 'false';
@@ -195,7 +191,7 @@ class Modal extends Base {
       $(_backdropElem).on('click', backdrop0 == 'static' ? 
           (DQueryEvent e) => element.focus() : (DQueryEvent e) => hide());
       
-      //if (animate) this.$backdrop[0].offsetWidth // force reflow
+      if (animate) _backdropElem.offsetWidth; // force reflow
       
       _backdropElem.classes.add('in');
       transit = true;
