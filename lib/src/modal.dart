@@ -37,7 +37,7 @@ class Modal extends Base {
   /**
    * 
    */
-  toggle() => _shown ? show() : hide();
+  toggle() => _shown ? hide() : show();
   
   /**
    * 
@@ -148,7 +148,7 @@ class Modal extends Base {
   
   void _hideWithTransition() {
     bool canceled = false;
-    new Future.delayed(const Duration(milliseconds: 500)).then(() {
+    new Future.delayed(const Duration(milliseconds: 500)).then((_) {
       if (!canceled) {
         $element.off(Transition.end);
         _hideModal();
@@ -220,6 +220,7 @@ class Modal extends Base {
   
   static void register() {
     $document().on('click.modal.data-api', (DQueryEvent e) {
+      
       if (!(e.target is Element))
         return;
       final Element elem = e.target as Element;
@@ -232,9 +233,10 @@ class Modal extends Base {
         return;
       
       Modal modal = $target.data.get('modal');
-      if (modal != null)
+      if (modal != null) {
         modal.toggle();
-      else {
+        
+      } else {
         // , option = $target.data('modal') ? 'toggle' : $.extend({ remote:!/#/.test(href) && href }, $target.data(), $this.data())
         $target.data.set('modal', modal = new Modal($target.first)); // TODO: other options
         modal.show();

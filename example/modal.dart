@@ -4,10 +4,7 @@ import 'package:bootjack/bootjack.dart';
 
 void main() {
   
+  //Transition.register();
   Modal.register();
-  
-  $('#btn').on('click', (DQueryEvent e) {
-    new Modal($('#myModal').first).toggle();
-  });
   
 }
