@@ -1,7 +1,5 @@
 part of bootjack;
 
-// TODO: keydown
-
 /**
  * 
  */
@@ -53,10 +51,8 @@ class Dropdown extends Base {
     e.preventDefault();
     e.stopPropagation();
     
-    if (element.classes.contains('disabled') || element.attributes.containsKey('disabled'))
+    if (element.matches('.disabled, :disabled'))
       return;
-    // TODO: check
-    // src: if ($this.is('.disabled, :disabled')) return
     
     final Element parent = _getParent(element);
     final bool isActive = parent.classes.contains('open');
@@ -72,10 +68,7 @@ class Dropdown extends Base {
     if ($items.isEmpty)
       return;
     
-    int index = 0;
-    // TODO
-    // src: index = $items.index($items.filter(':focus'))
-    
+    int index = _indexWhere($items, (Element e) => e.matches(':focus'));
     if (keyCode == 38 && index > 0)
       index--; // up
     else if (keyCode == 40 && index < $items.length - 1)
@@ -83,12 +76,18 @@ class Dropdown extends Base {
     if (index == -1)
       index = 0;
     
-    /*
-    $items
-    .eq(index)
-    .focus()
-    */
+    $($items[index]).trigger('focus');
     
+  }
+  
+  static int _indexWhere(List<Element> elems, bool f(Element elem)) {
+    int i = 0;
+    for (Element e in elems) {
+      if (f(e))
+        return i;
+      i++;
+    }
+    return -1;
   }
   
   static void _clearMenus() {
