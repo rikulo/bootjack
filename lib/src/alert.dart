@@ -1,77 +1,75 @@
 part of bootjack;
 
-// required jQuery features:
-// attr()
-// classes: hasClass()
-// traversing: parent()
-// event: trigger()
-// remove()
-// transition?
-// data()
-// on()
-
-class Alert {
+/**
+ * 
+ */
+class Alert extends Base {
   
-  static final String _DISMISS_SELECTOR = '[data-dismiss="alert"]';
+  static const String _NAME = 'alert';
+  static const String _DISMISS_SELECTOR = '[data-dismiss="alert"]';
   
-  Alert(Element element) {
-    /*
-    $(el).on('click', dismiss, this.close)
-    */
+  /**
+   * 
+   */
+  Alert(Element element) :  
+  super(element, _NAME) {
+    $(element).on('click', _closeHandler, selector: _DISMISS_SELECTOR);
   }
   
-  void close([Event e]) {
-    /*
-    var $this = $(this)
-      , selector = $this.attr('data-target')
-      , $parent
-
-    if (!selector) {
-      selector = $this.attr('href')
-      selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') //strip for ie7
-    }
-
-    $parent = $(selector)
-
-    e && e.preventDefault()
-
-    $parent.length || ($parent = $this.hasClass('alert') ? $this : $this.parent())
-
-    $parent.trigger(e = $.Event('close'))
-
-    if (e.isDefaultPrevented()) return
-
-    $parent.removeClass('in')
-
-    function removeElement() {
-      $parent
-        .trigger('closed')
-        .remove()
-    }
-
-    $.support.transition && $parent.hasClass('fade') ?
-      $parent.on($.support.transition.end, removeElement) :
-      removeElement()
-    */
+  /**
+   * 
+   */
+  static Alert wire(Element element) =>
+      _wire(element, _NAME, () => new Alert(element));
+  
+  /**
+   * 
+   */
+  void close() {
+    _close(element);
   }
   
-  static void register() {
-    // $(document).on('click.alert.data-api', dismiss, Alert.prototype.close)
+  static void _close(Element elem) {
+    final String selector = _dataTarget(elem);
+    
+    final ElementQuery $parent = $(selector);
+    
+    if ($parent.isEmpty)
+      $parent = elem.classes.contains('alert') ? $(elem) : $(elem.parent);
+    
+    if ($parent.isEmpty)
+      return;
+    
+    final DQueryEvent e = new DQueryEvent('close');
+    $parent.trigger(e);
+    
+    if (e.isDefaultPrevented)
+      return;
+    
+    final Element parent = $parent.first;
+    parent.classes.remove('in');
+    
+    if (Transition.isUsed && parent.classes.contains('fade'))
+      $parent.on(Transition.end, (e) => _removeElement($parent));
+    
+    else
+      _removeElement($parent);
+  }
+  
+  static void _closeHandler(DQueryEvent e) {
+    e.preventDefault();
+    if (e.target is Element)
+      _close(e.target);
+  }
+  
+  static void _removeElement(ElementQuery $elem) {
+    $elem.trigger('closed');
+    $elem.remove();
+  }
+  
+  // Data API //
+  static void _register() {
+    $document().on('click.alert.data-api', _closeHandler, selector: _DISMISS_SELECTOR);
   }
   
 }
-
-/*
- // ALERT PLUGIN DEFINITION
- // ======================= 
-
-  $.fn.alert = function (option) {
-    return this.each(function () {
-      var $this = $(this)
-        , data = $this.data('alert')
-      if (!data) $this.data('alert', (data = new Alert(this)))
-      if (typeof option == 'string') data[option].call($this)
-    })
-  }
-
-*/

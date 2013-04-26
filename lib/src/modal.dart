@@ -13,7 +13,7 @@ class Modal extends Base {
   /**
    * 
    */
-  final String backdrop0; // false, true, static: should use enum when ready
+  final String backdrop; // false, true, static: should use enum when ready
   
   /**
    * 
@@ -25,7 +25,7 @@ class Modal extends Base {
    */
   Modal(Element element, {String backdrop: 'true', bool keyboard: true, 
     String remote}) :
-  this.backdrop0 = backdrop,
+  this.backdrop = backdrop,
   this.keyboard = keyboard,
   super(element, _NAME) {
     $element.on('click.dismiss.modal', 
@@ -58,7 +58,7 @@ class Modal extends Base {
    */
   show() {
     
-    DQueryEvent e = new DQueryEvent('show');
+    final DQueryEvent e = new DQueryEvent('show');
     $element.triggerEvent(e);
     
     if (_shown || e.isDefaultPrevented)
@@ -67,12 +67,12 @@ class Modal extends Base {
     
     if (keyboard) {
       $element.on('keyup.dismiss.modal', (DQueryEvent e) {
-        if ((e.originalEvent as KeyEvent).keyCode == 27)
+        if ((e.originalEvent as KeyboardEvent).keyCode == 27)
           hide();
       });
     }
     
-    backdrop(() {
+    _backdrop(() {
       
       final bool transition = Transition.isUsed && element.classes.contains('fade');
       
@@ -108,9 +108,8 @@ class Modal extends Base {
    * 
    */
   hide() {
-    final Element elem = element;
     
-    DQueryEvent e = new DQueryEvent('hide');
+    final DQueryEvent e = new DQueryEvent('hide');
     $element.triggerEvent(e);
     
     if (!_shown || e.isDefaultPrevented)
@@ -121,10 +120,10 @@ class Modal extends Base {
     
     $document().off('focusin.modal');
     
-    elem.classes.remove('in');
-    elem.attributes['aria-hidden'] = 'true';
+    element.classes.remove('in');
+    element.attributes['aria-hidden'] = 'true';
     
-    if (Transition.isUsed && elem.classes.contains('fade')) {
+    if (Transition.isUsed && element.classes.contains('fade')) {
       _hideWithTransition();
       
     } else {
@@ -139,8 +138,6 @@ class Modal extends Base {
       e.preventDefault();
     hide();
   }
-  
-  // TODO: below are not in API?
   
   void _enforceFocus() {
     $document().on('focusin.modal', (DQueryEvent e) {
@@ -166,7 +163,7 @@ class Modal extends Base {
   
   void _hideModal() {
     $element.hide();
-    backdrop(() {
+    _backdrop(() {
       _removeBackdrop();
       $element.trigger('hidden');
     });
@@ -180,7 +177,7 @@ class Modal extends Base {
     _backdropElem = null;
   }
   
-  void backdrop([void callback()]) {
+  void _backdrop([void callback()]) {
     
     final bool fade = element.classes.contains('fade');
     final bool animate = Transition.isUsed && fade;
@@ -188,7 +185,7 @@ class Modal extends Base {
     
     final DQueryEventListener listener = (DQueryEvent e) => callback();
     
-    if (_shown && backdrop0 != 'false') { // backdrop0: false, true, or static
+    if (_shown && backdrop != 'false') {
       
       _backdropElem = new DivElement();
       _backdropElem.classes.add('modal-backdrop');
@@ -196,7 +193,7 @@ class Modal extends Base {
         _backdropElem.classes.add('fade');
       document.body.append(_backdropElem);
       
-      $(_backdropElem).on('click', backdrop0 == 'static' ? 
+      $(_backdropElem).on('click', backdrop == 'static' ? 
           (DQueryEvent e) => element.focus() : (DQueryEvent e) => hide());
       
       if (animate) _backdropElem.offsetWidth; // force reflow
@@ -222,14 +219,16 @@ class Modal extends Base {
     
   }
   
-  static void register() {
+  // Data API //
+  static void _register() {
     $document().on('click.modal.data-api', (DQueryEvent e) {
       
       if (!(e.target is Element))
         return;
+      
       final Element elem = e.target as Element;
-      final String href = elem.attributes['href'];
-      final ElementQuery $target = $(_fallback(elem.attributes['data-target'], () => href));
+      //final String href = elem.attributes['href'];
+      final ElementQuery $target = $(_dataTarget(elem));
       
       e.preventDefault();
       
@@ -245,20 +244,3 @@ class Modal extends Base {
   }
   
 }
-
-/*
- // MODAL PLUGIN DEFINITION
- // ======================= 
-
-  $.fn.modal = function (option) {
-    return this.each(function () {
-      var $this = $(this)
-        , data = $this.data('modal')
-        , options = $.extend({}, $.fn.modal.defaults, $this.data(), typeof option == 'object' && option)
-      if (!data) $this.data('modal', (data = new Modal(this, options)))
-      if (typeof option == 'string') data[option]()
-      else if (options.show) data.show()
-    })
-  }
-
-*/

@@ -10,6 +10,9 @@ part of bootjack;
 
 // TODO: require scroll spy
 
+/**
+ * 
+ */
 class Affix extends Base {
   
   static const String _NAME = 'affix';

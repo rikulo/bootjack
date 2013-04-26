@@ -8,6 +8,9 @@ class Dropdown extends Base {
   static const String _NAME = 'dropdown';
   static const String _TOGGLE_SELECTOR ='[data-toggle=dropdown]'; 
   
+  /**
+   * 
+   */
   Dropdown(Element element) : 
   super(element, _NAME) {
     $element.on('click.dropdown.data-api', _toggle);
@@ -18,6 +21,15 @@ class Dropdown extends Base {
     });
   }
   
+  /**
+   * 
+   */
+  static Dropdown wire(Element element, [Dropdown create()]) =>
+      _wire(element, _NAME, _fallback(create, () => () => new Dropdown(element)));
+  
+  /**
+   * 
+   */
   void toggle() => _toggle(element);
   
   static void _toggleEvent(DQueryEvent e) {
@@ -98,12 +110,7 @@ class Dropdown extends Base {
   }
 
   static Element _getParent(Element elem) {
-    String selector = elem.attributes['data-target']; // TODO: use dataset?
-    if (selector == null) {
-      selector = elem.attributes['href'];
-      // TODO
-      // src: selector = selector && /#/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') //strip for ie7
-    }
+    final String selector = _dataTarget(elem);
     if (selector != null) {
       ElementQuery p = $(selector);
       if (!p.isEmpty)
@@ -112,7 +119,8 @@ class Dropdown extends Base {
     return elem.parent;
   }
   
-  static void register() {
+  // Data API //
+  static void _register() {
     $document()
     ..on('click.dropdown.data-api', (DQueryEvent e) => _clearMenus())
     ..on('click.dropdown.data-api', (DQueryEvent e) => e.stopPropagation(), selector: '.dropdown form')
@@ -122,19 +130,3 @@ class Dropdown extends Base {
   }
   
 }
-
-/*
-
-  // DROPDOWN PLUGIN DEFINITION
-  // ========================== 
-
-  $.fn.dropdown = function (option) {
-    return this.each(function () {
-      var $this = $(this)
-        , data = $this.data('dropdown')
-      if (!data) $this.data('dropdown', (data = new Dropdown(this)))
-      if (typeof option == 'string') data[option].call($this)
-    })
-  }
-
-*/

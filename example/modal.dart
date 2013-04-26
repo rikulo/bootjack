@@ -4,7 +4,6 @@ import 'package:bootjack/bootjack.dart';
 
 void main() {
   
-  Transition.register();
-  Modal.register();
+  Bootjack.use(['transition', 'modal']);
   
 }

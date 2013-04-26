@@ -15,10 +15,7 @@ class Transition {
   static bool get isUsed => _used;
   static bool _used = false;
   
-  /**
-   * 
-   */
-  static void register() {
+  static void _register() {
     _used = true;
   }
   

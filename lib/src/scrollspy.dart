@@ -13,34 +13,58 @@ class Scrollspy extends Base {
   
   static const String _NAME = 'popover';
   
-  String get selector => _selector;
-  String _selector;
+  /**
+   * 
+   */
+  final String _selector;
   
+  /**
+   * 
+   */
   final int offset;
   
+  /**
+   * 
+   */
   Scrollspy(Element element, {String target, int offset : 10}) : 
-  this.offset = offset, 
+  this.offset = offset,
+  _$body = $('body'),
+  _selector = "${_fallback(target, () => element.attributes['href'], () => '')} .nav li > a",
+  _$scrollElement = element is BodyElement ? $window() : $element,
   super(element, _NAME) {
-    DQuery $observed = element is BodyElement ? $window() : $element;
-    
-    /*
-    var process = $.proxy(this.process, this)
-    this.$scrollElement = $element.on('scroll.scroll-spy.data-api', process)
-    */
-    
-    _selector = "${_fallback(target, () => element.attributes['href'], () => '')} .nav li > a";
+    _$scrollElement.on('scroll.scroll-spy.data-api', (DQueryEvent e) => _process());
     refresh();
-    process();
+    _process();
   }
   
+  /**
+   * 
+   */
+  static Scrollspy wire(Element element, [Scrollspy create()]) =>
+      _wire(element, _NAME, _fallback(create, () => () => new Scrollspy(element)));
+  
+  final ElementQuery _$body;
+  final DQuery _$scrollElement;
+  Element _activeTarget;
+  
+  // TODO: may want to group them?
+  final List<int> _offsets = new List<int>();
+  final List<Element> _targets = new List<Element>();
+  
+  /**
+   * 
+   */
   void refresh() {
+    
+    _offsets.clear();
+    _targets.clear();
+    
+    _$body.find(_selector);
+    
     /*
     var self = this
         , $targets
-
-    this.offsets = $([])
-    this.targets = $([])
-
+    
     $targets = this.$body
     .find(this.selector)
     .map(function () {
@@ -51,15 +75,15 @@ class Scrollspy extends Base {
               && $href.length
               && [[ $href.position().top + (!$.isWindow(self.$scrollElement.get(0)) && self.$scrollElement.scrollTop()), href ]] ) || null
           })
-          .sort(function (a, b) { return a[0] - b[0] })
-          .each(function () {
-            self.offsets.push(this[0])
-            self.targets.push(this[1])
-          })
+     .sort(function (a, b) { return a[0] - b[0] })
+     .each(function () {
+        self.offsets.push(this[0])
+        self.targets.push(this[1])
+     })
     */
   }
   
-  void process() {
+  void _process() {
     /*
     var scrollTop = this.$scrollElement.scrollTop() + this.options.offset
         , scrollHeight = this.$scrollElement[0].scrollHeight || this.$body[0].scrollHeight
@@ -83,40 +107,32 @@ class Scrollspy extends Base {
     */
   }
   
-  void activate(target) {
-    /*
-    var active
-    , selector
-
-    this.activeTarget = target
-
-    $(this.selector)
-    .parent('.active')
-    .removeClass('active')
-
-    selector = this.selector
-    + '[data-target="' + target + '"],'
-    + this.selector + '[href="' + target + '"]'
+  void _activate(Element target) {
     
-    active = $(selector)
-    .parent('li')
-    .addClass('active')
-
-    if (active.parent('.dropdown-menu').length)  {
-      active = active.closest('li.dropdown').addClass('active')
+    _activeTarget = target;
+    
+    $(_selector).parent('.active').forEach((Element e) => e.classes.remove('active'));
+    
+    // TODO: wouldn't toString() be too aggressive?
+    final String selector = '$_selector[data-target="$target"], $_selector[href="$target"]';
+    
+    ElementQuery $active = $(selector).parent('li');
+    $active.forEach((Element e) => e.classes.add('active'));
+    
+    if (!$active.parent('.dropdown-menu').isEmpty) {
+      $active = $active.closest('li.dropdown');
+      $active.forEach((Element e) => e.classes.add('active'));
     }
-
-    active.trigger('activate')
-    */
+    
+    $active.trigger('activate');
+    
   }
   
-  static void register() {
+  static void _register() {
     $window().on('load', (DQueryEvent e) {
       for (Element elem in $('[data-spy="scroll"]')) {
-        /*
-        var $spy = $(this)
-            $spy.scrollspy($spy.data())
-        */
+        Scrollspy.wire(elem); // TODO: data option
+        //$spy.scrollspy($spy.data())
       }
     });
   }

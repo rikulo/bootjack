@@ -72,10 +72,7 @@ class Button extends Base {
   }
   
   // Data API //
-  /**
-   * 
-   */
-  static void register() {
+  static void _register() {
     $document().on('click.button.data-api', (DQueryEvent e) {
       if (e.target is Element) {
         final ElementQuery $btn = $(e.target).closest('.btn');
@@ -87,19 +84,3 @@ class Button extends Base {
   }
   
 }
-
-/*
- // BUTTON PLUGIN DEFINITION
- // ======================== 
-
-  $.fn.button = function (option) {
-    return this.each(function () {
-      var $this = $(this)
-        , data = $this.data('button')
-        , options = typeof option == 'object' && option
-      if (!data) $this.data('button', (data = new Button(this, options)))
-      if (option == 'toggle') data.toggle()
-      else if (option) data.setState(option)
-    })
-  }
-*/
