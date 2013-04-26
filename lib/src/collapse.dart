@@ -12,7 +12,10 @@ part of bootjack;
 
 class Collapse extends Base {
   
-  Collapse(Element element) : super(element) {
+  static const String _NAME = 'collapse';
+  
+  Collapse(Element element) : 
+  super(element, _NAME) {
     /*
     this.options = $.extend({}, $.fn.collapse.defaults, options)
 

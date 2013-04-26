@@ -5,9 +5,11 @@ part of bootjack;
  */
 class Dropdown extends Base {
   
-  static final String _TOGGLE_SELECTOR ='[data-toggle=dropdown]'; 
+  static const String _NAME = 'dropdown';
+  static const String _TOGGLE_SELECTOR ='[data-toggle=dropdown]'; 
   
-  Dropdown(Element element) : super(element) {
+  Dropdown(Element element) : 
+  super(element, _NAME) {
     $element.on('click.dropdown.data-api', _toggle);
     $('html').on('click.dropdown.data-api', (DQueryEvent e) { // TODO: why not document?
       Element p = element.parent;

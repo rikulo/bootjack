@@ -12,11 +12,13 @@ part of bootjack;
 
 class Affix extends Base {
   
+  static const String _NAME = 'affix';
+  
   final int offset;
   
   Affix(Element element, {int offset : 0}) : 
   this.offset = offset, 
-  super(element) {
+  super(element, _NAME) {
     /*
     this.$window = $(window)
       .on('scroll.affix.data-api', $.proxy(this.checkPosition, this))

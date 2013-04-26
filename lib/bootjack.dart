@@ -30,18 +30,23 @@ class Base {
   final Element element;
   final ElementQuery $element;
   
-  Base(Element element) : 
+  Base(Element element, String name) : 
   this.element = element,
-  $element = $(element);
+  $element = $(element) {
+    $element.data.set(name, this);
+  }
   
 }
+
+_wire(Element elem, String name, create()) =>
+    _fallback($(elem).data.get(name), create); // create shall save it back
 
 class Bootjack {
   
   /**
    * 
    */
-  void use() {
+  void use(List<String> names) {
     // TODO: batch register
   }
   

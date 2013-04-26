@@ -1,6 +1,6 @@
 part of bootjack;
 
-_fallback(a, b()) => a != null ? a : b();
+_fallback(a, b(), [c()]) => a != null ? a : _fallback(b(), () => c == null ? null : c());
 
 Map _copy(Map a, Map b) {
   Map c = new HashMap.from(a);

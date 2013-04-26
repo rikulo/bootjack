@@ -10,12 +10,31 @@ part of bootjack;
 // data()
 // on()/off()
 
-/*
- // TOOLTIP PUBLIC CLASS DEFINITION
- // =============================== 
+class Tooltip extends Base {
+  
+  static const String _NAME = 'tooltip';
+  
+  Tooltip(Element element) : 
+  super(element, _NAME) {
+    
+  }
+  
+  /*
 
   var Tooltip = function (element, options) {
     this.init('tooltip', element, options)
+  }
+
+  $.fn.tooltip.defaults = {
+    animation: true
+  , placement: 'top'
+  , selector: false
+  , template: '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
+  , trigger: 'hover focus'
+  , title: ''
+  , delay: 0
+  , html: false
+  , container: false
   }
 
   Tooltip.prototype = {
@@ -305,7 +324,11 @@ part of bootjack;
     }
 
   }
+  */
+  
+}
 
+/*
 
  // TOOLTIP PLUGIN DEFINITION
  // ========================= 
@@ -318,18 +341,6 @@ part of bootjack;
       if (!data) $this.data('tooltip', (data = new Tooltip(this, options)))
       if (typeof option == 'string') data[option]()
     })
-  }
-
-  $.fn.tooltip.defaults = {
-    animation: true
-  , placement: 'top'
-  , selector: false
-  , template: '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
-  , trigger: 'hover focus'
-  , title: ''
-  , delay: 0
-  , html: false
-  , container: false
   }
 
 */

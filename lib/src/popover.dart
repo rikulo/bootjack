@@ -7,7 +7,23 @@ part of bootjack;
 // data()
 // on()/off()
 
-/*
+class Popover extends Base {
+  
+  static const String _NAME = 'popover';
+  
+  Popover(Element element) : 
+  super(element, _NAME) {
+    
+  }
+  
+  /*
+  $.fn.popover.defaults = $.extend({} , $.fn.tooltip.defaults, {
+    placement: 'right'
+  , trigger: 'click'
+  , content: ''
+  , template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+  })
+
  // POPOVER PUBLIC CLASS DEFINITION
  // =============================== 
 
@@ -61,7 +77,9 @@ part of bootjack;
     }
 
   })
-
+  */
+}
+/*
 
  // POPOVER PLUGIN DEFINITION
  // ======================= 
@@ -75,12 +93,5 @@ part of bootjack;
       if (typeof option == 'string') data[option]()
     })
   }
-
-  $.fn.popover.defaults = $.extend({} , $.fn.tooltip.defaults, {
-    placement: 'right'
-  , trigger: 'click'
-  , content: ''
-  , template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-  })
 
 */

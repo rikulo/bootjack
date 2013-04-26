@@ -5,6 +5,8 @@ part of bootjack;
  */
 class Button extends Base {
   
+  static const String _NAME = 'button';
+  
   static final Map<String, String> DEFAULT_TEXTS = {
     'loadingText': 'loading...'
   };
@@ -17,9 +19,15 @@ class Button extends Base {
   /**
    * 
    */
-  Button(Element element, [Map<String, String> texts]) : 
+  Button(Element element, {Map<String, String> texts}) : 
   this.texts = _copy(DEFAULT_TEXTS, texts), 
-  super(element);
+  super(element, _NAME);
+  
+  /**
+   * 
+   */
+  static Button wire(Element element, [Button create()]) => 
+      _wire(element, _NAME, _fallback(create, () => () => new Button(element)));
   
   /**
    * 
@@ -69,12 +77,12 @@ class Button extends Base {
    */
   static void register() {
     $document().on('click.button.data-api', (DQueryEvent e) {
-      if (!(e.target is Element))
-        return;
-      Element target = e.target as Element;
-      if (!target.classes.contains('btn'))
-        target = _closest(target, (Element elem) => elem.classes.contains('btn'));
-      $(target).data.space().putIfAbsent('button', () => new Button(target)).toggle();
+      if (e.target is Element) {
+        final ElementQuery $btn = $(e.target).closest('.btn');
+        if (!$btn.isEmpty)
+          Button.wire($btn.first).toggle();
+      }
+      
     }, selector: '[data-toggle^=button]');
   }
   

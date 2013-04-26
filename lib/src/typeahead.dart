@@ -11,10 +11,14 @@ part of bootjack;
 // data()
 // on()
 
-/*
- // TYPEAHEAD PUBLIC CLASS DEFINITION
- // ================================= 
-
+class Typeahead extends Base {
+  
+  static const String _NAME = 'tooltip';
+  
+  Typeahead(Element element) : 
+  super(element, _NAME);
+  
+  /*
   var Typeahead = function (element, options) {
     this.$element = $(element)
     this.options = $.extend({}, $.fn.typeahead.defaults, options)
@@ -28,22 +32,32 @@ part of bootjack;
     this.listen()
   }
 
-  Typeahead.prototype = {
-
-    constructor: Typeahead
-
-  , select: function () {
-      var val = this.$menu.find('.active').attr('data-value')
-      this.$element
-        .val(this.updater(val))
-        .change()
-      return this.hide()
-    }
-
+  $.fn.typeahead.defaults = {
+    source: []
+  , items: 8
+  , menu: '<ul class="typeahead dropdown-menu"></ul>'
+  , item: '<li><a href="#"></a></li>'
+  , minLength: 1
+  }
+  */
+  
+  void select() {
+    /*
+    var val = this.$menu.find('.active').attr('data-value')
+    this.$element
+    .val(this.updater(val))
+    .change()
+    return this.hide()
+    */
+  }
+  
+  /*
   , updater: function (item) {
       return item
     }
-
+  */
+  
+  /*
   , show: function () {
       var pos = $.extend({}, this.$element.position(), {
         height: this.$element[0].offsetHeight
@@ -275,8 +289,21 @@ part of bootjack;
     }
 
   }
+  */
+  
+  static void register() {
+    $document().on('focus.typeahead.data-api', (DQueryEvent e) {
+      /*
+      var $this = $(this)
+          if ($this.data('typeahead')) return
+              $this.typeahead($this.data())
+      */
+    }, selector: '[data-provide="typeahead"]');
+  }
+  
+}
 
-
+/*
   // TYPEAHEAD PLUGIN DEFINITION
   // =========================== 
 
@@ -289,22 +316,4 @@ part of bootjack;
       if (typeof option == 'string') data[option]()
     })
   }
-
-  $.fn.typeahead.defaults = {
-    source: []
-  , items: 8
-  , menu: '<ul class="typeahead dropdown-menu"></ul>'
-  , item: '<li><a href="#"></a></li>'
-  , minLength: 1
-  }
-
- // TYPEAHEAD DATA-API
- // ================== 
-
-  $(document).on('focus.typeahead.data-api', '[data-provide="typeahead"]', function (e) {
-    var $this = $(this)
-    if ($this.data('typeahead')) return
-    $this.typeahead($this.data())
-  })
-
 */

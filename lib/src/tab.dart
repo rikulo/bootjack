@@ -9,45 +9,40 @@ part of bootjack;
 // data()
 // on()
 
-/*
- // TAB CLASS DEFINITION
- // ==================== 
-
-  var Tab = function (element) {
-    this.element = $(element)
-  }
-
-  Tab.prototype = {
-
-    constructor: Tab
-
-  , show: function () {
-      var $this = this.element
-        , $ul = $this.closest('ul:not(.dropdown-menu)')
-        , selector = $this.attr('data-target')
-        , previous
-        , $target
-        , e
-
+class Tab extends Base {
+  
+  static const String _NAME = 'tab';
+  
+  Tab(Element element) : super(element, _NAME);
+  
+  void show() {
+    final ElementQuery $ul = $element.closest(selector: 'ul:not(.dropdown-menu)');
+    final String selector = _fallback(
+        element.attributes['data-target'], 
+        () => element.attributes['href']); // TODO: should cache in construction?
+    /*
       if (!selector) {
         selector = $this.attr('href')
         selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') //strip for ie7
       }
-
-      if ( $this.parent('li').hasClass('active') ) return
-
-      previous = $ul.find('.active:last a')[0]
-
-      e = $.Event('show', {
-        relatedTarget: previous
-      })
-
-      $this.trigger(e)
-
-      if (e.isDefaultPrevented()) return
-
-      $target = $(selector)
-
+    */
+    
+    //if ( $this.parent('li').hasClass('active') ) return
+    
+    Element previous = $ul.find('.active:last a').first;
+    //previous = $ul.find('.active:last a')[0]
+    
+    DQueryEvent e = new DQueryEvent('show'); // TODO: data
+    //e = $.Event('show', { relatedTarget: previous })
+    
+    $element.trigger(e);
+    
+    if (e.isDefaultPrevented) 
+      return;
+    
+    ElementQuery $target = $(selector);
+    
+    /*
       this.activate($this.parent('li'), $ul)
       this.activate($target, $target.parent(), function () {
         $this.trigger({
@@ -55,10 +50,13 @@ part of bootjack;
         , relatedTarget: previous
         })
       })
-    }
-
-  , activate: function ( element, container, callback) {
-      var $active = container.find('> .active')
+    */
+    
+  }
+  
+  void activate(element, container, callback) {
+    /*
+    var $active = container.find('> .active')
         , transition = callback
             && $.support.transition
             && $active.hasClass('fade')
@@ -90,10 +88,21 @@ part of bootjack;
         next()
 
       $active.removeClass('in')
-    }
+    */
   }
+  
+  static void register() {
+    
+    $document().on('click.tab.data-api', (DQueryEvent e) {
+      e.preventDefault();
+      // $(this).tab('show')
+    }, selector: '[data-toggle="tab"], [data-toggle="pill"]');
+    
+  }
+  
+}
 
-
+/*
  // TAB PLUGIN DEFINITION
  // ===================== 
 
@@ -105,13 +114,4 @@ part of bootjack;
       if (typeof option == 'string') data[option]()
     })
   }
-
- // TAB DATA-API
- // ============ 
-
-  $(document).on('click.tab.data-api', '[data-toggle="tab"], [data-toggle="pill"]', function (e) {
-    e.preventDefault()
-    $(this).tab('show')
-  })
-
 */

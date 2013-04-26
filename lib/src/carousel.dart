@@ -11,7 +11,10 @@ part of bootjack;
 
 class Carousel extends Base {
   
-  Carousel(Element element) : super(element) {
+  static const String _NAME = 'carousel';
+  
+  Carousel(Element element) : 
+  super(element, _NAME) {
     /*
     this.$indicators = this.$element.find('.carousel-indicators')
     this.options = options

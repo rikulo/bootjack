@@ -8,6 +8,8 @@ part of bootjack;
  */
 class Modal extends Base {
   
+  static const String _NAME = 'modal';
+  
   /**
    * 
    */
@@ -25,7 +27,7 @@ class Modal extends Base {
     String remote}) :
   this.backdrop0 = backdrop,
   this.keyboard = keyboard,
-  super(element) {
+  super(element, _NAME) {
     $element.on('click.dismiss.modal', 
         (DQueryEvent e) => hide(), 
         selector: '[data-dismiss="modal"]');
@@ -33,6 +35,12 @@ class Modal extends Base {
       //this.$element.find('.modal-body').load(this.options.remote)
     }
   }
+  
+  /**
+   * 
+   */
+  static Modal wire(Element element, [Modal create()]) =>
+      _wire(element, _NAME, _fallback(create, () => () => new Modal()));
   
   /**
    * 
@@ -228,15 +236,8 @@ class Modal extends Base {
       if ($target.isEmpty)
         return;
       
-      Modal modal = $target.data.get('modal');
-      if (modal != null) {
-        modal.toggle();
-        
-      } else {
-        // , option = $target.data('modal') ? 'toggle' : $.extend({ remote:!/#/.test(href) && href }, $target.data(), $this.data())
-        $target.data.set('modal', modal = new Modal($target.first)); // TODO: other options
-        modal.show();
-      }
+      // , option = $target.data('modal') ? 'toggle' : $.extend({ remote:!/#/.test(href) && href }, $target.data(), $this.data())
+      Modal.wire($target.first, () => new Modal($target.first)).toggle(); // TODO: other options
       
       $target.one('hide', (DQueryEvent e) => $(elem).trigger('focus'));
       
