@@ -63,11 +63,9 @@ class Button extends Base {
    * 
    */
   void toggle() {
-    Element parent = _closest(element, 
-        (Element elem) => elem.attributes['data-toggle'] == 'buttons-radio');
-    if (parent != null)
-      for (Element c in parent.queryAll('.active'))
-        c.classes.remove('active');
+    ElementQuery $parent = $element.closest('[data-toggle="buttons-radio"]');
+    if (!$parent.isEmpty)
+      $parent.find('.active').removeClass('active');
     element.classes.toggle('active');
   }
   
