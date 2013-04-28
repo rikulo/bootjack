@@ -95,7 +95,13 @@ class Tab extends Base {
     
   }
   
+  // Data API //
+  static bool _registered = false;
+  
   static void _register() {
+    if (_registered) return;
+    _registered = true;
+    
     $document().on('click.tab.data-api', (DQueryEvent e) {
       e.preventDefault();
       wire(e.target).show();

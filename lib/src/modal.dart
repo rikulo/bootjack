@@ -220,9 +220,13 @@ class Modal extends Base {
   }
   
   // Data API //
+  static bool _registered = false;
+  
   static void _register() {
+    if (_registered) return;
+    _registered = true;
+    
     $document().on('click.modal.data-api', (DQueryEvent e) {
-      
       if (!(e.target is Element))
         return;
       

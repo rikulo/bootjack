@@ -128,7 +128,13 @@ class Scrollspy extends Base {
     
   }
   
+  // Data API //
+  static bool _registered = false;
+  
   static void _register() {
+    if (_registered) return;
+    _registered = true;
+    
     $window().on('load', (DQueryEvent e) {
       for (Element elem in $('[data-spy="scroll"]')) {
         Scrollspy.wire(elem); // TODO: data option

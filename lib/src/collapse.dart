@@ -14,6 +14,12 @@ class Collapse extends Base {
   
   static const String _NAME = 'collapse';
   
+  /*
+  $.fn.collapse.defaults = {
+    toggle: true
+  }
+  */
+  
   Collapse(Element element) : 
   super(element, _NAME) {
     /*
@@ -116,6 +122,25 @@ class Collapse extends Base {
     */
   }
   
+  static bool _registered = false;
+  
+  static void _register() {
+    if (_registered) return;
+    _registered = true;
+    
+    /*
+    $(document).on('click.collapse.data-api', '[data-toggle=collapse]', function (e) {
+      var $this = $(this), href
+          , target = $this.attr('data-target')
+          || e.preventDefault()
+          || (href = $this.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') //strip for ie7
+          , option = $(target).data('collapse') ? 'toggle' : $this.data()
+              $this[$(target).hasClass('in') ? 'addClass' : 'removeClass']('collapsed')
+              $(target).collapse(option)
+    })
+    */
+  }
+  
 }
 
 /*
@@ -131,22 +156,5 @@ class Collapse extends Base {
       if (typeof option == 'string') data[option]()
     })
   }
-
-  $.fn.collapse.defaults = {
-    toggle: true
-  }
-
- // COLLAPSE DATA-API
- // ================= 
-
-  $(document).on('click.collapse.data-api', '[data-toggle=collapse]', function (e) {
-    var $this = $(this), href
-      , target = $this.attr('data-target')
-        || e.preventDefault()
-        || (href = $this.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') //strip for ie7
-      , option = $(target).data('collapse') ? 'toggle' : $this.data()
-    $this[$(target).hasClass('in') ? 'addClass' : 'removeClass']('collapsed')
-    $(target).collapse(option)
-  })
 
 */

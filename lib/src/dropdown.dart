@@ -120,7 +120,12 @@ class Dropdown extends Base {
   }
   
   // Data API //
+  static bool _registered = false;
+  
   static void _register() {
+    if (_registered) return;
+    _registered = true;
+    
     $document()
     ..on('click.dropdown.data-api', (DQueryEvent e) => _clearMenus())
     ..on('click.dropdown.data-api', (DQueryEvent e) => e.stopPropagation(), selector: '.dropdown form')

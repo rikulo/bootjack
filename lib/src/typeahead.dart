@@ -291,7 +291,13 @@ class Typeahead extends Base {
   }
   */
   
-  static void register() {
+  // Data API //
+  static bool _registered = false;
+  
+  static void _register() {
+    if (_registered) return;
+    _registered = true;
+    
     $document().on('focus.typeahead.data-api', (DQueryEvent e) {
       /*
       var $this = $(this)

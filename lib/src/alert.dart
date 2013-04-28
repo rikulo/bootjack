@@ -68,7 +68,12 @@ class Alert extends Base {
   }
   
   // Data API //
+  static bool _registered = false;
+  
   static void _register() {
+    if (_registered) return;
+    _registered = true;
+    
     $document().on('click.alert.data-api', _closeHandler, selector: _DISMISS_SELECTOR);
   }
   

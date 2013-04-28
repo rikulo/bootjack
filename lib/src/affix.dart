@@ -61,7 +61,12 @@ class Affix extends Base {
     */
   }
   
-  static void register() {
+  static bool _registered = false;
+  
+  static void _register() {
+    if (_registered) return;
+    _registered = true;
+    
     /*
     $(window).on('load', function () {
       $('[data-spy="affix"]').each(function () {
