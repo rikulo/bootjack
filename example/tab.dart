@@ -3,6 +3,8 @@ import 'package:bootjack/bootjack.dart';
 
 void main() {
   
-  Bootjack.use(['transition', 'modal']);
+  Bootjack.use(['tab']);
+  
+  Tab.wire(document.query('#myTab a')).show();
   
 }

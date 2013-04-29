@@ -105,8 +105,9 @@ class Dropdown extends Base {
   }
   
   static void _clearMenus() {
-    for (Element elem in $(_TOGGLE_SELECTOR))
-      _getParent(elem).classes.remove('open');
+    for (Element elem in $(_TOGGLE_SELECTOR)) {
+      $(_getParent(elem)).removeClass('open');
+    }
   }
 
   static Element _getParent(Element elem) {

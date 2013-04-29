@@ -29,7 +29,7 @@ class Scrollspy extends Base {
   Scrollspy(Element element, {String target, int offset : 10}) : 
   this.offset = offset,
   _$body = $('body'),
-  _selector = "${_fallback(target, () => element.attributes['href'], () => '')} .nav li > a",
+  _selector = "${_fallback(target, () => _fallback(element.attributes['href'], () => ''))} .nav li > a",
   _$scrollElement = element is BodyElement ? $window() : $element,
   super(element, _NAME) {
     _$scrollElement.on('scroll.scroll-spy.data-api', (DQueryEvent e) => _process());
@@ -59,15 +59,8 @@ class Scrollspy extends Base {
     _offsets.clear();
     _targets.clear();
     
-    _$body.find(_selector);
-    
-    /*
-    var self = this
-        , $targets
-    
-    $targets = this.$body
-    .find(this.selector)
-    .map(function () {
+    _$body.find(_selector).map((Element e) {
+      /*
       var $el = $(this)
           , href = $el.data('target') || $el.attr('href')
           , $href = /^#\w/.test(href) && $(href)
@@ -75,12 +68,12 @@ class Scrollspy extends Base {
               && $href.length
               && [[ $href.position().top + (!$.isWindow(self.$scrollElement.get(0)) && self.$scrollElement.scrollTop()), href ]] ) || null
           })
-     .sort(function (a, b) { return a[0] - b[0] })
-     .each(function () {
-        self.offsets.push(this[0])
-        self.targets.push(this[1])
-     })
-    */
+      */
+    }).toList().sort((a, b) => a[0] - b[0]).forEach((t) {
+      _offsets.add(t[0]);
+      _targets.add(t[1]);
+    });
+    
   }
   
   void _process() {
@@ -111,17 +104,17 @@ class Scrollspy extends Base {
     
     _activeTarget = target;
     
-    $(_selector).parent('.active').forEach((Element e) => e.classes.remove('active'));
+    $(_selector).parent('.active').removeClass('active');
     
     // TODO: wouldn't toString() be too aggressive?
     final String selector = '$_selector[data-target="$target"], $_selector[href="$target"]';
     
     ElementQuery $active = $(selector).parent('li');
-    $active.forEach((Element e) => e.classes.add('active'));
+    $active.addClass('active');
     
     if (!$active.parent('.dropdown-menu').isEmpty) {
       $active = $active.closest('li.dropdown');
-      $active.forEach((Element e) => e.classes.add('active'));
+      $active.addClass('active');
     }
     
     $active.trigger('activate');

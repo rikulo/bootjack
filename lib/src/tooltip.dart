@@ -14,10 +14,18 @@ class Tooltip extends Base {
   
   static const String _NAME = 'tooltip';
   
-  Tooltip(Element element) : 
+  final bool animation;
+  
+  final placement; // TODO: funciton or string
+  
+  Tooltip(Element element, {bool animation: true, placement: 'top'}) : 
+  this.animation = animation,
+  this.placement = placement,
   super(element, _NAME) {
     
   }
+  
+  bool _enabled = false;
   
   /*
 
@@ -26,8 +34,6 @@ class Tooltip extends Base {
   }
 
   $.fn.tooltip.defaults = {
-    animation: true
-  , placement: 'top'
   , selector: false
   , template: '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
   , trigger: 'hover focus'
@@ -36,10 +42,6 @@ class Tooltip extends Base {
   , html: false
   , container: false
   }
-
-  Tooltip.prototype = {
-
-    constructor: Tooltip
 
   , init: function (type, element, options) {
       var eventIn
@@ -71,7 +73,9 @@ class Tooltip extends Base {
         (this._options = $.extend({}, this.options, { trigger: 'manual', selector: '' })) :
         this.fixTitle()
     }
-
+  */
+  
+  /*
   , getOptions: function (options) {
       options = $.extend({}, $.fn[this.type].defaults, this.$element.data(), options)
 
@@ -84,9 +88,11 @@ class Tooltip extends Base {
 
       return options
     }
-
-  , enter: function (e) {
-      var defaults = $.fn[this.type].defaults
+  */
+  
+  static void _enter(DQueryEvent e) {
+    /*
+    var defaults = $.fn[this.type].defaults
         , options = {}
         , self
 
@@ -103,40 +109,45 @@ class Tooltip extends Base {
       this.timeout = setTimeout(function() {
         if (self.hoverState == 'in') self.show()
       }, self.options.delay.show)
-    }
+    */
+    
+  }
+  
+  static void  _leave(DQueryEvent e) {
+    /*
+    var self = $(e.currentTarget)[this.type](this._options).data(this.type)
 
-  , leave: function (e) {
-      var self = $(e.currentTarget)[this.type](this._options).data(this.type)
+    if (this.timeout) clearTimeout(this.timeout)
+    if (!self.options.delay || !self.options.delay.hide) return self.hide()
 
-      if (this.timeout) clearTimeout(this.timeout)
-      if (!self.options.delay || !self.options.delay.hide) return self.hide()
-
-      self.hoverState = 'out'
-      this.timeout = setTimeout(function() {
-        if (self.hoverState == 'out') self.hide()
-      }, self.options.delay.hide)
-    }
-
-  , show: function () {
-      var $tip
-        , pos
-        , actualWidth
-        , actualHeight
-        , placement
-        , tp
-        , e = $.Event('show')
-
-      if (this.hasContent() && this.enabled) {
-        this.$element.trigger(e)
-        if (e.isDefaultPrevented()) return
-        $tip = this.tip()
-        this.setContent()
-
-        if (this.options.animation) {
-          $tip.addClass('fade')
-        }
-
-        placement = typeof this.options.placement == 'function' ?
+    self.hoverState = 'out'
+    this.timeout = setTimeout(function() {
+      if (self.hoverState == 'out') self.hide()
+    }, self.options.delay.hide)
+    */
+  }
+  
+  void show() {
+    DQueryEvent e = new DQueryEvent(e);
+    /*
+    , pos
+    , actualWidth
+    , actualHeight
+    , placement
+    , tp
+    */
+    if (hasContent && _enabled) {
+      $element.trigger(e);
+      if (e.isDefaultPrevented) 
+        return;
+      
+      ElementQuery $tip = _tip();
+      
+      setContent();
+      if (animation)
+        $tip.forEach((Element e) => e.classes.add('fade'));
+      /*
+      placement = typeof this.options.placement == 'function' ?
           this.options.placement.call(this, $tip[0], this.$element[0]) :
           this.options.placement
 
@@ -167,12 +178,15 @@ class Tooltip extends Base {
         }
 
         this.applyPlacement(tp, placement)
-        this.$element.trigger('shown')
-      }
+      */
     }
-
-  , applyPlacement: function(offset, placement){
-      var $tip = this.tip()
+    
+    $element.trigger('shown');
+  }
+  
+  void applyPlacement(offset, placement) {
+    /*
+    var $tip = this.tip()
         , width = $tip[0].offsetWidth
         , height = $tip[0].offsetHeight
         , actualWidth
@@ -210,29 +224,39 @@ class Tooltip extends Base {
       }
 
       if (replace) $tip.offset(offset)
-    }
-
-  , replaceArrow: function(delta, dimension, position){
-      this
-        .arrow()
-        .css(position, delta ? (50 * (1 - delta / dimension) + "%") : '')
-    }
-
-  , setContent: function () {
-      var $tip = this.tip()
+    */
+  }
+  
+  void replaceArrow(delta, dimension, position) {
+    /*
+    this
+    .arrow()
+    .css(position, delta ? (50 * (1 - delta / dimension) + "%") : '')
+    */
+  }
+  
+  void setContent() {
+    /*
+    var $tip = this.tip()
         , title = this.getTitle()
 
       $tip.find('.tooltip-inner')[this.options.html ? 'html' : 'text'](title)
       $tip.removeClass('fade in top bottom left right')
-    }
-
-  , hide: function () {
-      var that = this
-        , $tip = this.tip()
-        , e = $.Event('hide')
-
-      this.$element.trigger(e)
-      if (e.isDefaultPrevented()) return
+    */
+  }
+  
+  void hide() {
+    ElementQuery $tip = _tip();
+    
+    DQueryEvent e = new DQueryEvent('hide');
+    
+    $element.triggerEvent(e);
+    if (e.isDefaultPrevented)
+      return;
+    
+    
+    /*
+    var that = this
 
       $tip.removeClass('in')
 
@@ -250,86 +274,96 @@ class Tooltip extends Base {
       $.support.transition && this.$tip.hasClass('fade') ?
         removeWithAnimation() :
         $tip.detach()
-
-      this.$element.trigger('hidden')
-
-      return this
+      
+    */
+    $element.trigger('hidden');
+  }
+  
+  void fixTitle() {
+    /*
+    var $e = this.$element
+    if ($e.attr('title') || typeof($e.attr('data-original-title')) != 'string') {
+      $e.attr('data-original-title', $e.attr('title') || '').attr('title', '')
     }
+    */
+  }
+  
+  bool get hasContent => getTitle() != null;
+  
+  Rect getPosition() {
+    return element.offset;
+    /*
+    var el = this.$element[0]
+    return $.extend({}, (typeof el.getBoundingClientRect == 'function') ? el.getBoundingClientRect() : {
+      width: el.offsetWidth
+    , height: el.offsetHeight
+    }, this.$element.offset())
+    */
+  }
+  
+  String getTitle() {
+    /*
+    var title
+    , $e = this.$element
+    , o = this.options
 
-  , fixTitle: function () {
-      var $e = this.$element
-      if ($e.attr('title') || typeof($e.attr('data-original-title')) != 'string') {
-        $e.attr('data-original-title', $e.attr('title') || '').attr('title', '')
-      }
+    title = $e.attr('data-original-title')
+    || (typeof o.title == 'function' ? o.title.call($e[0]) :  o.title)
+
+    return title
+    */
+  }
+  
+  ElementQuery _$tip, _$arrow;
+  
+  ElementQuery _tip() =>
+      _fallback(_$tip, () => _$tip = null /*$(this.options.template)*/);
+  
+  ElementQuery _arrow() =>
+      _fallback(_$arrow, () => _$arrow = _tip().find('.tooltip-arrow'));
+  
+  void validate() {
+    if (element.parent == null) {
+      hide();
+      /*
+      this.$element = null
+      this.options = null
+      */
     }
-
-  , hasContent: function () {
-      return this.getTitle()
-    }
-
-  , getPosition: function () {
-      var el = this.$element[0]
-      return $.extend({}, (typeof el.getBoundingClientRect == 'function') ? el.getBoundingClientRect() : {
-        width: el.offsetWidth
-      , height: el.offsetHeight
-      }, this.$element.offset())
-    }
-
-  , getTitle: function () {
-      var title
-        , $e = this.$element
-        , o = this.options
-
-      title = $e.attr('data-original-title')
-        || (typeof o.title == 'function' ? o.title.call($e[0]) :  o.title)
-
-      return title
-    }
-
-  , tip: function () {
-      return this.$tip = this.$tip || $(this.options.template)
-    }
-
-  , arrow: function(){
-      return this.$arrow = this.$arrow || this.tip().find(".tooltip-arrow")
-    }
-
-  , validate: function () {
-      if (!this.$element[0].parentNode) {
-        this.hide()
-        this.$element = null
-        this.options = null
-      }
-    }
-
-  , enable: function () {
-      this.enabled = true
-    }
-
-  , disable: function () {
-      this.enabled = false
-    }
-
-  , toggleEnabled: function () {
-      this.enabled = !this.enabled
-    }
-
+  }
+  
+  void enable() {
+    _enabled = true;
+  }
+  
+  void disable() {
+    _enabled = false;
+  }
+  
+  void toggleEnabled() {
+    _enabled = !_enabled;
+  }
+  
+  /*
   , toggle: function (e) {
       var self = e ? $(e.currentTarget)[this.type](this._options).data(this.type) : this
       self.tip().hasClass('in') ? self.hide() : self.show()
     }
 
-  , destroy: function () {
-      this.hide().$element.off('.' + this.type).removeData(this.type)
-    }
-
-  }
   */
+  static void _toggle(Element target) {
+    
+  }
+  
+  void destroy() {
+    hide();
+    //this.$element.off('.' + this.type)
+    //this.removeData(this.type)
+  }
   
 }
 
 /*
-
  // TOOLTIP PLUGIN DEFINITION
  // ========================= 
 
@@ -342,5 +376,4 @@ class Tooltip extends Base {
       if (typeof option == 'string') data[option]()
     })
   }
-
 */
