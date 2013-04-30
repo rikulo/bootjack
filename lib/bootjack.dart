@@ -60,9 +60,7 @@ class Bootjack {
    * 
    */
   static void use([List<String> names]) {
-    if (names == null)
-      names = _USE_MAP.keys;
-    for (String n in names) {
+    for (String n in _fallback(names, () => _USE_MAP.keys)) {
       _F f = _USE_MAP[n];
       if (f != null)
         f();
