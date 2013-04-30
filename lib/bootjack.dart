@@ -24,7 +24,6 @@ part 'src/transition.dart';
 part 'src/typeahead.dart';
 
 // TODO: may need to wire up DQuery data-attributes
-// TODO: enforce _register runs only once
 
 /**
  * 
