@@ -113,9 +113,12 @@ class Dropdown extends Base {
   static Element _getParent(Element elem) {
     final String selector = _dataTarget(elem);
     if (selector != null) {
-      ElementQuery p = $(selector);
-      if (!p.isEmpty)
-        return p.first;
+      ElementQuery p;
+      try {
+        p = $(selector);
+        if (!p.isEmpty)
+          return p.first;
+      } catch (e) {}
     }
     return elem.parent;
   }
