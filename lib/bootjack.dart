@@ -65,6 +65,7 @@ class Bootjack {
       _F f = _USE_MAP[n];
       if (f != null)
         f();
+      // TODO: else should warn
     }
   }
   
@@ -73,11 +74,17 @@ class Bootjack {
 typedef void _F();
 
 final Map<String, _F> _USE_MAP = new HashMap<String, _F>.from({
+  'affix': Affix._register,
   'alert': Alert._register,
   'button': Button._register,
+  'carousel': Carousel._register,
+  'collapse': Collapse._register,
   'dropdown': Dropdown._register,
   'modal': Modal._register,
-  'transition': Transition._register
+  'scrollspy': Scrollspy._register,
+  'tab': Tab._register,
+  'transition': Transition._register,
+  'typeahead': Typeahead._register
 });
 
 

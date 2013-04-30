@@ -1,5 +1,7 @@
 part of bootjack;
 
+// TODO: need to enable relatedTarget in show/shown event
+
 /**
  * 
  */
@@ -30,12 +32,12 @@ class Tab extends Base {
     if ($parent.hasClass('active'))
       return;
     
-    final Element previous = $ul.find('.active:last a').firstIfAny;
+    //final Element previous = $ul.find('.active:last a').firstIfAny; // TODO: :last is jq only
     
     final DQueryEvent e = 
-        new DQueryEvent('show', data: { 'relatedTarget': previous });
+        new DQueryEvent('show'/*, data: { 'relatedTarget': previous }*/);
     
-    $element.trigger(e);
+    $element.triggerEvent(e);
     
     if (e.isDefaultPrevented) 
       return;
@@ -43,20 +45,20 @@ class Tab extends Base {
     final ElementQuery $target = $(selector);
     _activate($parent, $ul);
     _activate($target, $target.parent(), () {
-      $element.trigger('shown', data: { 'relatedTarget': previous });
+      $element.trigger('shown'/*, data: { 'relatedTarget': previous }*/);
     });
     
   }
   
   void _activate(ElementQuery $elem, ElementQuery $container, [void callback()]) {
-    final $active = $container.find('> .active');
+    final $active = $container.children('.active');
     final bool transition = callback != null && 
         Transition.isUsed && 
         $active.hasClass('fade');
     
     final Function next = ([DQueryEvent e]) {
       $active.removeClass('active');
-      $active.find('> .dropdown-menu > .active').removeClass('active');
+      $active.children('.dropdown-menu').children('.active').removeClass('active');
       
       $elem.addClass('active');
       
