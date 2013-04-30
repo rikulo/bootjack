@@ -32,16 +32,20 @@ class Alert extends Base {
   static void _close(Element elem) {
     final String selector = _dataTarget(elem);
     
-    final ElementQuery $parent = $(selector);
+    ElementQuery $parent;
     
-    if ($parent.isEmpty)
+    try {
+      $parent = $(selector);
+    } catch(e) {}
+    
+    if ($parent == null || $parent.isEmpty)
       $parent = elem.classes.contains('alert') ? $(elem) : $(elem.parent);
     
     if ($parent.isEmpty)
       return;
     
     final DQueryEvent e = new DQueryEvent('close');
-    $parent.trigger(e);
+    $parent.triggerEvent(e);
     
     if (e.isDefaultPrevented)
       return;
@@ -64,7 +68,7 @@ class Alert extends Base {
   
   static void _removeElement(ElementQuery $elem) {
     $elem.trigger('closed');
-    $elem.remove();
+    $elem.forEach((Element e) => e.remove());
   }
   
   // Data API //
