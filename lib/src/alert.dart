@@ -1,6 +1,6 @@
 part of bootjack;
 
-/**
+/** The alert component
  * 
  */
 class Alert extends Base {
