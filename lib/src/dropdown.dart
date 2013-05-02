@@ -53,6 +53,8 @@ class Dropdown extends Base {
   }
   
   static void _keydown(DQueryEvent e) {
+    final Element elem = e.target as Element;
+    
     Event oe = e.originalEvent;
     if (!(oe is KeyEvent))
       return;
@@ -65,17 +67,17 @@ class Dropdown extends Base {
     e.preventDefault();
     e.stopPropagation();
     
-    if (element.matches('.disabled, :disabled'))
+    if (elem.matches('.disabled, :disabled'))
       return;
     
-    final Element parent = _getParent(element);
+    final Element parent = _getParent(elem);
     final bool isActive = parent.classes.contains('open');
     
     if (keyCode == 27)
       $(parent).find(_TOGGLE_SELECTOR).trigger('focus');
     
     if (!isActive || keyCode == 27)
-      $element.trigger('click');
+      $(elem).trigger('click');
     
     final ElementQuery $items = $('[role=menu] li:not(.divider):visible a', parent);
     
