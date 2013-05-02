@@ -30,8 +30,8 @@ class Scrollspy extends Base {
   this.offset = offset,
   _$body = $('body'),
   _selector = "${_fallback(target, () => _fallback(element.attributes['href'], () => ''))} .nav li > a",
-  _$scrollElement = element is BodyElement ? $window() : $element,
   super(element, _NAME) {
+    _$scrollElement = element is BodyElement ? $window() : $element;
     _$scrollElement.on('scroll.scroll-spy.data-api', (DQueryEvent e) => _process());
     refresh();
     _process();
@@ -44,7 +44,7 @@ class Scrollspy extends Base {
       _wire(element, _NAME, _fallback(create, () => () => new Scrollspy(element)));
   
   final ElementQuery _$body;
-  final DQuery _$scrollElement;
+  DQuery _$scrollElement;
   Element _activeTarget;
   
   // TODO: may want to group them?
