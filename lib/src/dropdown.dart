@@ -33,7 +33,7 @@ class Dropdown extends Base {
   void toggle() => _toggle(element);
   
   static void _toggleEvent(DQueryEvent e) {
-    _toggle(e.target as Element);
+    _toggle(e.currentTarget as Element);
     if (e != null)
       e.stopPropagation(); // TODO: check jQuery spec on return value false
   }
