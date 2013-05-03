@@ -40,7 +40,7 @@ class Modal extends Base {
    * 
    */
   static Modal wire(Element element, [Modal create()]) =>
-      _wire(element, _NAME, _fallback(create, () => () => new Modal()));
+      _wire(element, _NAME, _fallback(create, () => () => new Modal(element)));
   
   /**
    * 
