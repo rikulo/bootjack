@@ -1,29 +1,28 @@
 part of bootjack;
 
-/** The alert component
- * 
+/** An alert message box component.
  */
 class Alert extends Base {
   
   static const String _NAME = 'alert';
   static const String _DISMISS_SELECTOR = '[data-dismiss="alert"]';
   
-  /**
-   * 
+  /** Construct an Alert object and wire it to [element].
    */
   Alert(Element element) :  
   super(element, _NAME) {
     $(element).on('click', _closeHandler, selector: _DISMISS_SELECTOR);
   }
   
-  /**
-   * 
+  /** Retrieve the wired Alert object from an element. If there is no wired
+   * Alert object, a new one will be created.
+   * + If [create] is provided, it will be used for Alert creation. Otherwise 
+   * the default constructor with no optional parameter value is used.
    */
-  static Alert wire(Element element) =>
-      _wire(element, _NAME, () => new Alert(element));
+  static Alert wire(Element element, [Alert create()]) =>
+      _wire(element, _NAME, _fallback(create, () => () => new Alert(element)));
   
-  /**
-   * 
+  /** Detach the Alert component from DOM.
    */
   void close() {
     _close(element);

@@ -1,36 +1,39 @@
 part of bootjack;
 
-/**
- * 
+/** A button component.
  */
 class Button extends Base {
   
   static const String _NAME = 'button';
   
+  /** The default text setting of button.
+   */
   static final Map<String, String> DEFAULT_TEXTS = {
     'loadingText': 'loading...'
   };
   
-  /**
-   * 
+  /** The text setting this button.
+   * See [setState].
    */
   final Map<String, String> texts;
   
-  /**
-   * 
+  /** Construct a button object, wired to [element].
+   * + [texts] determines Button text corresponding to the state.
    */
   Button(Element element, {Map<String, String> texts}) : 
   this.texts = _copy(DEFAULT_TEXTS, texts), 
   super(element, _NAME);
   
-  /**
-   * 
+  /** Retrieve the wired Button object from an element. If there is no wired
+   * Button object, a new one will be created.
+   * + If [create] is provided, it will be used for Button creation. Otherwise 
+   * the default constructor with no optional parameter value is used.
    */
   static Button wire(Element element, [Button create()]) => 
       _wire(element, _NAME, _fallback(create, () => () => new Button(element)));
   
-  /**
-   * 
+  /** Set the button state, which will change the button text according to [texts]
+   * setting.
    */
   Future setState(String state) {
     final String d = 'disabled';
@@ -59,8 +62,8 @@ class Button extends Base {
     
   }
   
-  /**
-   * 
+  /** Toogle the `active` class on the button. If the button is of radio type,
+   * other associated buttons will react accordingly.
    */
   void toggle() {
     ElementQuery $parent = $element.closest('[data-toggle="buttons-radio"]');

@@ -13,9 +13,6 @@ class Scrollspy extends Base {
   
   static const String _NAME = 'popover';
   
-  /**
-   * 
-   */
   final String _selector;
   
   /**

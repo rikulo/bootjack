@@ -1,15 +1,13 @@
 part of bootjack;
 
-/**
- * 
+/** A dropdown component.
  */
 class Dropdown extends Base {
   
   static const String _NAME = 'dropdown';
   static const String _TOGGLE_SELECTOR ='[data-toggle=dropdown]'; 
   
-  /**
-   * 
+  /** Construct a Dropdown object and wire it to [element].
    */
   Dropdown(Element element) : 
   super(element, _NAME) {
@@ -21,14 +19,15 @@ class Dropdown extends Base {
     });
   }
   
-  /**
-   * 
+  /** Retrieve the wired Dropdown object from an element. If there is no wired
+   * Dropdown object, a new one will be created.
+   * + If [create] is provided, it will be used for Dropdown creation. Otherwise 
+   * the default constructor with no optional parameter value is used.
    */
   static Dropdown wire(Element element, [Dropdown create()]) =>
       _wire(element, _NAME, _fallback(create, () => () => new Dropdown(element)));
   
-  /**
-   * 
+  /** Toggle the open/close state of the Dropdown.
    */
   void toggle() => _toggle(element);
   

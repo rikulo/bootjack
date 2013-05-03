@@ -3,8 +3,7 @@ part of bootjack;
 // TODO
 // 4. DQuery load()
 
-/**
- * 
+/** A Modal box component.
  */
 class Modal extends Base {
   
@@ -15,46 +14,40 @@ class Modal extends Base {
    */
   final String backdrop; // false, true, static: should use enum when ready
   
-  /**
-   * 
+  /** Return true if the Modal component listens to escape key for closing.
    */
   final bool keyboard;
   
-  /**
-   * 
+  /** Construct a Modal object and wire it to [element].
    */
-  Modal(Element element, {String backdrop: 'true', bool keyboard: true, 
-    String remote}) :
+  Modal(Element element, {String backdrop: 'true', bool keyboard: true, String remote}) :
   this.backdrop = backdrop,
   this.keyboard = keyboard,
   super(element, _NAME) {
-    $element.on('click.dismiss.modal', 
-        (DQueryEvent e) => hide(), 
-        selector: '[data-dismiss="modal"]');
+    $element.on('click.dismiss.modal', (DQueryEvent e) => hide(), selector: '[data-dismiss="modal"]');
     if (remote != null) {
       //this.$element.find('.modal-body').load(this.options.remote)
     }
   }
   
-  /**
-   * 
+  /** Retrieve the wired Modal object from an element. If there is no wired
+   * Modal object, a new one will be created.
+   * + If [create] is provided, it will be used for Modal creation. Otherwise 
+   * the default constructor with no optional parameter value is used.
    */
   static Modal wire(Element element, [Modal create()]) =>
       _wire(element, _NAME, _fallback(create, () => () => new Modal(element)));
   
-  /**
-   * 
+  /** Toggle the visibility state of the Modal.
    */
   toggle() => _shown ? hide() : show();
   
-  /**
-   * 
+  /** True if the Modal is shown.
    */
   bool get isShown => _shown;
   bool _shown = false;
   
-  /**
-   * 
+  /** Show the Modal.
    */
   show() {
     
@@ -104,8 +97,7 @@ class Modal extends Base {
     
   }
   
-  /**
-   * 
+  /** Hide the Modal.
    */
   hide() {
     

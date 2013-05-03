@@ -23,10 +23,7 @@ part 'src/tooltip.dart';
 part 'src/transition.dart';
 part 'src/typeahead.dart';
 
-// TODO: may need to wire up DQuery data-attributes
-
-/**
- * 
+/** The skeleton class for Bootjack components.
  */
 abstract class Base {
   
@@ -51,13 +48,12 @@ _dataTarget(Element elem) =>
     _fallback(elem.attributes['data-target'], () => elem.attributes['href']);
 // selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') //strip for ie7 // skipped
 
-/**
- * 
+/** A collection of top level Bootjack static methods.
  */
 class Bootjack {
   
-  /**
-   * 
+  /** Register the uses of one or more component. If [names] are omitted, all
+   * available component types will be registered.
    */
   static void use([List<String> names]) {
     for (String n in _fallback(names, () => _USE_MAP.keys)) {

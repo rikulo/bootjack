@@ -9,17 +9,18 @@ class Tab extends Base {
   
   static const String _NAME = 'tab';
   
-  /**
-   * 
+  /** Construct a Tab object and wire it to [element].
    */
   Tab(Element element) : 
   super(element, _NAME);
   
-  /**
-   * 
+  /** Retrieve the wired Tab object from an element. If there is no wired
+   * Tab object, a new one will be created.
+   * + If [create] is provided, it will be used for Tab creation. Otherwise 
+   * the default constructor with no optional parameter value is used.
    */
-  static Tab wire(Element element) =>
-      _wire(element, _NAME, () => new Tab(element));
+  static Tab wire(Element element, [Tab create()]) =>
+      _wire(element, _NAME, _fallback(create, () => () => new Tab(element)));
   
   /**
    * 
