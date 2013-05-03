@@ -32,7 +32,8 @@ class Modal extends Base {
   
   /** Retrieve the wired Modal object from an element. If there is no wired
    * Modal object, a new one will be created.
-   * + If [create] is provided, it will be used for Modal creation. Otherwise 
+   * 
+   * + [create] - If provided, it will be used for Modal creation. Otherwise 
    * the default constructor with no optional parameter value is used.
    */
   static Modal wire(Element element, [Modal create()]) =>

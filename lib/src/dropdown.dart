@@ -21,7 +21,8 @@ class Dropdown extends Base {
   
   /** Retrieve the wired Dropdown object from an element. If there is no wired
    * Dropdown object, a new one will be created.
-   * + If [create] is provided, it will be used for Dropdown creation. Otherwise 
+   * 
+   * + [create] - If provided, it will be used for Dropdown creation. Otherwise 
    * the default constructor with no optional parameter value is used.
    */
   static Dropdown wire(Element element, [Dropdown create()]) =>
