@@ -7,10 +7,11 @@ Map<String, String> _TRANS_END_EVENT_NAMES = new HashMap<String, String>.from({
 });
 
 // TODO: check current browser status, maybe we don't need different event names at all.
+/** Transition related utilities.
+ */
 class Transition {
   
-  /**
-   * 
+  /** Return true if transition is used.
    */
   static bool get isUsed => _used;
   static bool _used = false;
@@ -19,8 +20,7 @@ class Transition {
     _used = true;
   }
   
-  /**
-   * 
+  /** The event name for transition end across browser.
    */
   static String get end {
     if (_end == null) {
