@@ -124,7 +124,9 @@ class Collapse extends Base {
   
   static bool _registered = false;
   
-  static void _register() {
+  /** Register to use Collapse component.
+   */
+  static void use() {
     if (_registered) return;
     _registered = true;
     

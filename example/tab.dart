@@ -3,6 +3,6 @@ import 'package:bootjack/bootjack.dart';
 
 void main() {
   
-  Bootjack.use(['tab']);
+  Tab.use();
   
 }

@@ -3,6 +3,6 @@ import 'package:bootjack/bootjack.dart';
 
 void main() {
   
-  Bootjack.use(['dropdown']);
+  Dropdown.use();
   
 }

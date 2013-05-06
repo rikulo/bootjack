@@ -8,7 +8,7 @@ final List<String> COLORS = [
 
 void main() {
   
-  Bootjack.use(); // use all
+  Bootjack.useDefault(); // use all
   
   final Element alertPool = document.query('#alert-pool');
   int i = 0;

@@ -52,34 +52,18 @@ _dataTarget(Element elem) =>
  */
 class Bootjack {
   
-  /** Register the uses of one or more component. If [names] are omitted, all
-   * available component types will be registered.
+  /** Register the uses of all default Bootjack components.
    */
-  static void use([List<String> names]) {
-    for (String n in _fallback(names, () => _USE_MAP.keys)) {
-      _F f = _USE_MAP[n];
-      if (f != null)
-        f();
-      // TODO: else should warn
-    }
+  static void useDefault() {
+    for (Function f in _USE_SET) 
+      f();
   }
   
 }
 
-typedef void _F();
-
-final Map<String, _F> _USE_MAP = new HashMap<String, _F>.from({
-  'affix': Affix._register,
-  'alert': Alert._register,
-  'button': Button._register,
-  'carousel': Carousel._register,
-  'collapse': Collapse._register,
-  'dropdown': Dropdown._register,
-  'modal': Modal._register,
-  'scrollspy': Scrollspy._register,
-  'tab': Tab._register,
-  'transition': Transition._register,
-  'typeahead': Typeahead._register
-});
+final Set<Function> _USE_SET = new HashSet<Function>.from([
+  Affix.use, Alert.use, Button.use, Carousel.use, Collapse.use, Dropdown.use,
+  Modal.use, Scrollspy.use, Tab.use, Transition.use, Typeahead.use
+]);
 
 

@@ -16,7 +16,9 @@ class Transition {
   static bool get isUsed => _used;
   static bool _used = false;
   
-  static void _register() {
+  /** Register to use Transition effect.
+   */
+  static void use() {
     _used = true;
   }
   

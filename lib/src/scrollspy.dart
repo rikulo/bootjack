@@ -121,7 +121,9 @@ class Scrollspy extends Base {
   // Data API //
   static bool _registered = false;
   
-  static void _register() {
+  /** Register to use Scrollspy component.
+   */
+  static void use() {
     if (_registered) return;
     _registered = true;
     

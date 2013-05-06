@@ -3,8 +3,7 @@ import 'package:bootjack/bootjack.dart';
 
 void main() {
   
-  Bootjack.use(['alert', 'transition']);
-  
-  
+  Alert.use();
+  Transition.use();
   
 }
