@@ -6,7 +6,6 @@ Map<String, String> _TRANS_END_EVENT_NAMES = new HashMap<String, String>.from({
   'o-'      : 'oTransitionEnd otransitionend'
 });
 
-// TODO: check current browser status, maybe we don't need different event names at all.
 /** Transition related utilities.
  */
 class Transition {
@@ -19,7 +18,8 @@ class Transition {
   /** Register to use Transition effect.
    */
   static void use() {
-    _used = true;
+    if (isSupported)
+      _used = true;
   }
   
   /** The event name for transition end across browser.
@@ -31,5 +31,28 @@ class Transition {
     return _end;
   }
   static String _end;
+  
+  /** Return true if CSS transition is supported in this device.
+   */
+  static bool get isSupported {
+    if (_supported == null) {
+      if (Device.isIE) {
+        int version = _ieVersion;
+        _supported =  version != null && version > 9;
+      } else {
+        _supported = true;
+      }
+    }
+    return _supported;
+  }
+  static bool _supported;
+  
+  static int get _ieVersion {
+    try {
+      return int.parse(_IE_VERSION.firstMatch(Device.userAgent).group(1));
+    } catch (_) {}
+    return null;
+  }
+  static final RegExp _IE_VERSION = new RegExp(r'MSIE\s+(\d+)');
   
 }
