@@ -173,6 +173,7 @@ class Carousel extends Base {
     if (_registered) return;
     _registered = true;
     
+    /*
     $document().on('click.carousel.data-api', '[data-slide], [data-slide-to]', (DQueryEvent e) {
       Element elem = e.target as Element;
       ElementQuery $target = $(_dataTarget(elem));
@@ -194,6 +195,7 @@ class Carousel extends Base {
       e.preventDefault();
       
     });
+    */
   }
   
 }
