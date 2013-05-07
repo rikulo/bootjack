@@ -13,14 +13,16 @@ class Carousel extends Base {
   
   static const String _NAME = 'carousel';
   
-  /*
-  $.fn.carousel.defaults = {
-    interval: 5000
-  , pause: 'hover'
-  }
-  */
-
-  Carousel(Element element) : 
+  /// 
+  final int interval;
+  
+  /** The condition to pause the sliding
+   */
+  final String pauseCondition;
+  
+  Carousel(Element element, {int interval: 5000, String pause: 'hover'}) :
+  this.interval = interval,
+  this.pauseCondition = pause,
   super(element, _NAME) {
     /*
     this.$indicators = this.$element.find('.carousel-indicators')
@@ -31,9 +33,14 @@ class Carousel extends Base {
     */
   }
   
+  
+  /** Return true if the Carousel is currently sliding.
+   */
   bool get sliding => _sliding;
   bool _sliding = false;
   
+  /** Return true if the Carousel sliding is currently paused.
+   */
   bool get paused => _paused;
   bool _paused = false;
   
@@ -47,33 +54,35 @@ class Carousel extends Base {
     */
   }
   
+  ElementQuery _$active, _$items;
+  
   int getActiveIndex() {
+    _$active = $element.find('.item.active');
+    _$items = _$active.parent().children();
     /*
-    this.$active = this.$element.find('.item.active')
-    this.$items = this.$active.parent().children()
     return this.$items.index(this.$active)
     */
   }
   
   void to(int pos) {
-    /*
-    var activeIndex = this.getActiveIndex()
-        , that = this
-
-    if (pos > (this.$items.length - 1) || pos < 0) return
-
-    if (this.sliding) {
-      return this.$element.one('slid', function () {
-        that.to(pos)
-      })
+    int activeIndex = this.getActiveIndex();
+    
+    if (pos > (_$items.length - 1) || pos < 0)
+      return;
+    
+    if (_sliding) {
+      $element.one('slid', (DQueryEvent e) {
+        to(pos);
+      });
     }
-
+    
     if (activeIndex == pos) {
-      this.pause().cycle()
+      pause();
+      cycle();
     }
-
-    this.slide(pos > activeIndex ? 'next' : 'prev', $(this.$items[pos]))
-    */
+    
+    slide(pos > activeIndex ? 'next' : 'prev', $(_$items[pos]));
+    
   }
   
   void pause([e]) {
@@ -164,22 +173,27 @@ class Carousel extends Base {
     if (_registered) return;
     _registered = true;
     
-    /*
-    $(document).on('click.carousel.data-api', '[data-slide], [data-slide-to]', function (e) {
-      var $this = $(this), href
-          , $target = $($this.attr('data-target') || (href = $this.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '')) //strip for ie7
-          , options = $.extend({}, $target.data(), $this.data())
-          , slideIndex
-
-          $target.carousel(options)
-
-          if (slideIndex = $this.attr('data-slide-to')) {
-            $target.data('carousel').pause().to(slideIndex).cycle()
-          }
-
-      e.preventDefault()
-    })
-    */
+    $document().on('click.carousel.data-api', '[data-slide], [data-slide-to]', (DQueryEvent e) {
+      Element elem = e.target as Element;
+      ElementQuery $target = $(_dataTarget(elem));
+      
+      if (!$target.isEmpty) {
+        Element target = $target.first;
+        
+        // , options = $.extend({}, $target.data(), $this.data())
+        Carousel c = Carousel.wire(target); // TODO options
+        
+        var slideIndex = elem.attributes['data-slide-to'];
+        if (slideIndex != 0) {
+          c.pause();
+          c.to(slideIndex);
+          c.cycle();
+        }
+      }
+      
+      e.preventDefault();
+      
+    });
   }
   
 }

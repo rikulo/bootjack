@@ -14,86 +14,92 @@ class Collapse extends Base {
   
   static const String _NAME = 'collapse';
   
-  /*
-  $.fn.collapse.defaults = {
-    toggle: true
-  }
-  */
-  
-  Collapse(Element element) : 
+  /**
+   * 
+   */
+  Collapse(Element element, {bool toggle: true, Element parent}) :
   super(element, _NAME) {
-    /*
-    this.options = $.extend({}, $.fn.collapse.defaults, options)
-
-    if (this.options.parent) {
-      this.$parent = $(this.options.parent)
-    }
-
-    this.options.toggle && this.toggle()
-    */
+    if (parent != null)
+      _$parent = $(parent);
+    if (toggle)
+      this.toggle();
   }
+  
+  ElementQuery _$parent;
   
   bool get transitioning => _transitioning;
   bool _transitioning = false;
   
-  String get dimension {
-    /*
-    var hasWidth = this.$element.hasClass('width')
-    return hasWidth ? 'width' : 'height'
-    */
-  }
+  /**
+   * 
+   */
+  String get dimension => 
+      element.classes.contains('width') ? 'width' : 'height';
+  
+  bool get _horizontal =>
+      element.classes.contains('width');
   
   void show() {
-    /*
-    var dimension
-    , scroll
-    , actives
-    , hasData
-
-    if (this.transitioning || this.$element.hasClass('in')) return
-
-    dimension = this.dimension()
-    scroll = $.camelCase(['scroll', dimension].join('-'))
-    actives = this.$parent && this.$parent.find('> .accordion-group > .in')
-
-    if (actives && actives.length) {
-      hasData = actives.data('collapse')
-          if (hasData && hasData.transitioning) return
-              actives.collapse('hide')
-              hasData || actives.data('collapse', null)
+    if (_transitioning || element.classes.contains('in'))
+      return;
+    
+    final String scroll = element.classes.contains('width') ? 'scrollWidth' : 'scrollHeight';
+    
+    if (_$parent != null) {
+      ElementQuery $actives = _$parent.children('.accordion-group').children('.in');
+      if (!$actives.isEmpty) {
+        /*
+        hasData = actives.data('collapse')
+            if (hasData && hasData.transitioning) return
+        actives.collapse('hide')
+        hasData || actives.data('collapse', null)
+        */
+      }
     }
-
-    this.$element[dimension](0)
-    this.transition('addClass', $.Event('show'), 'shown')
-    $.support.transition && this.$element[dimension](this.$element[0][scroll])
-    */
+    
+    _clearSize();
+    
+    _transition('addClass', new DQueryEvent('show'), 'shown');
+    if (Transition.isUsed) {
+      if (_horizontal)
+        element.style.width = '${element.scrollWidth}px';
+      else
+        element.style.height = '${element.scrollHeight}px';
+    }
+    
   }
   
   void hide() {
+    if (_transitioning || !element.classes.contains('in'))
+      return;
     /*
-    var dimension
-    if (this.transitioning || !this.$element.hasClass('in')) return
-    dimension = this.dimension()
     this.reset(this.$element[dimension]())
-    this.transition('removeClass', $.Event('hide'), 'hidden')
-    this.$element[dimension](0)
     */
+    _transition('removeClass', new DQueryEvent('hide'), 'hidden');
+    _clearSize();
+    
   }
   
   void reset(size) {
+    element.classes.remove('collapse');
     /*
-    var dimension = this.dimension()
-
     this.$element
-    .removeClass('collapse')
     [dimension](size || 'auto')
-    [0].offsetWidth
-
+    */
+    element.offsetWidth;
+    /*
     this.$element[size !== null ? 'addClass' : 'removeClass']('collapse')
     */
   }
   
-  void transition(method, startEvent, completeEvent) {
+  void _clearSize() {
+    if (_horizontal)
+      element.style.width = '0';
+    else
+      element.style.height = '0';
+  }
+  
+  void _transition(String method, DQueryEvent startEvent, String completeEvent) {
     /*
     var that = this
         , complete = function () {
