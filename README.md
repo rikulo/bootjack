@@ -53,7 +53,7 @@ For example, a Dropdown button component is prepared by giving the following HTM
 With the following global registration in Dart:
 
 	void main() {
-		Bootjack.use(['dropdown']);
+		Dropdown.use();
 	}
 
 That's right. All you need to do in Dart is to tell Bootjack you are using Dropdown components. You can also progammatically access and manipulate the Dropdown:
