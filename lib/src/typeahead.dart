@@ -10,36 +10,54 @@ part of bootjack;
 // $.grep()
 // data()
 // on()
+// TODO: html manipulation
 
 class Typeahead extends Base {
   
-  static const String _NAME = 'tooltip';
+  static const String _NAME = 'typeahead';
   
-  Typeahead(Element element) : 
-  super(element, _NAME);
+  bool _shown = false;
+  List _source;
+  int _items, _minLength;
+  String _itemTemplate;
   
-  /*
-  var Typeahead = function (element, options) {
-    this.$element = $(element)
-    this.options = $.extend({}, $.fn.typeahead.defaults, options)
+  /**
+   * 
+   */
+  Typeahead(Element element, {List source: [], int items: 8, int minLength: 1,
+  String itemTemplate: '<li><a href="#"></a></li>', 
+  String menuTemplate: '<ul class="typeahead dropdown-menu"></ul>'}) :
+  _source = source,
+  _items = items,
+  _minLength = minLength,
+  _itemTemplate = itemTemplate,
+  super(element, _NAME) {
+    // TODO: closures
+    /*
     this.matcher = this.options.matcher || this.matcher
     this.sorter = this.options.sorter || this.sorter
     this.highlighter = this.options.highlighter || this.highlighter
     this.updater = this.options.updater || this.updater
-    this.source = this.options.source
-    this.$menu = $(this.options.menu)
-    this.shown = false
-    this.listen()
+    */
+    
+    // TODO: menu can also be a selector? so $(html) becomes necessary
+    _menu = new Element.html(menuTemplate); // TODO: try catch?
+    _$menu = $(_menu);
+    
+    listen();
   }
-
-  $.fn.typeahead.defaults = {
-    source: []
-  , items: 8
-  , menu: '<ul class="typeahead dropdown-menu"></ul>'
-  , item: '<li><a href="#"></a></li>'
-  , minLength: 1
-  }
-  */
+  
+  Element _menu;
+  ElementQuery _$menu;
+  
+  /** Retrieve the wired Typeahead object from an element. If there is no wired
+   * Typeahead object, a new one will be created.
+   * 
+   * + [create] - If provided, it will be used for Typeahead creation. Otherwise 
+   * the default constructor with no optional parameter value is used.
+   */
+  static Typeahead wire(Element element, [Typeahead create()]) =>
+      _wire(element, _NAME, _fallback(create, () => () => new Typeahead(element)));
   
   void select() {
     /*
@@ -47,8 +65,8 @@ class Typeahead extends Base {
     this.$element
     .val(this.updater(val))
     .change()
-    return this.hide()
     */
+    hide();
   }
   
   /*
@@ -57,30 +75,29 @@ class Typeahead extends Base {
     }
   */
   
+  void show() {
+    /*
+    var pos = $.extend({}, this.$element.position(), {
+      height: this.$element[0].offsetHeight
+    })
+
+    this.$menu
+    .insertAfter(this.$element)
+    .css({
+      top: pos.top + pos.height
+      , left: pos.left
+    })
+    */
+    _$menu.show();
+    _shown = true;
+  }
+  
+  void hide() {
+    _$menu.hide();
+    _shown = false;
+  }
+  
   /*
-  , show: function () {
-      var pos = $.extend({}, this.$element.position(), {
-        height: this.$element[0].offsetHeight
-      })
-
-      this.$menu
-        .insertAfter(this.$element)
-        .css({
-          top: pos.top + pos.height
-        , left: pos.left
-        })
-        .show()
-
-      this.shown = true
-      return this
-    }
-
-  , hide: function () {
-      this.$menu.hide()
-      this.shown = false
-      return this
-    }
-
   , lookup: function (event) {
       var items
 
@@ -172,8 +189,10 @@ class Typeahead extends Base {
 
       prev.addClass('active')
     }
-
-  , listen: function () {
+  */
+  void listen() {
+    
+    /*
       this.$element
         .on('focus',    $.proxy(this.focus, this))
         .on('blur',     $.proxy(this.blur, this))
@@ -185,11 +204,13 @@ class Typeahead extends Base {
       }
 
       this.$menu
-        .on('click', $.proxy(this.click, this))
         .on('mouseenter', 'li', $.proxy(this.mouseenter, this))
         .on('mouseleave', 'li', $.proxy(this.mouseleave, this))
-    }
-
+        */
+    _$menu
+    ..on('click', (DQueryEvent e) => click(this, e));
+  }
+  /*
   , eventSupported: function(eventName) {
       var isSupported = eventName in this.$element
       if (!isSupported) {
@@ -269,14 +290,14 @@ class Typeahead extends Base {
       this.focused = false
       if (!this.mousedover && this.shown) this.hide()
     }
-
-  , click: function (e) {
-      e.stopPropagation()
-      e.preventDefault()
-      this.select()
-      this.$element.focus()
-    }
-
+  */
+  static void click(Typeahead t, DQueryEvent e) {
+    e.stopPropagation();
+    e.preventDefault();
+    t.select();
+    //t.$element.focus(); // TODO
+  }
+  /*
   , mouseenter: function (e) {
       this.mousedover = true
       this.$menu.find('.active').removeClass('active')

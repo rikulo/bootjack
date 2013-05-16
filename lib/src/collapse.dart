@@ -30,12 +30,6 @@ class Collapse extends Base {
   bool get transitioning => _transitioning;
   bool _transitioning = false;
   
-  /**
-   * 
-   */
-  String get dimension => 
-      element.classes.contains('width') ? 'width' : 'height';
-  
   bool get _horizontal =>
       element.classes.contains('width');
   
@@ -59,7 +53,7 @@ class Collapse extends Base {
     
     _clearSize();
     
-    _transition('addClass', new DQueryEvent('show'), 'shown');
+    _transition(true, new DQueryEvent('show'), 'shown');
     if (Transition.isUsed) {
       if (_horizontal)
         element.style.width = '${element.scrollWidth}px';
@@ -73,9 +67,9 @@ class Collapse extends Base {
     if (_transitioning || !element.classes.contains('in'))
       return;
     /*
-    this.reset(this.$element[dimension]())
+    this.reset(this.$element[dimension]()) // TODO: check jQuery spec
     */
-    _transition('removeClass', new DQueryEvent('hide'), 'hidden');
+    _transition(false, new DQueryEvent('hide'), 'hidden');
     _clearSize();
     
   }
@@ -99,33 +93,38 @@ class Collapse extends Base {
       element.style.height = '0';
   }
   
-  void _transition(String method, DQueryEvent startEvent, String completeEvent) {
-    /*
-    var that = this
-        , complete = function () {
-            if (startEvent.type == 'show') that.reset()
-            that.transitioning = 0
-            that.$element.trigger(completeEvent)
-          }
-
-    this.$element.trigger(startEvent)
-
-    if (startEvent.isDefaultPrevented()) return
-
-    this.transitioning = 1
-
-    this.$element[method]('in')
-
-    $.support.transition && this.$element.hasClass('collapse') ?
-      this.$element.one($.support.transition.end, complete) :
-      complete()
-    */
+  void _transition(bool add, DQueryEvent startEvent, String completeEvent) {
+    
+    $element.triggerEvent(startEvent);
+    if (startEvent.isDefaultPrevented)
+      return;
+    
+    _transitioning = true;
+    
+    if (add)
+      element.classes.add('in');
+    else
+      element.classes.remove('in');
+    
+    final DQueryEventListener complete = (DQueryEvent e) {
+      if (startEvent.type == 'show')
+        reset();
+      _transitioning = false;
+      $element.trigger(completeEvent);
+    };
+    
+    if (Transition.isUsed && element.classes.contains('collapse'))
+      $element.one(Transition.end, complete);
+    else
+      complete(null);
+    
   }
   
   void toggle() {
-    /*
-    this[this.$element.hasClass('in') ? 'hide' : 'show']()
-    */
+    if (element.classes.contains('in'))
+      hide();
+    else
+      show();
   }
   
   static bool _registered = false;

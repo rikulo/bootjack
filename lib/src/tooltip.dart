@@ -13,14 +13,20 @@ part of bootjack;
 class Tooltip extends Base {
   
   static const String _NAME = 'tooltip';
+  static const String _DEF_TEMPLATE = 
+      '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>';
   
+  final String _type;
   final bool animation;
   
   final placement; // TODO: funciton or string
   
-  Tooltip(Element element, {bool animation: true, placement: 'top'}) : 
+  Tooltip(Element element, {bool animation: true, placement: 'top', 
+  selector: false, String template: _DEF_TEMPLATE, String trigger: 'hover focus',
+  String title: '', int delay: 0, html: false, container: false}) : 
   this.animation = animation,
   this.placement = placement,
+  _type = _NAME,
   super(element, _NAME) {
     
   }
@@ -33,16 +39,6 @@ class Tooltip extends Base {
     this.init('tooltip', element, options)
   }
 
-  $.fn.tooltip.defaults = {
-  , selector: false
-  , template: '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
-  , trigger: 'hover focus'
-  , title: ''
-  , delay: 0
-  , html: false
-  , container: false
-  }
-
   , init: function (type, element, options) {
       var eventIn
         , eventOut
@@ -51,7 +47,6 @@ class Tooltip extends Base {
         , i
 
       this.type = type
-      this.$element = $(element)
       this.options = this.getOptions(options)
       this.enabled = true
 
@@ -254,29 +249,22 @@ class Tooltip extends Base {
     if (e.isDefaultPrevented)
       return;
     
+    $tip.removeClass('in');
     
-    /*
-    var that = this
-
-      $tip.removeClass('in')
-
-      function removeWithAnimation() {
-        var timeout = setTimeout(function () {
-          $tip.off($.support.transition.end).detach()
-        }, 500)
-
-        $tip.one($.support.transition.end, function () {
-          clearTimeout(timeout)
-          $tip.detach()
-        })
-      }
-
-      $.support.transition && this.$tip.hasClass('fade') ?
-        removeWithAnimation() :
-        $tip.detach()
-      
-    */
-    $element.trigger('hidden');
+    if (Transition.isUsed && $tip.hasClass('fade')) {
+      new Future.delayed(const Duration(milliseconds: 500), () {
+        $tip.one(Transition.end);
+        //$tip.detach();
+      });
+      $tip.one(Transition.end, (DQueryEvent e) {
+        // TODO: clear timeout
+        //$tip.detach();
+      });
+    } else {
+      //$tip.detach(); // TODO: need detach();
+    }
+    
+    $element.trigger('hidden'); // TODO: check timing
   }
   
   void fixTitle() {
@@ -317,7 +305,7 @@ class Tooltip extends Base {
   ElementQuery _$tip, _$arrow;
   
   ElementQuery _tip() =>
-      _fallback(_$tip, () => _$tip = null /*$(this.options.template)*/);
+      _fallback(_$tip, () => _$tip = null /*$(this.options.template)*/); // TODO: $html()
   
   ElementQuery _arrow() =>
       _fallback(_$arrow, () => _$arrow = _tip().find('.tooltip-arrow'));
@@ -357,7 +345,7 @@ class Tooltip extends Base {
   
   void destroy() {
     hide();
-    //this.$element.off('.' + this.type)
+    $element.off(".$_type");
     //this.removeData(this.type)
   }
   
