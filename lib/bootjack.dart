@@ -5,6 +5,7 @@ import 'dart:html_common';
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:rikulo_commons/html.dart';
 import 'package:dquery/dquery.dart';
 
 part 'src/util/util.dart';
