@@ -1,31 +1,27 @@
 part of bootjack;
 
-// required jQuery features:
-// classes
-// traversing: find()/closest()/parent()
-// dimension: scrollTop()
-// map()/sort()/each()
-// attr()
-// data()
-// on()
+// TODO: write test case where data-spy not on body
 
+/** A scrollspy component, which captures the scroll position on an element and
+ * reflects the state on another element.
+ */
 class Scrollspy extends Base {
   
   static const String _NAME = 'popover';
   
   final String _selector;
   
-  /**
-   * 
+  /** The offset used when calculating scroll position. For example, if 10,
+   * the scroll position is effectively 10 + the real scroll position.
    */
   final int offset;
   
-  /**
-   * 
+  /** Construct a Scrollspy object and wire it to [element].
    */
-  Scrollspy(Element element, {String target, int offset : 10}) : 
+  Scrollspy(Element element, {String target, int offset: 10}) : 
   this.offset = offset,
-  _$body = $('body'),
+  _body = document.body,
+  _$body = $(document.body),
   _selector = "${_fallback(target, () => _fallback(element.attributes['href'], () => ''))} .nav li > a",
   super(element, _NAME) {
     _$scrollElement = element is BodyElement ? $window() : $element;
@@ -34,76 +30,78 @@ class Scrollspy extends Base {
     _process();
   }
   
-  /**
+  /** Retrieve the wired Scrollspy object from an element. If there is no wired
+   * Scrollspy object, a new one will be created.
    * 
    */
   static Scrollspy wire(Element element, [Scrollspy create()]) =>
       _wire(element, _NAME, _fallback(create, () => () => new Scrollspy(element)));
   
   final ElementQuery _$body;
+  final Element _body;
   DQuery _$scrollElement;
-  Element _activeTarget;
+  String _activeTarget;
   
-  // TODO: may want to group them?
-  final List<int> _offsets = new List<int>();
-  final List<Element> _targets = new List<Element>();
+  final List<_Anchor> _anchors = new List<_Anchor>();
+  static final RegExp _ANC_EXP = new RegExp(r'^#\w'); // TODO: may simplify?
   
-  /**
-   * 
+  /** Refresh the cached y-position values of spied items.
    */
   void refresh() {
     
-    _offsets.clear();
-    _targets.clear();
+    _anchors.clear();
     
-    _$body.find(_selector).map((Element e) {
-      /*
-      var $el = $(this)
-          , href = $el.data('target') || $el.attr('href')
-          , $href = /^#\w/.test(href) && $(href)
-          return ( $href
-              && $href.length
-              && [[ $href.position().top + (!$.isWindow(self.$scrollElement.get(0)) && self.$scrollElement.scrollTop()), href ]] ) || null
-          })
-      */
-    }).toList().sort((a, b) => a[0] - b[0]).forEach((t) {
-      _offsets.add(t[0]);
-      _targets.add(t[1]);
-    });
+    for (Element e in _$body.find(_selector)) {
+      final String href = _dataTarget(e);
+      if (!_ANC_EXP.hasMatch(href))
+        continue;
+      
+      final ElementQuery $href = $(href);
+      if (!$href.isEmpty) {
+        final int offset = $href.first.offsetTop + (element is BodyElement ? 0 : element.scrollTop);
+        _anchors.add(new _Anchor(offset, href));
+      }
+    }
+    
+    _anchors.sort((_Anchor a, _Anchor b) => a.offset - b.offset);
     
   }
   
   void _process() {
-    /*
-    var scrollTop = this.$scrollElement.scrollTop() + this.options.offset
-        , scrollHeight = this.$scrollElement[0].scrollHeight || this.$body[0].scrollHeight
-        , maxScroll = scrollHeight - this.$scrollElement.height()
-        , offsets = this.offsets
-        , targets = this.targets
-        , activeTarget = this.activeTarget
-        , i
-
+    if (_anchors.isEmpty)
+      return;
+    
+    final int scrollTop = _$scrollElement.scrollTop + this.offset;
+    int scrollHeight = _$scrollElement is ElementQuery ? 
+        element.scrollHeight : _body.scrollHeight;
+    final int maxScroll = scrollHeight - _$scrollElement.height;
+    final String lastTarget = _anchors.last.target;
+    
     if (scrollTop >= maxScroll) {
-      return activeTarget != (i = targets.last()[0])
-          && this.activate ( i )
+      _activate(lastTarget);
+      return;
     }
-
-    for (i = offsets.length; i--;) {
-      activeTarget != targets[i]
-      && scrollTop >= offsets[i]
-      && (!offsets[i + 1] || scrollTop <= offsets[i + 1])
-      && this.activate( targets[i] )
+    
+    _Anchor panc = null;
+    for (_Anchor anc in _anchors) {
+      // start with 1st and 2nd
+      if (panc != null && _activeTarget != panc.target && 
+          scrollTop >= panc.offset && scrollTop <= anc.offset)
+        _activate(panc.target);
+      panc = anc;
     }
-    */
+    if (scrollTop >= _anchors.last.offset)
+      _activate(lastTarget);
+    
   }
   
-  void _activate(Element target) {
-    
+  void _activate(String target) {
+    if (_activeTarget == target)
+      return;
     _activeTarget = target;
     
     $(_selector).parent('.active').removeClass('active');
     
-    // TODO: wouldn't toString() be too aggressive?
     final String selector = '$_selector[data-target="$target"], $_selector[href="$target"]';
     
     ElementQuery $active = $(selector).parent('li');
@@ -134,6 +132,15 @@ class Scrollspy extends Base {
       }
     });
   }
+  
+}
+
+class _Anchor {
+  
+  final int offset;
+  final String target;
+  
+  _Anchor(this.offset, this.target);
   
 }
 
