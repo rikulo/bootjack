@@ -1,15 +1,5 @@
 part of bootjack;
 
-// required jQuery features:
-// classes
-// traversing: find()
-// event: $.Event()/one()/trigger()
-// $.camelCase()
-// effect!
-// attr()
-// data()
-// on()
-
 class Collapse extends Base {
   
   static const String _NAME = 'collapse';
@@ -30,21 +20,22 @@ class Collapse extends Base {
   bool get transitioning => _transitioning;
   bool _transitioning = false;
   
-  bool get _horizontal =>
-      element.classes.contains('width');
+  bool get horizontal => p.fallback(_horizontal, 
+      () => _horizontal = element.classes.contains('width'));
+  bool _horizontal;
   
   void show() {
     if (_transitioning || element.classes.contains('in'))
       return;
     
-    final String scroll = element.classes.contains('width') ? 'scrollWidth' : 'scrollHeight';
+    final String scroll = horizontal ? 'scrollWidth' : 'scrollHeight';
     
     if (_$parent != null) {
       ElementQuery $actives = _$parent.children('.accordion-group').children('.in');
       if (!$actives.isEmpty) {
         /*
         hasData = actives.data('collapse')
-            if (hasData && hasData.transitioning) return
+        if (hasData && hasData.transitioning) return
         actives.collapse('hide')
         hasData || actives.data('collapse', null)
         */
@@ -55,7 +46,7 @@ class Collapse extends Base {
     
     _transition(true, new DQueryEvent('show'), 'shown');
     if (Transition.isUsed) {
-      if (_horizontal)
+      if (horizontal)
         element.style.width = '${element.scrollWidth}px';
       else
         element.style.height = '${element.scrollHeight}px';
@@ -66,24 +57,26 @@ class Collapse extends Base {
   void hide() {
     if (_transitioning || !element.classes.contains('in'))
       return;
-    /*
-    this.reset(this.$element[dimension]()) // TODO: check jQuery spec
-    */
+    reset(horizontal ? $element.width : $element.height);
     _transition(false, new DQueryEvent('hide'), 'hidden');
     _clearSize();
     
   }
   
-  void reset(size) {
+  void reset(int size) {
     element.classes.remove('collapse');
+    // TODO: check jQuery spec
     /*
     this.$element
     [dimension](size || 'auto')
     */
-    element.offsetWidth;
-    /*
-    this.$element[size !== null ? 'addClass' : 'removeClass']('collapse')
-    */
+    
+    element.offsetWidth; // force reflow
+    
+    if (size != null)
+      element.classes.add('collapse');
+    else
+      element.classes.remove('collapse');
   }
   
   void _clearSize() {

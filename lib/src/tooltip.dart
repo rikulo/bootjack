@@ -1,14 +1,8 @@
 part of bootjack;
 
 // required jQuery features:
-// classes
-// traversing: find()
-// event: $.Event()/trigger()
-// offset()/css()
-// detach()
-// attr()
-// data()
-// on()/off()
+// offset()
+// appendTo()
 
 class Tooltip extends Base {
   
@@ -25,7 +19,7 @@ class Tooltip extends Base {
   
   Tooltip(Element element, {bool animation: true, placement: _DEF_PLACEMENT, 
   selector: false, String template: _DEF_TEMPLATE, String trigger: 'hover focus',
-  String title: '', int delay: 0, html: false, container: false}) : 
+  String title: '', int delay: 0, html: false, container: null}) : 
   this.animation = animation,
   this.placement = placement,
   this.template = template,
@@ -111,7 +105,7 @@ class Tooltip extends Base {
     
   }
   
-  static void  _leave(DQueryEvent e) {
+  static void _leave(DQueryEvent e) {
     /*
     var self = $(e.currentTarget)[this.type](this._options).data(this.type)
 
@@ -127,13 +121,7 @@ class Tooltip extends Base {
   
   void show() {
     DQueryEvent e = new DQueryEvent(e);
-    /*
-    , pos
-    , actualWidth
-    , actualHeight
-    , placement
-    , tp
-    */
+    
     if (hasContent && _enabled) {
       $element.trigger(e);
       if (e.isDefaultPrevented) 
@@ -143,7 +131,8 @@ class Tooltip extends Base {
       if (animation)
         tip.classes.add('fade');
       
-      final String placement = _placement(this.placement);
+      final String placement = 
+          p.fallback(p.resolveString(this.placement), () => _DEF_PLACEMENT);
       
       tip.remove();
       tip.style.top = tip.style.left = '0';
@@ -190,74 +179,50 @@ class Tooltip extends Base {
     $element.trigger('shown');
   }
   
-  static String _placement(placement) {
-    if (placement is String)
-      return placement;
-    if (placement is Function) {
-      try {
-        return placement();
-      } catch (e) {}
-    }
-    return _DEF_PLACEMENT;
-  }
-  
-  void applyPlacement(top, left, String placement) {
+  void applyPlacement(int top, int left, String placement) {
+    final int width = tip.offsetWidth;
+    final int height = tip.offsetHeight;
+    bool replace;
+    
     /*
-    var $tip = this.tip()
-        , width = $tip[0].offsetWidth
-        , height = $tip[0].offsetHeight
-        , actualWidth
-        , actualHeight
-        , delta
-        , replace
-      
-      $tip
-        .offset(offset)
-      */
+      $tipoffset(offset)
+    */
     
     tip.classes..add('placement')..add('in');
     final int actualWidth = tip.offsetWidth;
     final int actualHeight = tip.offsetHeight;
     
-    /*
-      if (placement == 'top' && actualHeight != height) {
-        offset.top = offset.top + height - actualHeight
-        replace = true
+    if (placement == 'top' && actualHeight != height) {
+      top += height - actualHeight;
+      replace = true;
+    }
+    
+    if (placement == 'bottom' || placement == 'top') {
+      int delta = 0;
+      if (left < 0) {
+        delta = left * -2;
+        left = 0;
+        //$tip.offset(offset)
+        actualWidth = tip.offsetWidth;
+        actualHeight = tip.offsetHeight;
       }
+      arrow.style.left = _ratioValue(delta - width + actualWidth, actualWidth);
       
-      if (placement == 'bottom' || placement == 'top') {
-        delta = 0
-        
-        if (offset.left < 0){
-          delta = offset.left * -2
-          offset.left = 0
-          $tip.offset(offset)
-          actualWidth = $tip[0].offsetWidth
-          actualHeight = $tip[0].offsetHeight
-        }
-        
-        this.replaceArrow(delta - width + actualWidth, actualWidth, 'left')
-      } else {
-        this.replaceArrow(actualHeight - height, actualHeight, 'top')
-      }
+    } else {
+      arrow.style.top = _ratioValue(actualHeight - height, actualHeight);
       
-      if (replace) $tip.offset(offset)
-    */
+    }
+    
+    if (replace) {
+      // $tip.offset(offset)
+    }
   }
   
-  void replaceArrow(delta, dimension, position) {
-    /*
-    this
-    .arrow()
-    .css(position, delta ? (50 * (1 - delta / dimension) + "%") : '')
-    */
-  }
+  String _ratioValue(num delta, num dimension) =>
+      delta ? "${50 * (1 - delta / dimension)}%" : '';
   
   void setContent() {
     /*
-    var $tip = this.tip()
-        , title = this.getTitle()
-
       $tip.find('.tooltip-inner')[this.options.html ? 'html' : 'text'](title)
     */
     tip.classes.removeAll(['fade', 'in', 'top', 'bottom', 'left', 'right']);
@@ -272,7 +237,6 @@ class Tooltip extends Base {
     tip.classes.remove('in');
     
     if (Transition.isUsed && tip.classes.contains('fade')) {
-      
       ElementQuery $tip = $(tip);
       
       new Future.delayed(const Duration(milliseconds: 500), () {
@@ -314,7 +278,7 @@ class Tooltip extends Base {
     */
   }
   
-  String getTitle() {
+  String get title {
     /*
     var title
     , $e = this.$element
@@ -327,14 +291,14 @@ class Tooltip extends Base {
     */
   }
   
-  ElementQuery _$arrow;
   
   Element get tip =>
       p.fallback(_tip, () => _tip = new Element.html(template));
   Element _tip;
   
-  ElementQuery _arrow() =>
-      p.fallback(_$arrow, () => _$arrow = tip.find('.tooltip-arrow'));
+  Element get arrow =>
+      p.fallback(_arrow, () => _arrow = tip.query('.tooltip-arrow'));
+  Element _arrow;
   
   void validate() {
     if (element.parent == null) {

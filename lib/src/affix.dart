@@ -38,8 +38,8 @@ class Affix extends Base {
     if (!element.matches(':visible'))
       return;
     
-    final int offsetTop = _offsetValue(this.offsetTop);
-    final int offsetBottom = _offsetValue(this.offsetBottom);
+    final int offsetTop = p.fallback(p.resolveInt(this.offsetTop), () => _DEFAULT_OFFSET);
+    final int offsetBottom = p.fallback(p.resolveInt(this.offsetBottom), () => _DEFAULT_OFFSET);
     
     final int scrollHeight = $document().height();
     final int scrollTop = window.pageYOffset;
@@ -60,17 +60,6 @@ class Affix extends Base {
     ..remove('affix-bottom')
     ..add(affix == 'bottom' ? 'affix-bottom' : affix == 'top' ? 'affix-top' : 'affix');
     
-  }
-  
-  int _offsetValue(f) {
-    if (f is int)
-      return f;
-    if (f is Function) {
-      try {
-        return f();
-      } catch(e) {}
-    }
-    return _DEFAULT_OFFSET;
   }
   
   String _affixed;
