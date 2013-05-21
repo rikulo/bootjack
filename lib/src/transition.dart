@@ -26,7 +26,7 @@ class Transition {
    */
   static String get end {
     if (_end == null) {
-      _end = _fallback(_TRANS_END_EVENT_NAMES[Device.cssPrefix], () => 'transitionend');
+      _end = p.fallback(_TRANS_END_EVENT_NAMES[Device.cssPrefix], () => 'transitionend');
     }
     return _end;
   }
@@ -35,7 +35,7 @@ class Transition {
   /** Return true if CSS transition is supported in this device.
    */
   static bool get isSupported =>
-      _fallback(_supported, () => _supported = !browser.msie || browser.version >= 9);
+      p.fallback(_supported, () => _supported = !browser.msie || browser.version >= 9);
   static bool _supported;
   
 }

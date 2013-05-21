@@ -32,7 +32,7 @@ class Button extends Base {
    * the default constructor with no optional parameter value is used.
    */
   static Button wire(Element element, [Button create()]) => 
-      _wire(element, _NAME, _fallback(create, () => () => new Button(element)));
+      p.wire(element, _NAME, p.fallback(create, () => () => new Button(element)));
   
   /** Set the button state, which will change the button text according to [texts]
    * setting.
@@ -45,7 +45,7 @@ class Button extends Base {
     
     state = "${state}Text";
     space.putIfAbsent('resetText', () => value);
-    final String newStateText = _fallback(space[state], () => texts[state]);
+    final String newStateText = p.fallback(space[state], () => texts[state]);
     if (isInput)
       (element as InputElement).value = newStateText;
     else

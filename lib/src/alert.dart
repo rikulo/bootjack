@@ -21,7 +21,7 @@ class Alert extends Base {
    * the default constructor with no optional parameter value is used.
    */
   static Alert wire(Element element, [Alert create()]) =>
-      _wire(element, _NAME, _fallback(create, () => () => new Alert(element)));
+      p.wire(element, _NAME, p.fallback(create, () => () => new Alert(element)));
   
   /** Detach the Alert component from DOM.
    */
@@ -30,7 +30,7 @@ class Alert extends Base {
   }
   
   static void _close(Element elem) {
-    final String selector = _dataTarget(elem);
+    final String selector = p.getDataTarget(elem);
     
     ElementQuery $parent;
     

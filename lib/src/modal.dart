@@ -37,7 +37,7 @@ class Modal extends Base {
    * the default constructor with no optional parameter value is used.
    */
   static Modal wire(Element element, [Modal create()]) =>
-      _wire(element, _NAME, _fallback(create, () => () => new Modal(element)));
+      p.wire(element, _NAME, p.fallback(create, () => () => new Modal(element)));
   
   /** Toggle the visibility state of the Modal.
    */
@@ -227,7 +227,7 @@ class Modal extends Base {
       
       final Element elem = e.target as Element;
       //final String href = elem.attributes['href'];
-      final ElementQuery $target = $(_dataTarget(elem));
+      final ElementQuery $target = $(p.getDataTarget(elem));
       
       e.preventDefault();
       

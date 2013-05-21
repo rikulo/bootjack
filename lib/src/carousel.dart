@@ -176,7 +176,7 @@ class Carousel extends Base {
     /*
     $document().on('click.carousel.data-api', '[data-slide], [data-slide-to]', (DQueryEvent e) {
       Element elem = e.target as Element;
-      ElementQuery $target = $(_dataTarget(elem));
+      ElementQuery $target = $(p.getDataTarget(elem));
       
       if (!$target.isEmpty) {
         Element target = $target.first;

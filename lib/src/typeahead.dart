@@ -57,7 +57,7 @@ class Typeahead extends Base {
    * the default constructor with no optional parameter value is used.
    */
   static Typeahead wire(Element element, [Typeahead create()]) =>
-      _wire(element, _NAME, _fallback(create, () => () => new Typeahead(element)));
+      p.wire(element, _NAME, p.fallback(create, () => () => new Typeahead(element)));
   
   void select() {
     /*
