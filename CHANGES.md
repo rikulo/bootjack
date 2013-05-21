@@ -5,3 +5,4 @@
 * Added responsive CSS files.
 * Trantition was falled back to no animation in IE 9.
 * Changed component registration API.
+* Scrollspy component is ready.
