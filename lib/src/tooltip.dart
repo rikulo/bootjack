@@ -120,10 +120,10 @@ class Tooltip extends Base {
   }
   
   void show() {
-    DQueryEvent e = new DQueryEvent(e);
+    DQueryEvent e = new DQueryEvent('show');
     
     if (hasContent && _enabled) {
-      $element.trigger(e);
+      $element.triggerEvent(e);
       if (e.isDefaultPrevented) 
         return;
       
@@ -154,7 +154,7 @@ class Tooltip extends Base {
         case 'left':
           break;
         case 'right':
-        
+          break;
       }
       /*
         switch (placement) {
@@ -189,8 +189,8 @@ class Tooltip extends Base {
     */
     
     tip.classes..add('placement')..add('in');
-    final int actualWidth = tip.offsetWidth;
-    final int actualHeight = tip.offsetHeight;
+    int actualWidth = tip.offsetWidth;
+    int actualHeight = tip.offsetHeight;
     
     if (placement == 'top' && actualHeight != height) {
       top += height - actualHeight;
@@ -219,7 +219,7 @@ class Tooltip extends Base {
   }
   
   String _ratioValue(num delta, num dimension) =>
-      delta ? "${50 * (1 - delta / dimension)}%" : '';
+      delta == 0 ? "${50 * (1 - delta / dimension)}%" : '';
   
   void setContent() {
     /*
@@ -240,7 +240,7 @@ class Tooltip extends Base {
       ElementQuery $tip = $(tip);
       
       new Future.delayed(const Duration(milliseconds: 500), () {
-        $tip.one(Transition.end);
+        $tip.off(Transition.end);
         tip.remove();
       });
       $tip.one(Transition.end, (DQueryEvent e) {
@@ -265,7 +265,7 @@ class Tooltip extends Base {
     */
   }
   
-  bool get hasContent => getTitle() != null;
+  bool get hasContent => title != null;
   
   Rect getPosition() {
     return element.offset; // TODO: check jQuery offset

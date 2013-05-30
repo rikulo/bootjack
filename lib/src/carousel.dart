@@ -61,7 +61,7 @@ class Carousel extends Base {
       cycle();
     }
     
-    slide(pos > index ? 'next' : 'prev', $(_$items[pos]));
+    slide(pos > index ? 'next' : 'prev', _$items[pos]);
     
   }
   
@@ -140,7 +140,7 @@ class Carousel extends Base {
       });
     }
     
-    $element.trigger(e);
+    $element.triggerEvent(e);
     if (e.isDefaultPrevented)
       return;
     

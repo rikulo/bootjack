@@ -11,7 +11,7 @@ class Dropdown extends Base {
    */
   Dropdown(Element element) : 
   super(element, _NAME) {
-    $element.on('click.dropdown.data-api', _toggle);
+    $element.on('click.dropdown.data-api', _toggleEvent);
     $('html').on('click.dropdown.data-api', (DQueryEvent e) { // TODO: why not document?
       Element p = element.parent;
       if (p != null)

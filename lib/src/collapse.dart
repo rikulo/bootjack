@@ -25,7 +25,7 @@ class Collapse extends Base {
   bool _horizontal;
   
   void show() {
-    if (_transitioning || element.classes.contains('in'))
+    if (transitioning || element.classes.contains('in'))
       return;
     
     final String scroll = horizontal ? 'scrollWidth' : 'scrollHeight';
@@ -42,34 +42,26 @@ class Collapse extends Base {
       }
     }
     
-    _clearSize();
+    _size = '0';
     
     _transition(true, new DQueryEvent('show'), 'shown');
-    if (Transition.isUsed) {
-      if (horizontal)
-        element.style.width = '${element.scrollWidth}px';
-      else
-        element.style.height = '${element.scrollHeight}px';
-    }
+    if (Transition.isUsed)
+      _size = '${horizontal ? element.scrollWidth : element.scrollHeight}px';
     
   }
   
   void hide() {
-    if (_transitioning || !element.classes.contains('in'))
+    if (transitioning || !element.classes.contains('in'))
       return;
     reset(horizontal ? $element.width : $element.height);
     _transition(false, new DQueryEvent('hide'), 'hidden');
-    _clearSize();
-    
+    _size = '0';
   }
   
   void reset(int size) {
     element.classes.remove('collapse');
-    // TODO: check jQuery spec
-    /*
-    this.$element
-    [dimension](size || 'auto')
-    */
+    
+    _size = p.fallback("${size}px", () => 'auto');
     
     element.offsetWidth; // force reflow
     
@@ -79,11 +71,11 @@ class Collapse extends Base {
       element.classes.remove('collapse');
   }
   
-  void _clearSize() {
-    if (_horizontal)
-      element.style.width = '0';
+  void set _size(String size) {
+    if (horizontal)
+      element.style.width = size;
     else
-      element.style.height = '0';
+      element.style.height = size;
   }
   
   void _transition(bool add, DQueryEvent startEvent, String completeEvent) {
@@ -101,7 +93,7 @@ class Collapse extends Base {
     
     final DQueryEventListener complete = (DQueryEvent e) {
       if (startEvent.type == 'show')
-        reset();
+        reset(0);
       _transitioning = false;
       $element.trigger(completeEvent);
     };

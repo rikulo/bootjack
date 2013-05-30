@@ -20,7 +20,7 @@ class Affix extends Base {
     $(window)
     ..on('scroll.affix.data-api', (DQueryEvent e) => checkPosition())
     ..on('click.affix.data-api', (DQueryEvent e) {
-      new Future.delayed(const Duration(millisecond: 1), checkPosition);
+      new Future.delayed(const Duration(milliseconds: 1), checkPosition);
     });
     checkPosition();
   }
@@ -41,7 +41,7 @@ class Affix extends Base {
     final int offsetTop = p.fallback(p.resolveInt(this.offsetTop), () => _DEFAULT_OFFSET);
     final int offsetBottom = p.fallback(p.resolveInt(this.offsetBottom), () => _DEFAULT_OFFSET);
     
-    final int scrollHeight = $document().height();
+    final int scrollHeight = $document().height;
     final int scrollTop = window.pageYOffset;
     final int positionTop = element.offsetTop;
     
