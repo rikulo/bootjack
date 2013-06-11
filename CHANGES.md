@@ -10,3 +10,4 @@
 
 * Scrollspy component is ready.
 * Provided utility functions for user extension.
+* Misc bug fixes.
