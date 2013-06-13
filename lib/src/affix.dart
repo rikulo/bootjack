@@ -7,7 +7,7 @@ class Affix extends Base {
   
   static const String _NAME = 'affix';
   
-  const int _DEFAULT_OFFSET = 10;
+  static const int _DEFAULT_OFFSET = 10;
   final offsetTop, offsetBottom;
   
   /** 
