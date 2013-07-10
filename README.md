@@ -5,6 +5,8 @@
 * [Home](http://rikulo.org)
 * [Tutorial](http://blog.rikulo.org/posts/2013/May/General/bootjack-and-dquery/)
 * [API Reference](http://api.rikulo.org/bootjack/latest/)
+* [Git Repository](https://github.com/rikulo/bootjack)
+
 * [Discussion](http://stackoverflow.com/questions/tagged/rikulo)
 * [Issues](https://github.com/rikulo/bootjack/issues)
 
@@ -19,14 +21,6 @@ Then run the [Pub Package Manager](http://pub.dartlang.org/doc) in Dart Editor (
 (comes with the Dart SDK):
 
     pub install
-
-To ride with Bleeding Edge of DQuery, use the following configuration in pubspec:
-
-    dependencies:
-      bootjack:
-        git: git://github.com/rikulo/bootjack.git
-
-For more information, please refer to [Pub: Dependencies](http://pub.dartlang.org/doc/pubspec.html#dependencies).
 
 ##Usage
 
