@@ -1,13 +1,18 @@
 #CHANGES
 
-**0.5.1**
+**0.5.3**
 
-* Added responsive CSS files.
-* Trantition was falled back to no animation in IE 9.
-* Changed component registration API.
+* Tooltip component is ready.
+* Popover component is ready.
 
 **0.5.2**
 
 * Scrollspy component is ready.
 * Provided utility functions for user extension.
 * Misc bug fixes.
+
+**0.5.1**
+
+* Added responsive CSS files.
+* Trantition was falled back to no animation in IE 9.
+* Changed component registration API.

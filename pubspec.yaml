@@ -1,5 +1,5 @@
 name: bootjack
-version: 0.5.2+1
+version: 0.5.3
 author: Simon Pai <simonpai@rikulo.org>
 description: |
   Bootjack is a porting of Bootstrap in Dart.
