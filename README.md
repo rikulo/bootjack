@@ -6,7 +6,6 @@
 * [Tutorial](http://blog.rikulo.org/posts/2013/May/General/bootjack-and-dquery/)
 * [API Reference](http://api.rikulo.org/bootjack/latest/)
 * [Git Repository](https://github.com/rikulo/bootjack)
-
 * [Discussion](http://stackoverflow.com/questions/tagged/rikulo)
 * [Issues](https://github.com/rikulo/bootjack/issues)
 
