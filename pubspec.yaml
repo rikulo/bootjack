@@ -6,5 +6,6 @@ description: |
 homepage: http://rikulo.org/
 dependencies:
   browser: any
-  dquery: '>=0.5.1'
+  crypto: any
+  dquery: '>=0.5.2'
   rikulo_commons: '>=0.7.3'

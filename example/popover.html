@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Popover</title>
+    <link rel="stylesheet" href="packages/bootjack/css/bootstrap-2.3.1.css">
+    <link rel="stylesheet" href="css/base.css">
+  </head>
+  
+  <body>
+    <style>
+      .btn {
+        margin-right: 12px;
+      }
+      .well {
+        margin: 0 48px;
+      }
+    </style>
+    
+    <h2 style="margin-top: 48px">Direction</h2>
+    <div class="well">
+      <button class="btn btn-info" data-toggle="popover" data-placement="top"    
+          title="Popover" data-content="Popover on top."   >Top</a>
+      <button class="btn btn-info" data-toggle="popover" data-placement="bottom" 
+          title="Popover" data-content="Popover on bottom.">Bottom</a>
+      <button class="btn btn-info" data-toggle="popover" data-placement="left"   
+          title="Popover" data-content="Popover on left."  >Left</a>
+      <button class="btn btn-info" data-toggle="popover" data-placement="right"  
+          title="Popover" data-content="Popover on right." >Right</a>
+    </div>
+    
+    <script type="application/dart" src="popover.dart"></script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>

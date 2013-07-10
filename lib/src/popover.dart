@@ -1,97 +1,76 @@
 part of bootjack;
 
-// required jQuery features:
-// classes
-// travering: find()
-// attr()
-// data()
-// on()/off()
-
-class Popover extends Base {
+/**
+ * 
+ */
+class Popover extends Tooltip {
   
   static const String _NAME = 'popover';
+  static const String _DEFAULT_TEMPLATE = 
+      '<div class="popover"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>';
   
-  Popover(Element element) : 
-  super(element, _NAME) {
-    
+  /**
+   * 
+   */
+  Popover(Element element, {bool animation, placement, String selector, 
+  String template, String trigger, title, content, int delay, int showDelay, 
+  int hideDelay, bool html, container}) : 
+  this._content  = _data(content,   element, 'content'),
+  this.placement = _data(placement, element, 'placement', 'right'),
+  this.template  = _data(template,  element, 'template',   _DEFAULT_TEMPLATE),
+  this.trigger   = _data(trigger,   element, 'trigger',   'click'),
+  super(element, animation: animation, selector: selector, title: title, 
+  delay: delay, showDelay: showDelay, hideDelay: hideDelay, html: html, 
+  container: container);
+  
+  /** Retrieve the wired Popover object from an element. If there is no wired
+   * Popover object, a new one will be created.
+   * 
+   * + [create] - If provided, it will be used for Popover creation. Otherwise 
+   * the default constructor with no optional parameter value is used.
+   */
+  static Popover wire(Element element, [Popover create()]) =>
+      p.wire(element, _NAME, p.fallback(create, () => () => new Popover(element)));
+  
+  @override
+  String get _type => _NAME;
+  
+  @override
+  String get _placementDefault => 'right';
+  
+  @override
+  Element get arrow =>
+      p.fallback(_arrow, () => _arrow = tip.query('.arrow'));
+  Element _arrow;
+  
+  
+  
+  final _content;
+  
+  /// The placement strategy of the popover. Default: 'right'. TODO
+  final placement;
+  
+  /// The html template for popover.
+  final String template;
+  
+  /// The trigger condition. Default: 'click'.
+  final String trigger;
+  
+  ///
+  String get content =>
+      p.fallback(p.resolveString(_content, element), 
+          () => element.attributes['data-content']);
+  
+  @override
+  bool get hasContent => title != null || content != null;
+  
+  @override
+  void _setContent() {
+    _cnt(tip.query('.popover-title'), title);
+    _cnt(tip.query('.popover-content'), content);
+    tip.classes.removeAll(['fade', 'top', 'bottom', 'left', 'right', 'in']);
   }
   
-  /*
-  $.fn.popover.defaults = $.extend({} , $.fn.tooltip.defaults, {
-    placement: 'right'
-  , trigger: 'click'
-  , content: ''
-  , template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-  })
-
- // POPOVER PUBLIC CLASS DEFINITION
- // =============================== 
-
-  var Popover = function (element, options) {
-    this.init('popover', element, options)
-  }
-
-
-  // NOTE: POPOVER EXTENDS BOOTSTRAP-TOOLTIP.js
-  // ========================================== 
-
-  Popover.prototype = $.extend({}, $.fn.tooltip.Constructor.prototype, {
-
-    constructor: Popover
-
-  , setContent: function () {
-      var $tip = this.tip()
-        , title = this.getTitle()
-        , content = this.getContent()
-
-      $tip.find('.popover-title')[this.options.html ? 'html' : 'text'](title)
-      $tip.find('.popover-content')[this.options.html ? 'html' : 'text'](content)
-
-      $tip.removeClass('fade top bottom left right in')
-    }
-
-  , hasContent: function () {
-      return this.getTitle() || this.getContent()
-    }
-
-  , getContent: function () {
-      var content
-        , $e = this.$element
-        , o = this.options
-
-      content = (typeof o.content == 'function' ? o.content.call($e[0]) :  o.content)
-        || $e.attr('data-content')
-
-      return content
-    }
-
-  , tip: function () {
-      if (!this.$tip) {
-        this.$tip = $(this.options.template)
-      }
-      return this.$tip
-    }
-
-  , destroy: function () {
-      this.hide().$element.off('.' + this.type).removeData(this.type)
-    }
-
-  })
-  */
 }
-/*
 
- // POPOVER PLUGIN DEFINITION
- // ======================= 
 
-  $.fn.popover = function (option) {
-    return this.each(function () {
-      var $this = $(this)
-        , data = $this.data('popover')
-        , options = typeof option == 'object' && option
-      if (!data) $this.data('popover', (data = new Popover(this, options)))
-      if (typeof option == 'string') data[option]()
-    })
-  }
-
-*/

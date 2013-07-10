@@ -4,7 +4,9 @@ import 'dart:html';
 import 'dart:html_common';
 import 'dart:async';
 import 'dart:collection';
+import 'dart:math';
 
+import 'package:meta/meta.dart';
 import 'package:rikulo_commons/html.dart';
 import 'package:dquery/dquery.dart';
 import 'bootjack_plugin.dart' as p;

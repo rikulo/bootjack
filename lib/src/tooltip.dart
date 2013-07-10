@@ -1,194 +1,199 @@
 part of bootjack;
 
-// required jQuery features:
-// offset()
-// appendTo()
-
+/**
+ * 
+ */
 class Tooltip extends Base {
   
   static const String _NAME = 'tooltip';
-  static const String _DEF_PLACEMENT = 'top';
-  static const String _DEF_TEMPLATE = 
+  static const String _DEFAULT_TEMPLATE = 
       '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>';
   
-  final String template;
-  final String _type;
-  final bool animation;
-  
-  final placement; // TODO: funciton or string
-  
-  Tooltip(Element element, {bool animation: true, placement: _DEF_PLACEMENT, 
-  selector: false, String template: _DEF_TEMPLATE, String trigger: 'hover focus',
-  String title: '', int delay: 0, html: false, container: null}) : 
-  this.animation = animation,
-  this.placement = placement,
-  this.template = template,
-  _type = _NAME,
+  /**
+   * 
+   */
+  Tooltip(Element element, {bool animation, placement, String selector, 
+  String template, String trigger, title, int delay, int showDelay, 
+  int hideDelay, bool html, container}) : 
+  this.animation = _bool(animation, element, 'animation',  true),
+  this.placement = _data(placement, element, 'placement',  'top'),
+  this.selector  = _data(selector,  element, 'selector'),
+  this.template  = _data(template,  element, 'template',    _DEFAULT_TEMPLATE),
+  this.trigger   = _data(trigger,   element, 'trigger',    'hover focus'),
+  this._title    = _data(title,     element, 'title',      ''),
+  this.showDelay = _data(showDelay, element, 'show-delay', _data(delay, element, 'delay', 0)),
+  this.hideDelay = _data(hideDelay, element, 'hide-delay', _data(delay, element, 'delay', 0)),
+  this.html      = _bool(html,      element, 'html',       false),
+  this.container = _data(container, element, 'container'),
   super(element, _NAME) {
     
-  }
-  
-  bool _enabled = false;
-  
-  /*
-
-  var Tooltip = function (element, options) {
-    this.init('tooltip', element, options)
-  }
-
-  , init: function (type, element, options) {
-      var eventIn
-        , eventOut
-        , triggers
-        , trigger
-        , i
-
-      this.type = type
-      this.options = this.getOptions(options)
-      this.enabled = true
-
-      triggers = this.options.trigger.split(' ')
-
-      for (i = triggers.length; i--;) {
-        trigger = triggers[i]
-        if (trigger == 'click') {
-          this.$element.on('click.' + this.type, this.options.selector, $.proxy(this.toggle, this))
-        } else if (trigger != 'manual') {
-          eventIn = trigger == 'hover' ? 'mouseenter' : 'focus'
-          eventOut = trigger == 'hover' ? 'mouseleave' : 'blur'
-          this.$element.on(eventIn + '.' + this.type, this.options.selector, $.proxy(this.enter, this))
-          this.$element.on(eventOut + '.' + this.type, this.options.selector, $.proxy(this.leave, this))
-        }
+    for (String t in this.trigger.split(' ')) {
+      if (t == 'click') {
+        $element.on("click.$_type", (DQueryEvent event) => toggle(), selector: selector);
+        
+      } else if (t != 'manual') {
+        final String eventIn = t == 'hover' ? 'mouseover' : 'focus';
+        final String eventOut = t == 'hover' ? 'mouseout' : 'blur';
+        $element.on("$eventIn.$_type", (DQueryEvent event) => _enter(), selector: selector);
+        $element.on("$eventOut.$_type", (DQueryEvent event) => _leave(), selector: selector);
+        
       }
-
-      this.options.selector ?
-        (this._options = $.extend({}, this.options, { trigger: 'manual', selector: '' })) :
-        this.fixTitle()
     }
-  */
-  
-  /*
-  , getOptions: function (options) {
-      options = $.extend({}, $.fn[this.type].defaults, this.$element.data(), options)
-
-      if (options.delay && typeof options.delay == 'number') {
-        options.delay = {
-          show: options.delay
-        , hide: options.delay
-        }
-      }
-
-      return options
-    }
-  */
-  
-  static void _enter(DQueryEvent e) {
-    /*
-    var defaults = $.fn[this.type].defaults
-        , options = {}
-        , self
-
-      this._options && $.each(this._options, function (key, value) {
-        if (defaults[key] != value) options[key] = value
-      }, this)
-
-      self = $(e.currentTarget)[this.type](options).data(this.type)
-
-      if (!self.options.delay || !self.options.delay.show) return self.show()
-
-      clearTimeout(this.timeout)
-      self.hoverState = 'in'
-      this.timeout = setTimeout(function() {
-        if (self.hoverState == 'in') self.show()
-      }, self.options.delay.show)
-    */
     
+    /*
+    this.options.selector ?
+        (this._options = $.extend({}, this.options, { trigger: 'manual', selector: '' })) :
+        this._fixTitle()
+    */
+    if (selector == null)
+      _fixTitle();
   }
   
-  static void _leave(DQueryEvent e) {
-    /*
-    var self = $(e.currentTarget)[this.type](this._options).data(this.type)
-
-    if (this.timeout) clearTimeout(this.timeout)
-    if (!self.options.delay || !self.options.delay.hide) return self.hide()
-
-    self.hoverState = 'out'
-    this.timeout = setTimeout(function() {
-      if (self.hoverState == 'out') self.hide()
-    }, self.options.delay.hide)
-    */
+  /** Retrieve the wired Tooltip object from an element. If there is no wired
+   * Tooltip object, a new one will be created.
+   * 
+   * + [create] - If provided, it will be used for Tooltip creation. Otherwise 
+   * the default constructor with no optional parameter value is used.
+   */
+  static Tooltip wire(Element element, [Tooltip create()]) =>
+      p.wire(element, _NAME, p.fallback(create, () => () => new Tooltip(element)));
+  
+  String get _type => _NAME;
+  String get _placementDefault => 'top';
+  final _title;
+  
+  /// Whether to have animation. Default: true.
+  final bool animation;
+  
+  /// TODO
+  final bool html;
+  
+  /// The placement strategy of the tooltip. Default: 'top'. TODO
+  final placement;
+  
+  /// TODO
+  final String selector;
+  
+  /// The html template for tooltip.
+  final String template;
+  
+  /// The trigger condition. Default: 'hover focus'.
+  final String trigger;
+  
+  /// The delay time in milliseconds to show the tooptip. Default: 0.
+  final int showDelay;
+  
+  /// The delay time in milliseconds to show the tooptip. Default: 0.
+  final int hideDelay;
+  
+  /// TODO
+  final container;
+  
+  /// Whether the tooptip mechanism is in effect.
+  bool get enabled => _enabled;
+  bool _enabled = true;
+  
+  void _enter() {
+    if (showDelay == 0) {
+      show();
+      return;
+    }
+    
+    _hoverIn = true;
+    final p.Token token = _timeout = new p.Token();
+    
+    new Future.delayed(new Duration(milliseconds: showDelay)).then((_) {
+      if (token != _timeout)
+        return;
+      if (_hoverIn == true)
+        show();
+    });
   }
+  
+  void _leave() {
+    final p.Token token = _timeout = new p.Token(); // clear timeout
+    
+    if (hideDelay == 0) {
+      hide();
+      return;
+    }
+    
+    _hoverIn = false;
+    
+    new Future.delayed(new Duration(milliseconds: hideDelay)).then((_) {
+      if (token != _timeout)
+        return;
+      if (_hoverIn == false)
+        hide();
+    });
+  }
+  
+  bool _hoverIn;
+  p.Token _timeout;
   
   void show() {
-    DQueryEvent e = new DQueryEvent('show');
+    if (!hasContent || !_enabled) 
+      return;
     
-    if (hasContent && _enabled) {
-      $element.triggerEvent(e);
-      if (e.isDefaultPrevented) 
-        return;
-      
-      setContent();
-      if (animation)
-        tip.classes.add('fade');
-      
-      final String placement = 
-          p.fallback(p.resolveString(this.placement), () => _DEF_PLACEMENT);
-      
-      tip.remove();
-      tip.style.top = tip.style.left = '0';
-      tip.style.display = 'block';
-      
-      /*
-      this.options.container ? $tip.appendTo(this.options.container) : $tip.insertAfter(this.$element)
-      pos = this.getPosition()
-      */
-      
-      final int actualWidth = tip.offsetWidth;
-      final int actualHeight = tip.offsetHeight;
-      
-      switch (placement) {
-        case 'bottom':
-          break;
-        case 'top':
-          break;
-        case 'left':
-          break;
-        case 'right':
-          break;
-      }
-      /*
-        switch (placement) {
-          case 'bottom':
-            tp = {top: pos.top + pos.height, left: pos.left + pos.width / 2 - actualWidth / 2}
-            break
-          case 'top':
-            tp = {top: pos.top - actualHeight, left: pos.left + pos.width / 2 - actualWidth / 2}
-            break
-          case 'left':
-            tp = {top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left - actualWidth}
-            break
-          case 'right':
-            tp = {top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width}
-            break
-        }
-        
-        this.applyPlacement(tp, placement)
-      */
+    final DQueryEvent e = new DQueryEvent('show');
+    $element.triggerEvent(e);
+    if (e.isDefaultPrevented) 
+      return;
+    
+    _setContent();
+    if (animation)
+      tip.classes.add('fade');
+    
+    final String placement = 
+        p.fallback(p.resolveString(this.placement), () => _placementDefault);
+    
+    tip.remove();
+    tip.style.top = tip.style.left = '0';
+    tip.style.display = 'block';
+    
+    if (container != null)
+      $(tip).appendTo(container);
+    else
+      $element.after(tip);
+    
+    final Rect pos = position;
+    final int actualWidth = tip.offsetWidth;
+    final int actualHeight = tip.offsetHeight;
+    int top, left;
+    
+    //window.console.log("${pos.left} ${pos.width} ${tip.offsetWidth} ${pos.left.round() + ((pos.width.round() - actualWidth) / 2).floor()}");
+    
+    switch (placement) {
+      case 'bottom':
+        top = pos.top.round() + pos.height.round();
+        left = pos.left.round() + ((pos.width.round() - actualWidth) / 2).floor();
+        break;
+      case 'top':
+        top = pos.top.round() - actualHeight;
+        left = pos.left.round() + ((pos.width.round() - actualWidth) / 2).floor();
+        break;
+      case 'left':
+        top = pos.top.round() + ((pos.height.round() - actualHeight) / 2).floor();
+        left = pos.left.round() - actualWidth;
+        break;
+      case 'right':
+        top = pos.top.round() + ((pos.height - actualHeight) / 2).floor();
+        left = pos.left.round() + pos.width.round();
+        break;
     }
-    
+    _applyPlacement(top, left, placement);
     $element.trigger('shown');
+    
   }
   
-  void applyPlacement(int top, int left, String placement) {
+  void _applyPlacement(int top, int left, String placement) {
     final int width = tip.offsetWidth;
     final int height = tip.offsetHeight;
-    bool replace;
+    bool replace = false;
     
-    /*
-      $tipoffset(offset)
-    */
+    _offset(top, left);
     
-    tip.classes..add('placement')..add('in');
+    tip.classes..add(placement)..add('in');
     int actualWidth = tip.offsetWidth;
     int actualHeight = tip.offsetHeight;
     
@@ -202,7 +207,7 @@ class Tooltip extends Base {
       if (left < 0) {
         delta = left * -2;
         left = 0;
-        //$tip.offset(offset)
+        _offset(top, left);
         actualWidth = tip.offsetWidth;
         actualHeight = tip.offsetHeight;
       }
@@ -213,19 +218,29 @@ class Tooltip extends Base {
       
     }
     
-    if (replace) {
-      // $tip.offset(offset)
-    }
+    if (replace)
+      _offset(top, left);
+  }
+  
+  void _offset(int top, int left) {
+    $(tip).offset = new Point(left, top);
   }
   
   String _ratioValue(num delta, num dimension) =>
       delta == 0 ? "${50 * (1 - delta / dimension)}%" : '';
   
-  void setContent() {
-    /*
-      $tip.find('.tooltip-inner')[this.options.html ? 'html' : 'text'](title)
-    */
+  void _setContent() {
+    _cnt(tip.query('.tooltip-inner'), title);
     tip.classes.removeAll(['fade', 'in', 'top', 'bottom', 'left', 'right']);
+  }
+  
+  void _cnt(Element elem, String value) {
+    if (elem != null) {
+      if (html)
+        elem.innerHtml = value;
+      else
+        $(elem).text = value;
+    }
   }
   
   void hide() {
@@ -241,11 +256,12 @@ class Tooltip extends Base {
       
       new Future.delayed(const Duration(milliseconds: 500), () {
         $tip.off(Transition.end);
-        tip.remove();
+        if (tip.parent != null)
+          tip.remove();
       });
       $tip.one(Transition.end, (DQueryEvent e) {
-        // TODO: clear timeout?
-        tip.remove();
+        if (tip.parent != null)
+          tip.remove();
       });
       
     } else {
@@ -256,19 +272,18 @@ class Tooltip extends Base {
     $element.trigger('hidden'); // TODO: check timing
   }
   
-  void fixTitle() {
-    /*
-    var $e = this.$element
-    if ($e.attr('title') || typeof($e.attr('data-original-title')) != 'string') {
-      $e.attr('data-original-title', $e.attr('title') || '').attr('title', '')
+  void _fixTitle() {
+    final String title = element.attributes['title'];
+    if (title != null && !title.isEmpty) {
+      element.attributes['data-original-title'] = title;
+      element.attributes['title'] = '';
     }
-    */
   }
   
   bool get hasContent => title != null;
   
-  Rect getPosition() {
-    return element.offset; // TODO: check jQuery offset
+  Rect get position {
+    return element.getBoundingClientRect(); // TODO: check fallback scenario
     /*
     var el = this.$element[0]
     return $.extend({}, (typeof el.getBoundingClientRect == 'function') ? el.getBoundingClientRect() : {
@@ -278,19 +293,9 @@ class Tooltip extends Base {
     */
   }
   
-  String get title {
-    /*
-    var title
-    , $e = this.$element
-    , o = this.options
-
-    title = $e.attr('data-original-title')
-    || (typeof o.title == 'function' ? o.title.call($e[0]) :  o.title)
-
-    return title
-    */
-  }
-  
+  String get title =>
+      p.fallback(element.attributes['data-original-title'], 
+          () => p.resolveString(_title, element));
   
   Element get tip =>
       p.fallback(_tip, () => _tip = new Element.html(template));
@@ -300,58 +305,42 @@ class Tooltip extends Base {
       p.fallback(_arrow, () => _arrow = tip.query('.tooltip-arrow'));
   Element _arrow;
   
-  void validate() {
-    if (element.parent == null) {
-      hide();
-      /*
-      this.$element = null
-      this.options = null
-      */
-    }
-  }
-  
+  /// Enable tooptip.
   void enable() {
     _enabled = true;
   }
   
+  /// Disable tooptip.
   void disable() {
     _enabled = false;
   }
   
+  /// Toggle enable/disable state.
   void toggleEnabled() {
     _enabled = !_enabled;
   }
   
-  /*
-  , toggle: function (e) {
-      var self = e ? $(e.currentTarget)[this.type](this._options).data(this.type) : this
-      self.tip().hasClass('in') ? self.hide() : self.show()
-    }
-
-  */
-  static void _toggle(Element target) {
-    
-  }
+  /// Toggle visibility of tooltip.
+  void toggle() => tip.classes.contains('in') ? hide() : show();
   
+  /// Destroy the component.
   void destroy() {
     hide();
-    $element.off(".$_type");
-    //this.removeData(this.type)
+    $element.off(".${_type}");
+    $element.data.remove(_type);
   }
   
 }
 
-/*
- // TOOLTIP PLUGIN DEFINITION
- // ========================= 
+_data(value, Element elem, String name, [defaultValue]) =>
+    p.fallback(value, () => 
+    p.fallback(elem.attributes["data-$name"], () => defaultValue));
 
-  $.fn.tooltip = function ( option ) {
-    return this.each(function () {
-      var $this = $(this)
-        , data = $this.data('tooltip')
-        , options = typeof option == 'object' && option
-      if (!data) $this.data('tooltip', (data = new Tooltip(this, options)))
-      if (typeof option == 'string') data[option]()
-    })
-  }
-*/
+_bool(bool value, Element elem, String name, [bool defaultValue]) {
+  if (value != null)
+    return value;
+  final String v = elem.attributes["data-$name"];
+  return v == 'true' ? true : v == 'false' ? false : defaultValue;
+}
+
+
