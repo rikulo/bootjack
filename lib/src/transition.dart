@@ -26,7 +26,7 @@ class Transition {
    */
   static String get end {
     if (_end == null) {
-      _end = _fallback(_TRANS_END_EVENT_NAMES[Device.cssPrefix], () => 'transitionend');
+      _end = p.fallback(_TRANS_END_EVENT_NAMES[Device.cssPrefix], () => 'transitionend');
     }
     return _end;
   }
@@ -34,25 +34,8 @@ class Transition {
   
   /** Return true if CSS transition is supported in this device.
    */
-  static bool get isSupported {
-    if (_supported == null) {
-      if (Device.isIE) {
-        int version = _ieVersion;
-        _supported =  version != null && version > 9;
-      } else {
-        _supported = true;
-      }
-    }
-    return _supported;
-  }
+  static bool get isSupported =>
+      p.fallback(_supported, () => _supported = !browser.msie || browser.version >= 9);
   static bool _supported;
-  
-  static int get _ieVersion {
-    try {
-      return int.parse(_IE_VERSION.firstMatch(Device.userAgent).group(1));
-    } catch (_) {}
-    return null;
-  }
-  static final RegExp _IE_VERSION = new RegExp(r'MSIE\s+(\d+)');
   
 }

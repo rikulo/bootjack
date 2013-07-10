@@ -1,10 +1,10 @@
 name: bootjack
-version: 0.5.1
-description: > 
+version: 0.5.2+1
+author: Simon Pai <simonpai@rikulo.org>
+description: |
   Bootjack is a porting of Bootstrap in Dart.
-authors:
-- Simon Pai <simonpai@rikulo.org>
 homepage: http://rikulo.org/
 dependencies:
   browser: any
-  dquery: any
+  dquery: '>=0.5.1'
+  rikulo_commons: '>=0.7.3'

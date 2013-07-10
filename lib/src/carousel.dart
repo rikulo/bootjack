@@ -1,22 +1,13 @@
 part of bootjack;
 
-// required jQuery features:
-// classes
-// traversing: find()/parent()/children()
-// event: $.Event()/one()/trigger()
-// $.support.transition
-// index()
-// data()
-// on()
-
 class Carousel extends Base {
   
   static const String _NAME = 'carousel';
   
-  /// 
+  /// The time interval between sliding.
   final int interval;
   
-  /** The condition to pause the sliding
+  /** The condition to pause the sliding.
    */
   final String pauseCondition;
   
@@ -24,15 +15,15 @@ class Carousel extends Base {
   this.interval = interval,
   this.pauseCondition = pause,
   super(element, _NAME) {
-    /*
-    this.$indicators = this.$element.find('.carousel-indicators')
-    this.options = options
-    this.options.pause == 'hover' && this.$element
-      .on('mouseenter', $.proxy(this.pause, this))
-      .on('mouseleave', $.proxy(this.cycle, this))
-    */
+    _indicators = element.query('.carousel-indicators');
+    if (pause == 'hover') {
+      $element
+      ..on('mouseenter', (DQueryEvent e) => _pause())
+      ..on('mouseleave', (DQueryEvent e) => _cycle());
+    }
   }
   
+  Element _indicators;
   
   /** Return true if the Carousel is currently sliding.
    */
@@ -44,28 +35,17 @@ class Carousel extends Base {
   bool get paused => _paused;
   bool _paused = false;
   
-  void cycle([e]) {
-    /*
-    if (!e) this.paused = false
-    if (this.interval) clearInterval(this.interval);
-    this.options.interval
-    && !this.paused
-    && (this.interval = setInterval($.proxy(this.next, this), this.options.interval))
-    */
-  }
+  Element get active => element.query('.item.active');
+  ElementQuery _$items;
   
-  ElementQuery _$active, _$items;
-  
-  int getActiveIndex() {
-    _$active = $element.find('.item.active');
-    _$items = _$active.parent().children();
-    /*
-    return this.$items.index(this.$active)
-    */
+  int get activeIndex {
+    Element a = active;
+    _$items = $(a.parent).children();
+    return _$items.indexOf(a);
   }
   
   void to(int pos) {
-    int activeIndex = this.getActiveIndex();
+    int index = activeIndex;
     
     if (pos > (_$items.length - 1) || pos < 0)
       return;
@@ -76,22 +56,40 @@ class Carousel extends Base {
       });
     }
     
-    if (activeIndex == pos) {
+    if (index == pos) {
       pause();
       cycle();
     }
     
-    slide(pos > activeIndex ? 'next' : 'prev', $(_$items[pos]));
+    slide(pos > index ? 'next' : 'prev', _$items[pos]);
     
   }
   
-  void pause([e]) {
+  void cycle() {
+    _paused = false;
+    _cycle();
+  }
+  
+  void _cycle() {
     /*
-    if (!e) this.paused = true
-    if (this.$element.find('.next, .prev').length && $.support.transition.end) {
-      this.$element.trigger($.support.transition.end)
-      this.cycle(true)
+    if (this.interval) clearInterval(this.interval);
+    this.options.interval
+    && !this.paused
+    && (this.interval = setInterval($.proxy(this.next, this), this.options.interval))
+    */
+  }
+  
+  void pause() {
+    _paused = true;
+    _pause();
+  }
+  
+  void _pause() {
+    if (!$element.find('.next, .prev').isEmpty && Transition.isUsed) {
+      $element.trigger(Transition.end);
+      _cycle();
     }
+    /*
     clearInterval(this.interval)
     this.interval = null
     */
@@ -107,59 +105,68 @@ class Carousel extends Base {
       slide('prev');
   }
   
-  void slide(String type, [next]) {
+  void slide(String type, [Element next]) {
+    final Element activeItem = active;
+    final List<Element> items = $element.find('.item');
+    final Element nextItem = p.fallback(next, () => 
+        type == 'next' ? p.fallback(activeItem.nextElementSibling, () => items.first) : 
+        type == 'prev' ? p.fallback(activeItem.previousElementSibling, () => items.last) : 
+        null);
+    final String direction = type == 'next' ? 'left' : 'right';
     /*
-    var $active = this.$element.find('.item.active')
-        , $next = next || $active[type]()
         , isCycling = this.interval
-        , direction = type == 'next' ? 'left' : 'right'
-        , fallback  = type == 'next' ? 'first' : 'last'
-        , that = this
-        , e
-
-    this.sliding = true
-
+    */
+    _sliding = true;
+    
+    /*
     isCycling && this.pause()
-
-    $next = $next.length ? $next : this.$element.find('.item')[fallback]()
-
-    e = $.Event('slide', {
-      relatedTarget: $next[0]
-    , direction: direction
-    })
-
-    if ($next.hasClass('active')) return
-
-    if (this.$indicators.length) {
-      this.$indicators.find('.active').removeClass('active')
-      this.$element.one('slid', function () {
-        var $nextIndicator = $(that.$indicators.children()[that.getActiveIndex()])
-        $nextIndicator && $nextIndicator.addClass('active')
-      })
+    */
+    
+    DQueryEvent e = new DQueryEvent('slide', data: {
+      'relatedTarget': nextItem,
+      'direction': direction
+    });
+    
+    if (nextItem.classes.contains('active'))
+      return;
+    
+    if (_indicators != null) {
+      $(_indicators).find('.active').removeClass('active');
+      $element.one('slid', (DQueryEvent e) {
+        final List<Element> elems = _indicators.children;
+        final int index = activeIndex;
+        if (index > -1 && index < elems.length)
+          elems[index].classes.add('active');
+      });
     }
-
-    if ($.support.transition && this.$element.hasClass('slide')) {
-      this.$element.trigger(e)
-      if (e.isDefaultPrevented()) return
-      $next.addClass(type)
-      $next[0].offsetWidth // force reflow
-      $active.addClass(direction)
-      $next.addClass(direction)
-      this.$element.one($.support.transition.end, function () {
-        $next.removeClass([type, direction].join(' ')).addClass('active')
-        $active.removeClass(['active', direction].join(' '))
-        that.sliding = false
-        setTimeout(function () { that.$element.trigger('slid') }, 0)
-      })
+    
+    $element.triggerEvent(e);
+    if (e.isDefaultPrevented)
+      return;
+    
+    if (Transition.isUsed && element.classes.contains('slide')) {
+      nextItem.classes.add(type);
+      nextItem.offsetWidth; // force reflow
+      activeItem.classes.add(direction);
+      nextItem.classes.add(direction);
+      
+      $element.one(Transition.end, (DQueryEvent e) {
+        nextItem.classes..remove('type')..remove(direction)..add('active');
+        activeItem.classes..remove('type')..remove(direction);
+        _sliding = false;
+        new Future.delayed(const Duration(), () {
+          $element.trigger('slid');
+        });
+      });
+      
     } else {
-      this.$element.trigger(e)
-      if (e.isDefaultPrevented()) return
-      $active.removeClass('active')
-      $next.addClass('active')
-      this.sliding = false
-      this.$element.trigger('slid')
+      activeItem.classes.remove('active');
+      nextItem.classes.add('active');
+      _sliding = false;
+      $element.trigger('slid');
+      
     }
-
+    /*
     isCycling && this.cycle()
     */
   }
@@ -176,7 +183,7 @@ class Carousel extends Base {
     /*
     $document().on('click.carousel.data-api', '[data-slide], [data-slide-to]', (DQueryEvent e) {
       Element elem = e.target as Element;
-      ElementQuery $target = $(_dataTarget(elem));
+      ElementQuery $target = $(p.getDataTarget(elem));
       
       if (!$target.isEmpty) {
         Element target = $target.first;

@@ -1,26 +1,29 @@
 part of bootjack;
 
 // required jQuery features:
-// classes
-// traversing: find()
-// event: $.Event()/trigger()
-// offset()/css()
-// detach()
-// attr()
-// data()
-// on()/off()
+// offset()
+// appendTo()
 
 class Tooltip extends Base {
   
   static const String _NAME = 'tooltip';
+  static const String _DEF_PLACEMENT = 'top';
+  static const String _DEF_TEMPLATE = 
+      '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>';
   
+  final String template;
+  final String _type;
   final bool animation;
   
   final placement; // TODO: funciton or string
   
-  Tooltip(Element element, {bool animation: true, placement: 'top'}) : 
+  Tooltip(Element element, {bool animation: true, placement: _DEF_PLACEMENT, 
+  selector: false, String template: _DEF_TEMPLATE, String trigger: 'hover focus',
+  String title: '', int delay: 0, html: false, container: null}) : 
   this.animation = animation,
   this.placement = placement,
+  this.template = template,
+  _type = _NAME,
   super(element, _NAME) {
     
   }
@@ -33,16 +36,6 @@ class Tooltip extends Base {
     this.init('tooltip', element, options)
   }
 
-  $.fn.tooltip.defaults = {
-  , selector: false
-  , template: '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
-  , trigger: 'hover focus'
-  , title: ''
-  , delay: 0
-  , html: false
-  , container: false
-  }
-
   , init: function (type, element, options) {
       var eventIn
         , eventOut
@@ -51,7 +44,6 @@ class Tooltip extends Base {
         , i
 
       this.type = type
-      this.$element = $(element)
       this.options = this.getOptions(options)
       this.enabled = true
 
@@ -113,7 +105,7 @@ class Tooltip extends Base {
     
   }
   
-  static void  _leave(DQueryEvent e) {
+  static void _leave(DQueryEvent e) {
     /*
     var self = $(e.currentTarget)[this.type](this._options).data(this.type)
 
@@ -128,40 +120,43 @@ class Tooltip extends Base {
   }
   
   void show() {
-    DQueryEvent e = new DQueryEvent(e);
-    /*
-    , pos
-    , actualWidth
-    , actualHeight
-    , placement
-    , tp
-    */
+    DQueryEvent e = new DQueryEvent('show');
+    
     if (hasContent && _enabled) {
-      $element.trigger(e);
+      $element.triggerEvent(e);
       if (e.isDefaultPrevented) 
         return;
       
-      ElementQuery $tip = _tip();
-      
       setContent();
       if (animation)
-        $tip.forEach((Element e) => e.classes.add('fade'));
+        tip.classes.add('fade');
+      
+      final String placement = 
+          p.fallback(p.resolveString(this.placement), () => _DEF_PLACEMENT);
+      
+      tip.remove();
+      tip.style.top = tip.style.left = '0';
+      tip.style.display = 'block';
+      
       /*
-      placement = typeof this.options.placement == 'function' ?
-          this.options.placement.call(this, $tip[0], this.$element[0]) :
-          this.options.placement
-
-        $tip
-          .detach()
-          .css({ top: 0, left: 0, display: 'block' })
-
-        this.options.container ? $tip.appendTo(this.options.container) : $tip.insertAfter(this.$element)
-
-        pos = this.getPosition()
-
-        actualWidth = $tip[0].offsetWidth
-        actualHeight = $tip[0].offsetHeight
-
+      this.options.container ? $tip.appendTo(this.options.container) : $tip.insertAfter(this.$element)
+      pos = this.getPosition()
+      */
+      
+      final int actualWidth = tip.offsetWidth;
+      final int actualHeight = tip.offsetHeight;
+      
+      switch (placement) {
+        case 'bottom':
+          break;
+        case 'top':
+          break;
+        case 'left':
+          break;
+        case 'right':
+          break;
+      }
+      /*
         switch (placement) {
           case 'bottom':
             tp = {top: pos.top + pos.height, left: pos.left + pos.width / 2 - actualWidth / 2}
@@ -176,7 +171,7 @@ class Tooltip extends Base {
             tp = {top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width}
             break
         }
-
+        
         this.applyPlacement(tp, placement)
       */
     }
@@ -184,99 +179,81 @@ class Tooltip extends Base {
     $element.trigger('shown');
   }
   
-  void applyPlacement(offset, placement) {
+  void applyPlacement(int top, int left, String placement) {
+    final int width = tip.offsetWidth;
+    final int height = tip.offsetHeight;
+    bool replace;
+    
     /*
-    var $tip = this.tip()
-        , width = $tip[0].offsetWidth
-        , height = $tip[0].offsetHeight
-        , actualWidth
-        , actualHeight
-        , delta
-        , replace
-
-      $tip
-        .offset(offset)
-        .addClass(placement)
-        .addClass('in')
-
-      actualWidth = $tip[0].offsetWidth
-      actualHeight = $tip[0].offsetHeight
-
-      if (placement == 'top' && actualHeight != height) {
-        offset.top = offset.top + height - actualHeight
-        replace = true
-      }
-
-      if (placement == 'bottom' || placement == 'top') {
-        delta = 0
-
-        if (offset.left < 0){
-          delta = offset.left * -2
-          offset.left = 0
-          $tip.offset(offset)
-          actualWidth = $tip[0].offsetWidth
-          actualHeight = $tip[0].offsetHeight
-        }
-
-        this.replaceArrow(delta - width + actualWidth, actualWidth, 'left')
-      } else {
-        this.replaceArrow(actualHeight - height, actualHeight, 'top')
-      }
-
-      if (replace) $tip.offset(offset)
+      $tipoffset(offset)
     */
+    
+    tip.classes..add('placement')..add('in');
+    int actualWidth = tip.offsetWidth;
+    int actualHeight = tip.offsetHeight;
+    
+    if (placement == 'top' && actualHeight != height) {
+      top += height - actualHeight;
+      replace = true;
+    }
+    
+    if (placement == 'bottom' || placement == 'top') {
+      int delta = 0;
+      if (left < 0) {
+        delta = left * -2;
+        left = 0;
+        //$tip.offset(offset)
+        actualWidth = tip.offsetWidth;
+        actualHeight = tip.offsetHeight;
+      }
+      arrow.style.left = _ratioValue(delta - width + actualWidth, actualWidth);
+      
+    } else {
+      arrow.style.top = _ratioValue(actualHeight - height, actualHeight);
+      
+    }
+    
+    if (replace) {
+      // $tip.offset(offset)
+    }
   }
   
-  void replaceArrow(delta, dimension, position) {
-    /*
-    this
-    .arrow()
-    .css(position, delta ? (50 * (1 - delta / dimension) + "%") : '')
-    */
-  }
+  String _ratioValue(num delta, num dimension) =>
+      delta == 0 ? "${50 * (1 - delta / dimension)}%" : '';
   
   void setContent() {
     /*
-    var $tip = this.tip()
-        , title = this.getTitle()
-
       $tip.find('.tooltip-inner')[this.options.html ? 'html' : 'text'](title)
-      $tip.removeClass('fade in top bottom left right')
     */
+    tip.classes.removeAll(['fade', 'in', 'top', 'bottom', 'left', 'right']);
   }
   
   void hide() {
-    ElementQuery $tip = _tip();
-    
-    DQueryEvent e = new DQueryEvent('hide');
-    
+    final DQueryEvent e = new DQueryEvent('hide');
     $element.triggerEvent(e);
     if (e.isDefaultPrevented)
       return;
     
+    tip.classes.remove('in');
     
-    /*
-    var that = this
-
-      $tip.removeClass('in')
-
-      function removeWithAnimation() {
-        var timeout = setTimeout(function () {
-          $tip.off($.support.transition.end).detach()
-        }, 500)
-
-        $tip.one($.support.transition.end, function () {
-          clearTimeout(timeout)
-          $tip.detach()
-        })
-      }
-
-      $.support.transition && this.$tip.hasClass('fade') ?
-        removeWithAnimation() :
-        $tip.detach()
+    if (Transition.isUsed && tip.classes.contains('fade')) {
+      ElementQuery $tip = $(tip);
       
-    */
-    $element.trigger('hidden');
+      new Future.delayed(const Duration(milliseconds: 500), () {
+        $tip.off(Transition.end);
+        tip.remove();
+      });
+      $tip.one(Transition.end, (DQueryEvent e) {
+        // TODO: clear timeout?
+        tip.remove();
+      });
+      
+    } else {
+      tip.remove();
+      
+    }
+    
+    $element.trigger('hidden'); // TODO: check timing
   }
   
   void fixTitle() {
@@ -288,10 +265,10 @@ class Tooltip extends Base {
     */
   }
   
-  bool get hasContent => getTitle() != null;
+  bool get hasContent => title != null;
   
   Rect getPosition() {
-    return element.offset;
+    return element.offset; // TODO: check jQuery offset
     /*
     var el = this.$element[0]
     return $.extend({}, (typeof el.getBoundingClientRect == 'function') ? el.getBoundingClientRect() : {
@@ -301,7 +278,7 @@ class Tooltip extends Base {
     */
   }
   
-  String getTitle() {
+  String get title {
     /*
     var title
     , $e = this.$element
@@ -314,13 +291,14 @@ class Tooltip extends Base {
     */
   }
   
-  ElementQuery _$tip, _$arrow;
   
-  ElementQuery _tip() =>
-      _fallback(_$tip, () => _$tip = null /*$(this.options.template)*/);
+  Element get tip =>
+      p.fallback(_tip, () => _tip = new Element.html(template));
+  Element _tip;
   
-  ElementQuery _arrow() =>
-      _fallback(_$arrow, () => _$arrow = _tip().find('.tooltip-arrow'));
+  Element get arrow =>
+      p.fallback(_arrow, () => _arrow = tip.query('.tooltip-arrow'));
+  Element _arrow;
   
   void validate() {
     if (element.parent == null) {
@@ -357,7 +335,7 @@ class Tooltip extends Base {
   
   void destroy() {
     hide();
-    //this.$element.off('.' + this.type)
+    $element.off(".$_type");
     //this.removeData(this.type)
   }
   

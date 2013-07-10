@@ -5,7 +5,9 @@ import 'dart:html_common';
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:rikulo_commons/html.dart';
 import 'package:dquery/dquery.dart';
+import 'bootjack_plugin.dart' as p;
 
 part 'src/util/util.dart';
 
@@ -40,13 +42,6 @@ abstract class Base {
   }
   
 }
-
-_wire(Element elem, String name, create()) =>
-    _fallback($(elem).data.get(name), create); // create shall save it back
-
-_dataTarget(Element elem) =>
-    _fallback(elem.attributes['data-target'], () => elem.attributes['href']);
-// selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') //strip for ie7 // skipped
 
 /** A collection of top level Bootjack static methods.
  */

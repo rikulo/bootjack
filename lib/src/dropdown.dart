@@ -11,7 +11,7 @@ class Dropdown extends Base {
    */
   Dropdown(Element element) : 
   super(element, _NAME) {
-    $element.on('click.dropdown.data-api', _toggle);
+    $element.on('click.dropdown.data-api', _toggleEvent);
     $('html').on('click.dropdown.data-api', (DQueryEvent e) { // TODO: why not document?
       Element p = element.parent;
       if (p != null)
@@ -26,7 +26,7 @@ class Dropdown extends Base {
    * the default constructor with no optional parameter value is used.
    */
   static Dropdown wire(Element element, [Dropdown create()]) =>
-      _wire(element, _NAME, _fallback(create, () => () => new Dropdown(element)));
+      p.wire(element, _NAME, p.fallback(create, () => () => new Dropdown(element)));
   
   /** Toggle the open/close state of the Dropdown.
    */
@@ -113,7 +113,7 @@ class Dropdown extends Base {
   }
 
   static Element _getParent(Element elem) {
-    final String selector = _dataTarget(elem);
+    final String selector = p.getDataTarget(elem);
     if (selector != null) {
       try {
         final ElementQuery p = $(selector);

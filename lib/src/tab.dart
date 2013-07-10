@@ -21,14 +21,14 @@ class Tab extends Base {
    * the default constructor with no optional parameter value is used.
    */
   static Tab wire(Element element, [Tab create()]) =>
-      _wire(element, _NAME, _fallback(create, () => () => new Tab(element)));
+      p.wire(element, _NAME, p.fallback(create, () => () => new Tab(element)));
   
   /**
    * 
    */
   void show() {
     final ElementQuery $ul = $element.closest('ul:not(.dropdown-menu)');
-    final String selector = _dataTarget(element); // TODO: should cache in construction?
+    final String selector = p.getDataTarget(element); // TODO: should cache in construction?
     final ElementQuery $parent = $element.parent('li');
     
     if ($parent.hasClass('active'))

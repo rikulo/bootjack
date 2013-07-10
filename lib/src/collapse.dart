@@ -1,15 +1,5 @@
 part of bootjack;
 
-// required jQuery features:
-// classes
-// traversing: find()
-// event: $.Event()/one()/trigger()
-// $.camelCase()
-// effect!
-// attr()
-// data()
-// on()
-
 class Collapse extends Base {
   
   static const String _NAME = 'collapse';
@@ -30,102 +20,96 @@ class Collapse extends Base {
   bool get transitioning => _transitioning;
   bool _transitioning = false;
   
-  /**
-   * 
-   */
-  String get dimension => 
-      element.classes.contains('width') ? 'width' : 'height';
-  
-  bool get _horizontal =>
-      element.classes.contains('width');
+  bool get horizontal => p.fallback(_horizontal, 
+      () => _horizontal = element.classes.contains('width'));
+  bool _horizontal;
   
   void show() {
-    if (_transitioning || element.classes.contains('in'))
+    if (transitioning || element.classes.contains('in'))
       return;
     
-    final String scroll = element.classes.contains('width') ? 'scrollWidth' : 'scrollHeight';
+    final String scroll = horizontal ? 'scrollWidth' : 'scrollHeight';
     
     if (_$parent != null) {
       ElementQuery $actives = _$parent.children('.accordion-group').children('.in');
       if (!$actives.isEmpty) {
         /*
         hasData = actives.data('collapse')
-            if (hasData && hasData.transitioning) return
+        if (hasData && hasData.transitioning) return
         actives.collapse('hide')
         hasData || actives.data('collapse', null)
         */
       }
     }
     
-    _clearSize();
+    _size = '0';
     
-    _transition('addClass', new DQueryEvent('show'), 'shown');
-    if (Transition.isUsed) {
-      if (_horizontal)
-        element.style.width = '${element.scrollWidth}px';
-      else
-        element.style.height = '${element.scrollHeight}px';
-    }
+    _transition(true, new DQueryEvent('show'), 'shown');
+    if (Transition.isUsed)
+      _size = '${horizontal ? element.scrollWidth : element.scrollHeight}px';
     
   }
   
   void hide() {
-    if (_transitioning || !element.classes.contains('in'))
+    if (transitioning || !element.classes.contains('in'))
       return;
-    /*
-    this.reset(this.$element[dimension]())
-    */
-    _transition('removeClass', new DQueryEvent('hide'), 'hidden');
-    _clearSize();
+    reset(horizontal ? $element.width : $element.height);
+    _transition(false, new DQueryEvent('hide'), 'hidden');
+    _size = '0';
+  }
+  
+  void reset(int size) {
+    element.classes.remove('collapse');
+    
+    _size = p.fallback("${size}px", () => 'auto');
+    
+    element.offsetWidth; // force reflow
+    
+    if (size != null)
+      element.classes.add('collapse');
+    else
+      element.classes.remove('collapse');
+  }
+  
+  void set _size(String size) {
+    if (horizontal)
+      element.style.width = size;
+    else
+      element.style.height = size;
+  }
+  
+  void _transition(bool add, DQueryEvent startEvent, String completeEvent) {
+    
+    $element.triggerEvent(startEvent);
+    if (startEvent.isDefaultPrevented)
+      return;
+    
+    _transitioning = true;
+    
+    if (add)
+      element.classes.add('in');
+    else
+      element.classes.remove('in');
+    
+    final DQueryEventListener complete = (DQueryEvent e) {
+      if (startEvent.type == 'show')
+        reset(0);
+      _transitioning = false;
+      $element.trigger(completeEvent);
+    };
+    
+    if (Transition.isUsed && element.classes.contains('collapse'))
+      $element.one(Transition.end, complete);
+    else
+      complete(null);
     
   }
   
-  void reset(size) {
-    element.classes.remove('collapse');
-    /*
-    this.$element
-    [dimension](size || 'auto')
-    */
-    element.offsetWidth;
-    /*
-    this.$element[size !== null ? 'addClass' : 'removeClass']('collapse')
-    */
-  }
-  
-  void _clearSize() {
-    if (_horizontal)
-      element.style.width = '0';
-    else
-      element.style.height = '0';
-  }
-  
-  void _transition(String method, DQueryEvent startEvent, String completeEvent) {
-    /*
-    var that = this
-        , complete = function () {
-            if (startEvent.type == 'show') that.reset()
-            that.transitioning = 0
-            that.$element.trigger(completeEvent)
-          }
-
-    this.$element.trigger(startEvent)
-
-    if (startEvent.isDefaultPrevented()) return
-
-    this.transitioning = 1
-
-    this.$element[method]('in')
-
-    $.support.transition && this.$element.hasClass('collapse') ?
-      this.$element.one($.support.transition.end, complete) :
-      complete()
-    */
-  }
-  
   void toggle() {
-    /*
-    this[this.$element.hasClass('in') ? 'hide' : 'show']()
-    */
+    if (element.classes.contains('in'))
+      hide();
+    else
+      show();
   }
   
   static bool _registered = false;

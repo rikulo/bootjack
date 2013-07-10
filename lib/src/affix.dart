@@ -1,15 +1,5 @@
 part of bootjack;
 
-// $(window)
-
-// required jQuery features:
-// dimensions: height()/scrollTop()/offset()/top()/bottom()
-// classes: removeClass()/addClass()
-// data()
-// on()
-
-// TODO: require scroll spy
-
 /**
  * 
  */
@@ -17,49 +7,63 @@ class Affix extends Base {
   
   static const String _NAME = 'affix';
   
-  final int offset;
+  static const int _DEFAULT_OFFSET = 10;
+  final offsetTop, offsetBottom;
   
-  Affix(Element element, {int offset : 0}) : 
-  this.offset = offset, 
+  /** 
+   * 
+   */
+  Affix(Element element, {offsetTop: _DEFAULT_OFFSET, offsetBottom: _DEFAULT_OFFSET}) : 
+  this.offsetTop = offsetTop,
+  this.offsetBottom = offsetBottom,
   super(element, _NAME) {
-    /*
-    this.$window = $(window)
-      .on('scroll.affix.data-api', $.proxy(this.checkPosition, this))
-      .on('click.affix.data-api',  $.proxy(function () { setTimeout($.proxy(this.checkPosition, this), 1) }, this))
-    */
+    $(window)
+    ..on('scroll.affix.data-api', (DQueryEvent e) => checkPosition())
+    ..on('click.affix.data-api', (DQueryEvent e) {
+      new Future.delayed(const Duration(milliseconds: 1), checkPosition);
+    });
     checkPosition();
   }
   
+  /**
+   * 
+   */
+  static Affix wire(Element element, [Affix create()]) =>
+      p.wire(element, _NAME, p.fallback(create, () => () => new Affix(element)));
+  
+  /**
+   * 
+   */
   void checkPosition() {
-    /*
-    if (!this.$element.is(':visible')) return
-
-    var scrollHeight = $(document).height()
-      , scrollTop = this.$window.scrollTop()
-      , position = this.$element.offset()
-      , offset = this.options.offset
-      , offsetBottom = offset.bottom
-      , offsetTop = offset.top
-      , reset = 'affix affix-top affix-bottom'
-      , affix
-
-    if (typeof offset != 'object') offsetBottom = offsetTop = offset
-    if (typeof offsetTop == 'function') offsetTop = offset.top()
-    if (typeof offsetBottom == 'function') offsetBottom = offset.bottom()
-
-    affix = this.unpin != null && (scrollTop + this.unpin <= position.top) ?
-      false    : offsetBottom != null && (position.top + this.$element.height() >= scrollHeight - offsetBottom) ?
-      'bottom' : offsetTop != null && scrollTop <= offsetTop ?
-      'top'    : false
-
-    if (this.affixed === affix) return
-
-    this.affixed = affix
-    this.unpin = affix == 'bottom' ? position.top - scrollTop : null
-
-    this.$element.removeClass(reset).addClass('affix' + (affix ? '-' + affix : ''))
-    */
+    if (!element.matches(':visible'))
+      return;
+    
+    final int offsetTop = p.fallback(p.resolveInt(this.offsetTop), () => _DEFAULT_OFFSET);
+    final int offsetBottom = p.fallback(p.resolveInt(this.offsetBottom), () => _DEFAULT_OFFSET);
+    
+    final int scrollHeight = $document().height;
+    final int scrollTop = window.pageYOffset;
+    final int positionTop = element.offsetTop;
+    
+    String affix = _unpin != null && scrollTop + _unpin <= positionTop ? 'false' : 
+      offsetBottom != null && (positionTop + element.offsetHeight >= scrollHeight - offsetBottom) ? 'bottom' :
+      offsetTop != null && scrollTop <= offsetTop ? 'top' : 'false';
+    
+    if (_affixed == affix)
+      return;
+    _affixed = affix;
+    _unpin = affix == 'bottom' ? positionTop - scrollTop : null;
+    
+    element.classes
+    ..remove('affix')
+    ..remove('affix-top')
+    ..remove('affix-bottom')
+    ..add(affix == 'bottom' ? 'affix-bottom' : affix == 'top' ? 'affix-top' : 'affix');
+    
   }
+  
+  String _affixed;
+  int _unpin;
   
   static bool _registered = false;
   
@@ -69,21 +73,17 @@ class Affix extends Base {
     if (_registered) return;
     _registered = true;
     
-    /*
-    $(window).on('load', function () {
-      $('[data-spy="affix"]').each(function () {
-        var $spy = $(this)
-            , data = $spy.data()
-
-            data.offset = data.offset || {}
-
+    $window().on('load', (DQueryEvent e) {
+      for (Element elem in $('[data-spy="affix"]')) {
+        // TODO: pass data
+        /*
+        data.offset = data.offset || {}
         data.offsetBottom && (data.offset.bottom = data.offsetBottom)
         data.offsetTop && (data.offset.top = data.offsetTop)
-
-        $spy.affix(data)
-      })
-    })
-    */
+        */
+        Affix.wire(elem);
+      }
+    });
   }
   
 }
