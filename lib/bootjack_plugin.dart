@@ -64,6 +64,8 @@ void setClass(Element element, String className, bool value) {
     element.classes.remove(className);
 }
 
+/** Generates random bytes array of given [size].
+ */
 List<int> randomBytes(int size) {
   final List<int> list = new List<int>();
   for (int i = 0; i < size; i++)
