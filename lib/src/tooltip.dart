@@ -21,7 +21,8 @@ class Tooltip extends Base {
    * + [trigger] determines the conditions which triggers the tooltip, separated 
    * by whitespace. Accepted values are 'click', 'hover', 'focus', 'manual'.
    * Default value is 'hover focus'.
-   * + [title] function returns the message shown in tooltip.
+   * + If the 'title' attribute is absent on the [element], [title] function 
+   * determines the message shown in tooltip.
    * + [showDelay] determines the delay time when showing tooltip, in milliseconds.
    * If absent, [delay] value is used; if [delay] is also absent, it defaults to 
    * [0] (instant).

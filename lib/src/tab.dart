@@ -2,8 +2,7 @@ part of bootjack;
 
 // TODO: need to enable relatedTarget in show/shown event
 
-/**
- * 
+/** A tab component.
  */
 class Tab extends Base {
   
@@ -53,7 +52,7 @@ class Tab extends Base {
   }
   
   void _activate(ElementQuery $elem, ElementQuery $container, [void callback()]) {
-    final $active = $container.children('.active');
+    final ElementQuery $active = $container.children('.active');
     final bool transition = callback != null && 
         Transition.isUsed && 
         $active.hasClass('fade');

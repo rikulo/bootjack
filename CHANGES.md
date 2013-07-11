@@ -4,6 +4,7 @@
 
 * Tooltip component is ready.
 * Popover component is ready.
+* Remove resolveString(), resolveInt() utilit functions.
 * Minor bug fixes.
 
 **0.5.2**

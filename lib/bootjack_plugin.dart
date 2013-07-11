@@ -28,33 +28,7 @@ String getDataTarget(Element element) =>
     fallback(element.attributes['data-target'], () => element.attributes['href']);
 // selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') //strip for ie7 // skipped
 
-/** Return [f] if it is a String, or [f()] if [f] is a function. 
- */
-String resolveString(f, [arg]) {
-  if (f is String)
-    return f;
-  if (f is Function) {
-    try {
-      return arg == null ? f() : f(arg);
-    } catch (e) {}
-  }
-  return null;
-}
-
-/** Return [f] if it is an int, or [f()] if [f] is a function. 
- */
-int resolveInt(f) {
-  if (f is int)
-    return f;
-  if (f is Function) {
-    try {
-      return f();
-    } catch (e) {}
-  }
-  return null;
-}
-
-/** Add [className] to [element] CSS classes is [value] is true, Remove it 
+/** Add [className] to [element] CSS classes if [value] is true, Remove it 
  * otherwise.
  */
 void setClass(Element element, String className, bool value) {

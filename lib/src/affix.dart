@@ -8,12 +8,13 @@ class Affix extends Base {
   static const String _NAME = 'affix';
   
   static const int _DEFAULT_OFFSET = 10;
-  final offsetTop, offsetBottom;
+  final _AsInt offsetTop, offsetBottom;
   
   /** 
    * 
    */
-  Affix(Element element, {offsetTop: _DEFAULT_OFFSET, offsetBottom: _DEFAULT_OFFSET}) : 
+  Affix(Element element, {int offsetTop(): () => _DEFAULT_OFFSET, 
+  int offsetBottom(): () => _DEFAULT_OFFSET}) : 
   this.offsetTop = offsetTop,
   this.offsetBottom = offsetBottom,
   super(element, _NAME) {
@@ -38,8 +39,8 @@ class Affix extends Base {
     if (!element.matches(':visible'))
       return;
     
-    final int offsetTop = p.fallback(p.resolveInt(this.offsetTop), () => _DEFAULT_OFFSET);
-    final int offsetBottom = p.fallback(p.resolveInt(this.offsetBottom), () => _DEFAULT_OFFSET);
+    final int offsetTop = p.fallback(this.offsetTop(), () => _DEFAULT_OFFSET);
+    final int offsetBottom = p.fallback(this.offsetBottom(), () => _DEFAULT_OFFSET);
     
     final int scrollHeight = $document().height;
     final int scrollTop = window.pageYOffset;
@@ -87,6 +88,9 @@ class Affix extends Base {
   }
   
 }
+
+typedef int _AsInt();
+
 /*
  // AFFIX PLUGIN DEFINITION
  // ======================= 
