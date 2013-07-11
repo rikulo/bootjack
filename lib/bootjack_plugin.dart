@@ -3,7 +3,6 @@ library bootjack_plugin;
 import 'dart:html';
 import 'dart:math';
 import 'package:meta/meta.dart';
-import 'package:crypto/crypto.dart';
 import 'package:dquery/dquery.dart';
 
 /** Load a component from Element data space if available, otherwise create
@@ -38,14 +37,6 @@ void setClass(Element element, String className, bool value) {
     element.classes.remove(className);
 }
 
-/** Generates random bytes array of given [size].
- */
-List<int> randomBytes(int size) {
-  final List<int> list = new List<int>();
-  for (int i = 0; i < size; i++)
-    list.add(_random.nextInt(256));
-}
-
 get _random => fallback(_r, () => _r = new Random());
 Random _r;
 
@@ -53,8 +44,13 @@ Random _r;
  * easier debugging.
  */
 class Token {
+  
+  Token() : _str = "token_${_i++}";
+  
   @override
-  String toString() => fallback(_str, () => _str = _gen());
-  String _str;
-  static String _gen() => CryptoUtils.bytesToHex(randomBytes(4));
+  String toString() => _str;
+  
+  final String _str;
+  static int _i = 0;
+  
 }

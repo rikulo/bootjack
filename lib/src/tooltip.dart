@@ -23,12 +23,10 @@ class Tooltip extends Base {
    * Default value is 'hover focus'.
    * + If the 'title' attribute is absent on the [element], [title] function 
    * determines the message shown in tooltip.
-   * + [showDelay] determines the delay time when showing tooltip, in milliseconds.
-   * If absent, [delay] value is used; if [delay] is also absent, it defaults to 
-   * [0] (instant).
-   * + [hideDelay] determines the delay time when hiding tooltip, in milliseconds.
-   * If absent, [delay] value is used; if [delay] is also absent, it defaults to 
-   * [0] (instant).
+   * + [delay] value determines the delay time when showing/hiding tooltip, in 
+   * milliseconds. You can specify [showDelay] and [hideDelay] to configurate
+   * the delay time separately. Default: 0. Delay time only apply to 'hover' and
+   * 'focus' trigger type.
    * + If [html] is false, the component will html-escape the [title] when 
    * rendering.
    * + If [container] is given, the tooltip Element will be inserted as a child
@@ -39,13 +37,13 @@ class Tooltip extends Base {
   Tooltip(Element element, {bool animation, String placement(Element elem), 
   String selector, String template, String trigger, String title(Element elem), 
   int delay, int showDelay, int hideDelay, bool html, container}) : 
-  this.animation  = _bool(animation, element, 'animation',  true),
+  this.animation  = _bool(animation, element, 'animation', true),
+  this.html       = _bool(html,      element, 'html',      false),
+  this.showDelay  = _int(showDelay, element, 'show-delay', _int(delay, element, 'delay', 0)),
+  this.hideDelay  = _int(hideDelay, element, 'hide-delay', _int(delay, element, 'delay', 0)),
   this.selector   = _data(selector,  element, 'selector'),
-  this.template   = _data(template,  element, 'template',    _DEFAULT_TEMPLATE),
-  this.trigger    = _data(trigger,   element, 'trigger',    'hover focus'),
-  this.showDelay  = _data(showDelay, element, 'show-delay', _data(delay, element, 'delay', 0)),
-  this.hideDelay  = _data(hideDelay, element, 'hide-delay', _data(delay, element, 'delay', 0)),
-  this.html       = _bool(html,      element, 'html',       false),
+  this.template   = _data(template,  element, 'template', _DEFAULT_TEMPLATE),
+  this.trigger    = _data(trigger,   element, 'trigger',  'hover focus'),
   this.container  = _data(container, element, 'container'),
   this._title     = p.fallback(title,     () => (Element elem) => elem.attributes['data-title']),
   this._placement = p.fallback(placement, () => (Element elem) => elem.attributes['data-placement']),
@@ -371,7 +369,19 @@ typedef String _ToString(Element elem);
 _data(value, Element elem, String name, [defaultValue]) =>
     p.fallback(value, () => elem.attributes["data-$name"], () => defaultValue);
 
-_bool(bool value, Element elem, String name, [bool defaultValue]) {
+int _int(int value, Element elem, String name, [int defaultValue]) {
+  if (value != null)
+    return value;
+  final String v = elem.attributes["data-$name"];
+  if (v != null) {
+    try {
+      return int.parse(elem.attributes["data-$name"]);
+    } catch (e) {}
+  }
+  return defaultValue;
+}
+
+bool _bool(bool value, Element elem, String name, [bool defaultValue]) {
   if (value != null)
     return value;
   final String v = elem.attributes["data-$name"];
