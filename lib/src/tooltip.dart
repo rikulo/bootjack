@@ -1,7 +1,7 @@
 part of bootjack;
 
-/**
- * 
+/** A tooltip component, which shows a tip message around target component when
+ * triggered.
  */
 class Tooltip extends Base {
   
@@ -9,22 +9,45 @@ class Tooltip extends Base {
   static const String _DEFAULT_TEMPLATE = 
       '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>';
   
-  /**
+  /** Construct a tooltip component and wire it to [element].
    * 
+   * + If [animation] is true, the show/hide action will be animated. Default: true.
+   * + [placement] function determines where to put the tooltip. Accepted output
+   * are 'top', 'bottom', 'left', 'right'. Default: a function which returns the
+   * attribute 'data-placement' on the [element], or 'top' if absent.
+   * + [selector] determines on which descendants the tooltip can be triggered.
+   * If absent, the tooltip is triggered by the events on the [element] itself.
+   * + [template] determines the DOM structure of tooltip.
+   * + [trigger] determines the conditions which triggers the tooltip, separated 
+   * by whitespace. Accepted values are 'click', 'hover', 'focus', 'manual'.
+   * Default value is 'hover focus'.
+   * + [title] function returns the message shown in tooltip.
+   * + [showDelay] determines the delay time when showing tooltip, in milliseconds.
+   * If absent, [delay] value is used; if [delay] is also absent, it defaults to 
+   * [0] (instant).
+   * + [hideDelay] determines the delay time when hiding tooltip, in milliseconds.
+   * If absent, [delay] value is used; if [delay] is also absent, it defaults to 
+   * [0] (instant).
+   * + If [html] is false, the component will html-escape the [title] when 
+   * rendering.
+   * + If [container] is given, the tooltip Element will be inserted as a child
+   * of it. The value must be either a selector String, an Element, or an 
+   * [ElementQuery] object. If absent, the tooltip Element will be inserted
+   * after the [element].
    */
-  Tooltip(Element element, {bool animation, placement, String selector, 
-  String template, String trigger, title, int delay, int showDelay, 
-  int hideDelay, bool html, container}) : 
-  this.animation = _bool(animation, element, 'animation',  true),
-  this.placement = _data(placement, element, 'placement',  'top'),
-  this.selector  = _data(selector,  element, 'selector'),
-  this.template  = _data(template,  element, 'template',    _DEFAULT_TEMPLATE),
-  this.trigger   = _data(trigger,   element, 'trigger',    'hover focus'),
-  this._title    = _data(title,     element, 'title',      ''),
-  this.showDelay = _data(showDelay, element, 'show-delay', _data(delay, element, 'delay', 0)),
-  this.hideDelay = _data(hideDelay, element, 'hide-delay', _data(delay, element, 'delay', 0)),
-  this.html      = _bool(html,      element, 'html',       false),
-  this.container = _data(container, element, 'container'),
+  Tooltip(Element element, {bool animation, String placement(Element elem), 
+  String selector, String template, String trigger, String title(Element elem), 
+  int delay, int showDelay, int hideDelay, bool html, container}) : 
+  this.animation  = _bool(animation, element, 'animation',  true),
+  this.selector   = _data(selector,  element, 'selector'),
+  this.template   = _data(template,  element, 'template',    _DEFAULT_TEMPLATE),
+  this.trigger    = _data(trigger,   element, 'trigger',    'hover focus'),
+  this.showDelay  = _data(showDelay, element, 'show-delay', _data(delay, element, 'delay', 0)),
+  this.hideDelay  = _data(hideDelay, element, 'hide-delay', _data(delay, element, 'delay', 0)),
+  this.html       = _bool(html,      element, 'html',       false),
+  this.container  = _data(container, element, 'container'),
+  this._title     = p.fallback(title,     () => (Element elem) => elem.attributes['data-title']),
+  this._placement = p.fallback(placement, () => (Element elem) => elem.attributes['data-placement']),
   super(element, _NAME) {
     
     for (String t in this.trigger.split(' ')) {
@@ -60,24 +83,28 @@ class Tooltip extends Base {
   
   String get _type => _NAME;
   String get _placementDefault => 'top';
-  final _title;
+  String get _titleDefault => '';
+  final _ToString _placement, _title;
   
   /// Whether to have animation. Default: true.
   final bool animation;
   
-  /// TODO
+  /** Whether the tooplip content is HTML. If [false], the content will be
+   * html-escaped. Default: false.
+   */
   final bool html;
   
-  /// The placement strategy of the tooltip. Default: 'top'. TODO
-  final placement;
-  
-  /// TODO
+  /** The selector to locate descendant Elements which would trigger the tooltip.
+   * If absent, the tooltip will be triggered by the base Element of this component.
+   */
   final String selector;
   
   /// The html template for tooltip.
   final String template;
   
-  /// The trigger condition. Default: 'hover focus'.
+  /** The trigger conditions, as event names separated by whitespace. 
+   * Default: 'hover focus'.
+   */
   final String trigger;
   
   /// The delay time in milliseconds to show the tooptip. Default: 0.
@@ -86,7 +113,9 @@ class Tooltip extends Base {
   /// The delay time in milliseconds to show the tooptip. Default: 0.
   final int hideDelay;
   
-  /// TODO
+  /** The container of tooltip Element. Accepted variable forms are selector
+   * String, Element, or [ElementQuery] object.
+   */
   final container;
   
   /// Whether the tooptip mechanism is in effect.
@@ -131,6 +160,8 @@ class Tooltip extends Base {
   bool _hoverIn;
   p.Token _timeout;
   
+  /** Show the tooltip.
+   */
   void show() {
     if (!hasContent || !_enabled) 
       return;
@@ -144,8 +175,7 @@ class Tooltip extends Base {
     if (animation)
       tip.classes.add('fade');
     
-    final String placement = 
-        p.fallback(p.resolveString(this.placement), () => _placementDefault);
+    final String placement = p.fallback(_placement(element), () => _placementDefault);
     
     tip.remove();
     tip.style.top = tip.style.left = '0';
@@ -156,29 +186,27 @@ class Tooltip extends Base {
     else
       $element.after(tip);
     
-    final Rect pos = position;
+    final Rect pos = _position;
     final int actualWidth = tip.offsetWidth;
     final int actualHeight = tip.offsetHeight;
     int top, left;
     
-    //window.console.log("${pos.left} ${pos.width} ${tip.offsetWidth} ${pos.left.round() + ((pos.width.round() - actualWidth) / 2).floor()}");
-    
     switch (placement) {
       case 'bottom':
-        top = pos.top.round() + pos.height.round();
-        left = pos.left.round() + ((pos.width.round() - actualWidth) / 2).floor();
+        top = (pos.top + pos.height).round();
+        left = (pos.left + (pos.width - actualWidth) / 2).round();
         break;
       case 'top':
         top = pos.top.round() - actualHeight;
-        left = pos.left.round() + ((pos.width.round() - actualWidth) / 2).floor();
+        left = (pos.left + (pos.width - actualWidth) / 2).round();
         break;
       case 'left':
-        top = pos.top.round() + ((pos.height.round() - actualHeight) / 2).floor();
+        top = (pos.top + (pos.height - actualHeight) / 2).round();
         left = pos.left.round() - actualWidth;
         break;
       case 'right':
-        top = pos.top.round() + ((pos.height - actualHeight) / 2).floor();
-        left = pos.left.round() + pos.width.round();
+        top = (pos.top + (pos.height - actualHeight) / 2).round();
+        left = (pos.left + pos.width).round();
         break;
     }
     _applyPlacement(top, left, placement);
@@ -211,10 +239,10 @@ class Tooltip extends Base {
         actualWidth = tip.offsetWidth;
         actualHeight = tip.offsetHeight;
       }
-      arrow.style.left = _ratioValue(delta - width + actualWidth, actualWidth);
+      _arrow.style.left = _ratioValue(delta - width + actualWidth, actualWidth);
       
     } else {
-      arrow.style.top = _ratioValue(actualHeight - height, actualHeight);
+      _arrow.style.top = _ratioValue(actualHeight - height, actualHeight);
       
     }
     
@@ -243,6 +271,8 @@ class Tooltip extends Base {
     }
   }
   
+  /** Hide the tooltip.
+   */
   void hide() {
     final DQueryEvent e = new DQueryEvent('hide');
     $element.triggerEvent(e);
@@ -280,9 +310,10 @@ class Tooltip extends Base {
     }
   }
   
+  /// Whether the tooltip message is non-empty.
   bool get hasContent => title != null;
   
-  Rect get position {
+  Rect get _position {
     return element.getBoundingClientRect(); // TODO: check fallback scenario
     /*
     var el = this.$element[0]
@@ -293,17 +324,19 @@ class Tooltip extends Base {
     */
   }
   
+  /// The message to show in tooltip.
   String get title =>
       p.fallback(element.attributes['data-original-title'], 
-          () => p.resolveString(_title, element));
+          () => _title(element), () => _titleDefault);
   
+  /// The tooltip Element.
   Element get tip =>
       p.fallback(_tip, () => _tip = new Element.html(template));
   Element _tip;
   
-  Element get arrow =>
-      p.fallback(_arrow, () => _arrow = tip.query('.tooltip-arrow'));
-  Element _arrow;
+  Element get _arrow =>
+      p.fallback(_arr, () => _arr = tip.query('.tooltip-arrow'));
+  Element _arr;
   
   /// Enable tooptip.
   void enable() {
@@ -332,9 +365,10 @@ class Tooltip extends Base {
   
 }
 
+typedef String _ToString(Element elem);
+
 _data(value, Element elem, String name, [defaultValue]) =>
-    p.fallback(value, () => 
-    p.fallback(elem.attributes["data-$name"], () => defaultValue));
+    p.fallback(value, () => elem.attributes["data-$name"], () => defaultValue);
 
 _bool(bool value, Element elem, String name, [bool defaultValue]) {
   if (value != null)

@@ -1,5 +1,7 @@
 part of bootjack;
 
+/** 
+ */
 class Carousel extends Base {
   
   static const String _NAME = 'carousel';

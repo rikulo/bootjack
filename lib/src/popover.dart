@@ -1,7 +1,6 @@
 part of bootjack;
 
-/**
- * 
+/** A pop up component bound to the given Element.
  */
 class Popover extends Tooltip {
   
@@ -9,19 +8,26 @@ class Popover extends Tooltip {
   static const String _DEFAULT_TEMPLATE = 
       '<div class="popover"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>';
   
-  /**
+  /** Construct a Popover component and wire it to [element].. See [Tooltip] 
+   * for definitions of most parameters. The differences compared to tooltip
+   * are:
    * 
+   * + The default [placement] is 'right'.
+   * + The default [trigger] is 'click'.
+   * + In addition to [title], which is rendered in popover header, you can also 
+   * specify [content], to be rendered in popover body. The [html] flag applies
+   * to both of them.
    */
-  Popover(Element element, {bool animation, placement, String selector, 
-  String template, String trigger, title, content, int delay, int showDelay, 
+  Popover(Element element, {bool animation, String placement(Element elem), 
+  String selector, String template, String trigger, String title(Element elem), 
+  String content(Element elem), int delay, int showDelay, 
   int hideDelay, bool html, container}) : 
-  this._content  = _data(content,   element, 'content'),
-  this.placement = _data(placement, element, 'placement', 'right'),
-  this.template  = _data(template,  element, 'template',   _DEFAULT_TEMPLATE),
-  this.trigger   = _data(trigger,   element, 'trigger',   'click'),
-  super(element, animation: animation, selector: selector, title: title, 
-  delay: delay, showDelay: showDelay, hideDelay: hideDelay, html: html, 
-  container: container);
+  this.template = _data(template, element, 'template', _DEFAULT_TEMPLATE),
+  this.trigger  = _data(trigger,  element, 'trigger',  'click'),
+  this._content = p.fallback(content, () => (Element elem) => elem.attributes['data-content']),
+  super(element, animation: animation, placement: placement, selector: selector, 
+  title: title, delay: delay, showDelay: showDelay, hideDelay: hideDelay, 
+  html: html, container: container);
   
   /** Retrieve the wired Popover object from an element. If there is no wired
    * Popover object, a new one will be created.
@@ -39,16 +45,9 @@ class Popover extends Tooltip {
   String get _placementDefault => 'right';
   
   @override
-  Element get arrow =>
-      p.fallback(_arrow, () => _arrow = tip.query('.arrow'));
-  Element _arrow;
-  
-  
-  
-  final _content;
-  
-  /// The placement strategy of the popover. Default: 'right'. TODO
-  final placement;
+  Element get _arrow =>
+      p.fallback(_arr, () => _arr = tip.query('.arrow'));
+  Element _arr;
   
   /// The html template for popover.
   final String template;
@@ -56,10 +55,12 @@ class Popover extends Tooltip {
   /// The trigger condition. Default: 'click'.
   final String trigger;
   
-  ///
-  String get content =>
-      p.fallback(p.resolveString(_content, element), 
-          () => element.attributes['data-content']);
+  /// The content message of the popover.
+  String get content => p.fallback(_content(element), 
+      () => element.attributes['data-content'], () => _contentDefault);
+  
+  String get _contentDefault => '';
+  final _ToString _content;
   
   @override
   bool get hasContent => title != null || content != null;

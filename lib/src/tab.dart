@@ -23,8 +23,7 @@ class Tab extends Base {
   static Tab wire(Element element, [Tab create()]) =>
       p.wire(element, _NAME, p.fallback(create, () => () => new Tab(element)));
   
-  /**
-   * 
+  /** Show the tab.
    */
   void show() {
     final ElementQuery $ul = $element.closest('ul:not(.dropdown-menu)');

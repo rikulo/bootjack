@@ -14,7 +14,12 @@ wire(Element element, String name, create()) =>
 
 /** Equivalent to || operator in JavaScript.
  */
-fallback(a, b()) => a != null ? a : b();
+fallback(a, b(), [c(), d()]) => 
+    c == null ? _fallback(a, b) :
+    d == null ? _fallback(_fallback(a, b), c) :
+    _fallback(_fallback(_fallback(a, b), c), d);
+
+_fallback(a, b()) => a != null ? a : b();
 
 /** Retrieve the value of data-target attribute of href attribute on given
  * [element].
