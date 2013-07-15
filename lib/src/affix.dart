@@ -13,10 +13,9 @@ class Affix extends Base {
   /** 
    * 
    */
-  Affix(Element element, {int offsetTop(): () => _DEFAULT_OFFSET, 
-  int offsetBottom(): () => _DEFAULT_OFFSET}) : 
-  this.offsetTop = offsetTop,
-  this.offsetBottom = offsetBottom,
+  Affix(Element element, {int offsetTop(), int offsetBottom()}) : 
+  this.offsetTop = p.fallback(offsetTop, () => () => _DEFAULT_OFFSET),
+  this.offsetBottom = p.fallback(offsetBottom, () => () => _DEFAULT_OFFSET),
   super(element, _NAME) {
     $(window)
     ..on('scroll.affix.data-api', (DQueryEvent e) => checkPosition())

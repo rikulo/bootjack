@@ -24,10 +24,10 @@ class Typeahead extends Base {
   /**
    * 
    */
-  Typeahead(Element element, {List source: [], int items: 8, int minLength: 1,
+  Typeahead(Element element, {List source, int items: 8, int minLength: 1,
   String itemTemplate: '<li><a href="#"></a></li>', 
   String menuTemplate: '<ul class="typeahead dropdown-menu"></ul>'}) :
-  _source = source,
+  _source = p.fallback(source, () => new List()),
   _items = items,
   _minLength = minLength,
   _itemTemplate = itemTemplate,
