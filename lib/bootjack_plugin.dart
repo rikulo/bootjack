@@ -20,6 +20,10 @@ fallback(a, b(), [c(), d()]) =>
 
 _fallback(a, b()) => a != null ? a : b();
 
+/** Equivalent to && operator in JavaScript.
+ */
+movein(a, b()) => a == null ? null : b();
+
 /** Retrieve the value of data-target attribute of href attribute on given
  * [element].
  */
