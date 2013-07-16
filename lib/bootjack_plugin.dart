@@ -1,7 +1,6 @@
 library bootjack_plugin;
 
 import 'dart:html';
-import 'dart:math';
 import 'package:meta/meta.dart';
 import 'package:dquery/dquery.dart';
 
@@ -40,9 +39,6 @@ void setClass(Element element, String className, bool value) {
   else
     element.classes.remove(className);
 }
-
-get _random => fallback(_r, () => _r = new Random());
-Random _r;
 
 /** A token object for identification with recognizable toString() output for
  * easier debugging.
