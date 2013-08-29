@@ -124,7 +124,7 @@ class Carousel extends Base {
     isCycling && this.pause()
     */
     
-    DQueryEvent e = new DQueryEvent('slide', data: {
+    DQueryEvent e = new DQueryEvent('slide.bs.carousel', data: {
       'relatedTarget': nextItem,
       'direction': direction
     });
@@ -134,7 +134,7 @@ class Carousel extends Base {
     
     if (_indicators != null) {
       $(_indicators).find('.active').removeClass('active');
-      $element.one('slid', (DQueryEvent e) {
+      $element.one('slid.bs.carousel', (DQueryEvent e) {
         final List<Element> elems = _indicators.children;
         final int index = activeIndex;
         if (index > -1 && index < elems.length)
@@ -157,7 +157,7 @@ class Carousel extends Base {
         activeItem.classes..remove('type')..remove(direction);
         _sliding = false;
         new Future.delayed(const Duration(), () {
-          $element.trigger('slid');
+          $element.trigger('slid.bs.carousel');
         });
       });
       
@@ -165,7 +165,7 @@ class Carousel extends Base {
       activeItem.classes.remove('active');
       nextItem.classes.add('active');
       _sliding = false;
-      $element.trigger('slid');
+      $element.trigger('slid.bs.carousel');
       
     }
     /*

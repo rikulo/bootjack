@@ -36,7 +36,7 @@ class Tab extends Base {
     //final Element previous = $ul.find('.active:last a').firstIfAny; // TODO: :last is jq only
     
     final DQueryEvent e = 
-        new DQueryEvent('show', data: previous);
+        new DQueryEvent('show.bs.tab', data: previous);
     
     $element.triggerEvent(e);
     
@@ -46,7 +46,7 @@ class Tab extends Base {
     final ElementQuery $target = $(selector);
     _activate($parent, $ul);
     _activate($target, $target.parent(), () {
-      $element.trigger('shown', data: previous);
+      $element.trigger('shown.bs.tab', data: previous);
     });
     
   }

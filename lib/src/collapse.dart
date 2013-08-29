@@ -44,7 +44,7 @@ class Collapse extends Base {
     
     _size = '0';
     
-    _transition(true, new DQueryEvent('show'), 'shown');
+    _transition(true, new DQueryEvent('show.bs.collapse'), 'shown.bs.collapse');
     if (Transition.isUsed)
       _size = '${horizontal ? element.scrollWidth : element.scrollHeight}px';
     
@@ -54,7 +54,7 @@ class Collapse extends Base {
     if (transitioning || !element.classes.contains('in'))
       return;
     reset(horizontal ? $element.width : $element.height);
-    _transition(false, new DQueryEvent('hide'), 'hidden');
+    _transition(false, new DQueryEvent('hide.bs.collapse'), 'hidden.bs.collapse');
     _size = '0';
   }
   
@@ -92,7 +92,7 @@ class Collapse extends Base {
       element.classes.remove('in');
     
     final DQueryEventListener complete = (DQueryEvent e) {
-      if (startEvent.type == 'show')
+      if (startEvent.type == 'show.bs.collapse')
         reset(0);
       _transitioning = false;
       $element.trigger(completeEvent);

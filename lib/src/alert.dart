@@ -44,7 +44,7 @@ class Alert extends Base {
     if ($parent.isEmpty)
       return;
     
-    final DQueryEvent e = new DQueryEvent('close');
+    final DQueryEvent e = new DQueryEvent('close.bs.alert');
     $parent.triggerEvent(e);
     
     if (e.isDefaultPrevented)
@@ -67,7 +67,7 @@ class Alert extends Base {
   }
   
   static void _removeElement(ElementQuery $elem) {
-    $elem.trigger('closed');
+    $elem.trigger('closed.bs.alert');
     $elem.forEach((Element e) => e.remove());
   }
   

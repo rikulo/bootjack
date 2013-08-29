@@ -52,7 +52,7 @@ class Modal extends Base {
    */
   show() {
     
-    final DQueryEvent e = new DQueryEvent('show');
+    final DQueryEvent e = new DQueryEvent('show.bs.modal');
     $element.triggerEvent(e);
     
     if (_shown || e.isDefaultPrevented)
@@ -85,12 +85,12 @@ class Modal extends Base {
       if (transition) {
         $element.one(Transition.end, (DQueryEvent e) {
           $element.trigger('focus');
-          $element.trigger('shown');
+          $element.trigger('shown.bs.modal');
         });
         
       } else {
         $element.trigger('focus');
-        $element.trigger('shown');
+        $element.trigger('shown.bs.modal');
         
       }
       
@@ -102,7 +102,7 @@ class Modal extends Base {
    */
   hide() {
     
-    final DQueryEvent e = new DQueryEvent('hide');
+    final DQueryEvent e = new DQueryEvent('hide.bs.modal');
     $element.triggerEvent(e);
     
     if (!_shown || e.isDefaultPrevented)
@@ -158,7 +158,7 @@ class Modal extends Base {
     $element.hide();
     _backdrop(() {
       _removeBackdrop();
-      $element.trigger('hidden');
+      $element.trigger('hidden.bs.modal');
     });
   }
   

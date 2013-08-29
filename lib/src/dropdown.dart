@@ -1,5 +1,7 @@
 part of bootjack;
 
+// TODO: check source code, in 3.0 it fires events
+
 /** A dropdown component.
  */
 class Dropdown extends Base {
