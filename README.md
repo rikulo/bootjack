@@ -1,6 +1,6 @@
 #Bootjack
 
-[Bootjack](http://rikulo.org) is a porting of [Twitter Bootstrap](http://twitter.github.io/bootstrap/index.html) in Dart.
+[Bootjack](http://rikulo.org) is a porting of [Twitter Bootstrap](http://getbootstrap.com/) 3.0 in Dart.
 
 * [Home](http://rikulo.org)
 * [Tutorial](http://blog.rikulo.org/posts/2013/May/General/bootjack-and-dquery/)
@@ -27,14 +27,15 @@ First of all in your HTML file, you need to include the CSS resource:
   
 	<head>
 		...
-		<link rel="stylesheet" href="packages/bootjack/css/bootstrap-2.3.1.css">
+		<link rel="stylesheet" href="packages/bootjack/css/bootstrap.min.css">
 	</head>
 
 Most of the functions in Bootjack components are automatic -- you only need to give the right CSS class on DOM elements and call a global function to register.
 
 For example, a Dropdown button component is prepared by giving the following HTML snippet:
 
-	<button class="btn dropdown-toggle" data-toggle="dropdown">
+	<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+		Button
 		<span class="caret"></span>
 	</button>
 	<ul class="dropdown-menu">
@@ -54,7 +55,7 @@ That's right. All you need to do in Dart is to tell Bootjack you are using Dropd
 	Dropdown dd = Dropdown.wire(element);
 	dd.toggle();
 
-Check more [examples](https://github.com/rikulo/bootjack/tree/master/example) and the [API reference](http://api.rikulo.org/bootjack/latest/bootjack.html) for more features. Also, you can read the reference of [Bootstrap](http://twitter.github.io/bootstrap/getting-started.html).
+Check more [examples](https://github.com/rikulo/bootjack/tree/master/example) and the [API reference](http://api.rikulo.org/bootjack/latest/bootjack.html) for more features. Also, you can read the reference of [Bootstrap](http://getbootstrap.com/getting-started/).
 
 ##Notes to Contributors
 

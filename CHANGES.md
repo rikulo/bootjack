@@ -1,5 +1,9 @@
 #CHANGES
 
+**0.6.0**
+
+* Migrate to Bootstrap 3.0.0
+
 **0.5.3**
 
 * Tooltip component is ready.

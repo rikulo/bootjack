@@ -3,7 +3,7 @@ import 'package:dquery/dquery.dart';
 import 'package:bootjack/bootjack.dart';
 
 final List<String> COLORS = [
-  ' alert-error', '', ' alert-success', ' alert-info'
+  ' alert-danger', ' alert-warning', ' alert-success', ' alert-info'
 ];
 
 void main() {
@@ -16,7 +16,7 @@ void main() {
   $('#alert-spawn-btn').on('click', (DQueryEvent e) {
     
     alertPool.appendHtml('''
-      <div class="alert${COLORS[i]} fade in">
+      <div class="alert${COLORS[i]} alert-dismissable fade in">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         Oh snap! A new <code>alert</code> spawned.
       </div>
@@ -29,7 +29,7 @@ void main() {
   $('#btn').on('click', (DQueryEvent e) {
     $('#btn')
     ..toggleClass('btn-info')
-    ..toggleClass('btn-inverse');
+    ..toggleClass('btn-danger');
   });
   
 }

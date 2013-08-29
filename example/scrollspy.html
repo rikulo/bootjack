@@ -2,46 +2,90 @@
 <html>
   <head>
     <title>Scrollspy</title>
-    <link rel="stylesheet" href="packages/bootjack/css/bootstrap-2.3.1.css">
-    <link rel="stylesheet" href="packages/bootjack/css/bootstrap-responsive-2.3.1.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="packages/bootjack/css/bootstrap.css">
     <link rel="stylesheet" href="css/base.css">
   </head>
   
-  <body id="scrollspy-demo-body" data-target="#sidebar" data-spy="scroll">
+  <body data-target="#sidebar" data-spy="scroll">
+    <style>
+      #sidebar {
+        position: relative;
+        padding: 30px 10px;
+      }
+      #sidebar > ul {
+        background-color: rgb(247, 245, 250);
+        border-radius: 5px;
+        text-shadow: 0px 1px 0px rgb(255, 255, 255);
+        padding: 10px 0;
+      }
+      #sidebar > ul > li > a {
+        display: block;
+        padding: 5px 20px;
+        color: rgb(113, 107, 122);
+      }
+      #sidebar > ul > .active > a {
+        font-weight: bold;
+        color: rgb(86, 61, 124);
+        background-color: transparent;
+        border-right: 1px solid rgb(86, 61, 124);
+      }
+      .img {
+        display: inline-block;
+        border: 1px solid #999;
+        padding: 8px;
+        background-color: #FFF;  
+      }
+      .img > div {
+        width: 500px;
+        height: 500px;
+        line-height: 500px;
+        text-align: center;
+        background-color: #EEE;
+        border-radius: 6px;
+        color: #999;
+        font-size: 50px;
+        font-weight: bold;
+      }
+      h2 {
+        padding: 10px 0;
+      }
+    </style>
+    
     <div class="container">
       <div class="row">
-        <div id="sidebar" class="span3">
+        <div id="sidebar" class="col-xs-3">
           <ul class="nav nav-list affix">
-            <li><a href="#section-1"><i class="icon-chevron-right"></i>Section 1</a></li>
-            <li><a href="#section-2"><i class="icon-chevron-right"></i>Section 2</a></li>
-            <li><a href="#section-3"><i class="icon-chevron-right"></i>Section 3</a></li>
-            <li><a href="#section-4"><i class="icon-chevron-right"></i>Section 4</a></li>
-            <li><a href="#section-5"><i class="icon-chevron-right"></i>Section 5</a></li>
+            <li><a href="#section-1">Section 1</a></li>
+            <li><a href="#section-2">Section 2</a></li>
+            <li><a href="#section-3">Section 3</a></li>
+            <li><a href="#section-4">Section 4</a></li>
+            <li><a href="#section-5">Section 5</a></li>
           </ul>
         </div>
-        <div class="span9">
+        <div class="col-xs-9">
           <section id="section-1">
-            <div class="page-header"><h2>Section 1</h2></div>
+            <h2>Section 1</h2>
             <p>Here we are in <code>Section 1</code>.</p>
             <div class="img"><div>Sec-1</div></div>
           </section>
           <section id="section-2">
-            <div class="page-header"><h2>Section 2</h2></div>
+            <h2>Section 2</h2>
             <p>Here we are in <code>Section 2</code>.</p>
             <div class="img"><div>Sec-2</div></div>
           </section>
           <section id="section-3">
-            <div class="page-header"><h2>Section 3</h2></div>
+            <h2>Section 3</h2>
             <p>Here we are in <code>Section 3</code>.</p>
             <div class="img"><div>Sec-3</div></div>
           </section>
           <section id="section-4">
-            <div class="page-header"><h2>Section 4</h2></div>
+            <h2>Section 4</h2>
             <p>Here we are in <code>Section 4</code>.</p>
             <div class="img"><div>Sec-4</div></div>
           </section>
-          <section id="section-5">
-            <div class="page-header"><h2>Section 5</h2></div>
+          <section id="section-5" style="margin-bottom: 60px">
+            <h2>Section 5</h2>
             <p>Here we are in <code>Section 5</code>.</p>
             <div class="img"><div>Sec-5</div></div>
           </section>
