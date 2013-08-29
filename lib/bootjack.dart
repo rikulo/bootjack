@@ -24,7 +24,6 @@ part 'src/scrollspy.dart';
 part 'src/tab.dart';
 part 'src/tooltip.dart';
 part 'src/transition.dart';
-part 'src/typeahead.dart';
 
 /** The skeleton class for Bootjack components.
  */
@@ -53,7 +52,7 @@ class Bootjack {
   static void useDefault() {
     for (Function f in [
   Affix.use, Alert.use, Button.use, Carousel.use, Collapse.use, Dropdown.use,
-  Modal.use, Scrollspy.use, Tab.use, Transition.use, Typeahead.use]) 
+  Modal.use, Scrollspy.use, Tab.use, Transition.use]) 
       f();
   }
 }
