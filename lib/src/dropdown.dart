@@ -44,14 +44,27 @@ class Dropdown extends Base {
     if (elem.matches('.disabled, :disabled'))
       return;
     final Element parent = _getParent(elem);
+    final ElementQuery $parent = $(parent);
     final bool isActive = parent.classes.contains('open');
     
     _clearMenus();
     
-    if (!isActive)
+    if (!isActive) {
+      
+      // TODO: mobile, see bootstrap
+      
+      final DQueryEvent e = new DQueryEvent('show.bs.dropdown');
+      $parent.triggerEvent(e);
+      
+      if (e.isDefaultPrevented)
+        return;
+      
       parent.classes.toggle('open');
+      $(parent).trigger('shown.bs.dropdown');
+      
+      $(elem).trigger('focus');
+    }
     
-    $(elem).trigger('focus');
   }
   
   static void _keydown(DQueryEvent e) {
@@ -110,7 +123,18 @@ class Dropdown extends Base {
   
   static void _clearMenus() {
     for (Element elem in $(_TOGGLE_SELECTOR)) {
-      $(_getParent(elem)).removeClass('open');
+      final Element parent = _getParent(elem);
+      final ElementQuery $parent = $(parent);
+      if (!parent.classes.contains('open'))
+        return;
+      
+      final DQueryEvent e = new DQueryEvent('hide.bs.dropdown');
+      $parent.triggerEvent(e);
+      if (e.isDefaultPrevented)
+        return;
+      
+      $parent.removeClass('open');
+      $parent.trigger('hidden.bs.dropdown');
     }
   }
 
