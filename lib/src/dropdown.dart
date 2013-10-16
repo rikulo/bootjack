@@ -14,11 +14,6 @@ class Dropdown extends Base {
   Dropdown(Element element) : 
   super(element, _NAME) {
     $element.on('click.dropdown.data-api', _toggleEvent);
-    $('html').on('click.dropdown.data-api', (DQueryEvent e) { // TODO: why not document?
-      Element p = element.parent;
-      if (p != null)
-        p.classes.remove('open');
-    });
   }
   
   /** Retrieve the wired Dropdown object from an element. If there is no wired
@@ -160,10 +155,9 @@ class Dropdown extends Base {
     _registered = true;
     
     $document()
-    ..on('click.dropdown.data-api', (DQueryEvent e) => _clearMenus())
-    ..on('click.dropdown.data-api', (DQueryEvent e) => e.stopPropagation(), selector: '.dropdown form')
-    ..on('click.dropdown-menu', (DQueryEvent e) => e.stopPropagation())
-    ..on('click.dropdown.data-api', _toggleEvent, selector: _TOGGLE_SELECTOR)
+    ..on('click.bs.dropdown.data-api', (DQueryEvent e) => _clearMenus())
+    ..on('click.bs.dropdown.data-api', (DQueryEvent e) => e.stopPropagation(), selector: '.dropdown form')
+    ..on('click.bs.dropdown.data-api', _toggleEvent, selector: _TOGGLE_SELECTOR)
     ..on('keydown.dropdown.data-api', _keydown, selector: "${_TOGGLE_SELECTOR}, [role=menu]");
   }
   
