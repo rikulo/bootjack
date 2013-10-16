@@ -122,18 +122,18 @@ class Dropdown extends Base {
       final Element parent = _getParent(elem);
       final ElementQuery $parent = $(parent);
       if (!parent.classes.contains('open'))
-        return;
+        continue;
       
       final DQueryEvent e = new DQueryEvent('hide.bs.dropdown');
       $parent.triggerEvent(e);
       if (e.isDefaultPrevented)
-        return;
+        continue;
       
       $parent.removeClass('open');
       $parent.trigger('hidden.bs.dropdown');
     }
   }
-
+  
   static Element _getParent(Element elem) {
     final String selector = p.getDataTarget(elem);
     if (selector != null) {
