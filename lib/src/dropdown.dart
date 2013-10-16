@@ -14,7 +14,7 @@ class Dropdown extends Base {
   Dropdown(Element element) : 
   super(element, _NAME) {
     Dropdown.use();
-    $element.on('click.dropdown.data-api', _toggleEvent);
+    $element.on('click.bs.dropdown', _toggleEvent);
   }
   
   /** Retrieve the wired Dropdown object from an element. If there is no wired
