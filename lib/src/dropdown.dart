@@ -13,6 +13,7 @@ class Dropdown extends Base {
    */
   Dropdown(Element element) : 
   super(element, _NAME) {
+    Dropdown.use();
     $element.on('click.dropdown.data-api', _toggleEvent);
   }
   
