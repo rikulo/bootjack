@@ -1,5 +1,9 @@
 #CHANGES
 
+**0.6.1**
+
+* Fixed dropdown events.
+
 **0.6.0**
 
 * Migrate to Bootstrap 3.0.0
