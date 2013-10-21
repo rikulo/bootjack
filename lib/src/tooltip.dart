@@ -185,7 +185,7 @@ class Tooltip extends Base {
     else
       $element.after(tip);
     
-    final Rect pos = _position;
+    final Rectangle pos = _position;
     final int actualWidth = tip.offsetWidth;
     final int actualHeight = tip.offsetHeight;
     int top, left;
@@ -312,7 +312,7 @@ class Tooltip extends Base {
   /// Whether the tooltip message is non-empty.
   bool get hasContent => title != null;
   
-  Rect get _position {
+  Rectangle get _position {
     return element.getBoundingClientRect(); // TODO: check fallback scenario
     /*
     var el = this.$element[0]
