@@ -257,7 +257,7 @@ class Tooltip extends Base {
       delta == 0 ? "${50 * (1 - delta / dimension)}%" : '';
   
   void _setContent() {
-    _cnt(tip.query('.tooltip-inner'), title);
+    _cnt(tip.querySelector('.tooltip-inner'), title);
     tip.classes.removeAll(['fade', 'in', 'top', 'bottom', 'left', 'right']);
   }
   
@@ -334,7 +334,7 @@ class Tooltip extends Base {
   Element _tip;
   
   Element get _arrow =>
-      p.fallback(_arr, () => _arr = tip.query('.tooltip-arrow'));
+      p.fallback(_arr, () => _arr = tip.querySelector('.tooltip-arrow'));
   Element _arr;
   
   /// Enable tooptip.

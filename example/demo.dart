@@ -10,7 +10,7 @@ void main() {
   
   Bootjack.useDefault(); // use all
   
-  final Element alertPool = document.query('#alert-pool');
+  final Element alertPool = document.querySelector('#alert-pool');
   int i = 0;
   
   $('#alert-spawn-btn').on('click', (DQueryEvent e) {

@@ -17,7 +17,7 @@ class Carousel extends Base {
   this.interval = interval,
   this.pauseCondition = pause,
   super(element, _NAME) {
-    _indicators = element.query('.carousel-indicators');
+    _indicators = element.querySelector('.carousel-indicators');
     if (pause == 'hover') {
       $element
       ..on('mouseenter', (DQueryEvent e) => _pause())
@@ -37,7 +37,7 @@ class Carousel extends Base {
   bool get paused => _paused;
   bool _paused = false;
   
-  Element get active => element.query('.item.active');
+  Element get active => element.querySelector('.item.active');
   ElementQuery _$items;
   
   int get activeIndex {

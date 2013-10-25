@@ -46,7 +46,7 @@ class Popover extends Tooltip {
   
   @override
   Element get _arrow =>
-      p.fallback(_arr, () => _arr = tip.query('.arrow'));
+      p.fallback(_arr, () => _arr = tip.querySelector('.arrow'));
   Element _arr;
   
   /// The html template for popover.
@@ -67,8 +67,8 @@ class Popover extends Tooltip {
   
   @override
   void _setContent() {
-    _cnt(tip.query('.popover-title'), title);
-    _cnt(tip.query('.popover-content'), content);
+    _cnt(tip.querySelector('.popover-title'), title);
+    _cnt(tip.querySelector('.popover-content'), content);
     tip.classes.removeAll(['fade', 'top', 'bottom', 'left', 'right', 'in']);
   }
   
