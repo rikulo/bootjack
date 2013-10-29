@@ -1,7 +1,6 @@
 library bootjack_plugin;
 
 import 'dart:html';
-import 'package:meta/meta.dart';
 import 'package:dquery/dquery.dart';
 
 /** Load a component from Element data space if available, otherwise create
