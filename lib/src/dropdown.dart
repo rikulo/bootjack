@@ -67,9 +67,9 @@ class Dropdown extends Base {
     final Element elem = e.target as Element;
     
     Event oe = e.originalEvent;
-    if (!(oe is KeyEvent))
+    if (!(oe is KeyboardEvent))
       return;
-    final KeyEvent ke = oe as KeyEvent;
+    final KeyboardEvent ke = oe;
     final int keyCode = ke.keyCode;
     
     if (keyCode != 38 && keyCode != 40 && keyCode != 27)
