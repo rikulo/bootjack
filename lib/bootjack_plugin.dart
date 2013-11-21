@@ -39,6 +39,15 @@ void setClass(Element element, String className, bool value) {
     element.classes.remove(className);
 }
 
+/**
+ * Refer to Jquery
+ */
+bool isHidden(Element e) {
+  //if (e.style.display != 'none' && e.style.visibility != 'hidden')
+  //refer to jquery
+  return e.offsetWidth <= 0 && e.offsetHeight <= 0;
+}
+
 /** A token object for identification with recognizable toString() output for
  * easier debugging.
  */

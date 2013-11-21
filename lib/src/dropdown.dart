@@ -58,13 +58,13 @@ class Dropdown extends Base {
       parent.classes.toggle('open');
       $(parent).trigger('shown.bs.dropdown');
       
-      $(elem).trigger('focus');
+      elem.focus();
     }
     
   }
   
   static void _keydown(DQueryEvent e) {
-    final Element elem = e.target as Element;
+    final Element elem = e.currentTarget as Element;
     
     Event oe = e.originalEvent;
     if (!(oe is KeyboardEvent))
@@ -84,13 +84,23 @@ class Dropdown extends Base {
     final Element parent = _getParent(elem);
     final bool isActive = parent.classes.contains('open');
     
-    if (keyCode == 27)
-      $(parent).find(_TOGGLE_SELECTOR).trigger('focus');
+    if (!isActive || (isActive && keyCode == 27)) {
+      if (keyCode == 27) 
+        $(parent).find(_TOGGLE_SELECTOR)[0].focus();
+      
+      elem.click();
+      return;
+    }
     
-    if (!isActive || keyCode == 27)
-      $(elem).trigger('click');
-    
-    final ElementQuery $items = $('[role=menu] li:not(.divider):visible a', parent);
+//    final ElementQuery $items = $('[role=menu] li:not(.divider):visible a', parent); css selector doesn't support :visible.
+    List<Element> $items = new List<Element>();
+    for (Element e in  $('[role=menu] li:not(.divider)', parent)) {
+      if (!p.isHidden(e)) {
+        Element a = e.querySelector('a');
+        if (a != null)
+          $items.add(a);
+      }
+    }
     
     if ($items.isEmpty)
       return;
@@ -103,7 +113,7 @@ class Dropdown extends Base {
     if (index == -1)
       index = 0;
     
-    $($items[index]).trigger('focus');
+    $($items[index])[0].focus();
     
   }
   
@@ -118,6 +128,7 @@ class Dropdown extends Base {
   }
   
   static void _clearMenus() {
+    // TODO: mobile, see bootstrap
     for (Element elem in $(_TOGGLE_SELECTOR)) {
       final Element parent = _getParent(elem);
       final ElementQuery $parent = $(parent);
@@ -135,7 +146,15 @@ class Dropdown extends Base {
   }
   
   static Element _getParent(Element elem) {
-    final String selector = p.getDataTarget(elem);
+    String selector = p.getDataTarget(elem);
+    
+    if (selector == null) {
+      selector = elem.attributes['href'];
+      if (selector != null && new RegExp(r'#').hasMatch(selector)) {
+        selector = selector.replaceAll(new RegExp(r'.*(?=#[^\s]*$'), ''); //strip for ie7
+      }
+    }
+    
     if (selector != null) {
       try {
         final ElementQuery p = $(selector);
@@ -159,7 +178,7 @@ class Dropdown extends Base {
     ..on('click.bs.dropdown.data-api', (DQueryEvent e) => _clearMenus())
     ..on('click.bs.dropdown.data-api', (DQueryEvent e) => e.stopPropagation(), selector: '.dropdown form')
     ..on('click.bs.dropdown.data-api', _toggleEvent, selector: _TOGGLE_SELECTOR)
-    ..on('keydown.dropdown.data-api', _keydown, selector: "${_TOGGLE_SELECTOR}, [role=menu]");
+    ..on('keydown.bs.dropdown.data-api', _keydown, selector: "${_TOGGLE_SELECTOR}, [role=menu]");
   }
   
 }

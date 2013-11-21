@@ -35,7 +35,7 @@ class Affix extends Base {
    * 
    */
   void checkPosition() {
-    if (!element.matches(':visible'))
+    if (p.isHidden(element))
       return;
     
     final int offsetTop = p.fallback(this.offsetTop(), () => _DEFAULT_OFFSET);
