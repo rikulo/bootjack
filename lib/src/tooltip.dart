@@ -54,8 +54,8 @@ class Tooltip extends Base {
         $element.on("click.$_type", (DQueryEvent event) => toggle(), selector: selector);
         
       } else if (t != 'manual') {
-        final String eventIn = t == 'hover' ? 'mouseover' : 'focus';
-        final String eventOut = t == 'hover' ? 'mouseout' : 'blur';
+        final String eventIn = t == 'hover' ? 'mouseenter' : 'focus';
+        final String eventOut = t == 'hover' ? 'mouseleave' : 'blur';
         $element.on("$eventIn.$_type", (DQueryEvent event) => _enter(), selector: selector);
         $element.on("$eventOut.$_type", (DQueryEvent event) => _leave(), selector: selector);
         
