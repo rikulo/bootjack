@@ -1,5 +1,9 @@
 #CHANGES
 
+**0.6.2**
+
+* Fixed tooltip events.
+
 **0.6.1**
 
 * Fixed dropdown events.
