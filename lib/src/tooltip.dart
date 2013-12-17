@@ -8,6 +8,8 @@ class Tooltip extends Base {
   static const String _NAME = 'tooltip';
   static const String _DEFAULT_TEMPLATE = 
       '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>';
+  final NodeValidatorBuilder _htmlValidator=new NodeValidatorBuilder.common()
+    ..allowElement('a', attributes: ['href']);
   
   /** Construct a tooltip component and wire it to [element].
    * 
@@ -264,7 +266,7 @@ class Tooltip extends Base {
   void _cnt(Element elem, String value) {
     if (elem != null) {
       if (html)
-        elem.innerHtml = value;
+        elem.setInnerHtml(value, validator: _htmlValidator);
       else
         $(elem).text = value;
     }
