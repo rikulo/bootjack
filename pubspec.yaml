@@ -1,5 +1,5 @@
 name: bootjack
-version: 0.6.1+7
+version: 0.6.1+8
 author: Simon Pai <simonpai@rikulo.org>
 description: Bootjack is a porting of Twitter Bootstrap 3.0 in Dart.
 homepage: https://github.com/rikulo/bootjack
