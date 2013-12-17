@@ -165,7 +165,7 @@ class Tooltip extends Base {
     if (!hasContent || !_enabled) 
       return;
     
-    final DQueryEvent e = new DQueryEvent('show.bs.tooltip');
+    final DQueryEvent e = new DQueryEvent('show.bs.$_type');
     $element.triggerEvent(e);
     if (e.isDefaultPrevented) 
       return;
@@ -209,7 +209,7 @@ class Tooltip extends Base {
         break;
     }
     _applyPlacement(top, left, placement);
-    $element.trigger('shown.bs.tooltip');
+    $element.trigger('shown.bs.$_type');
     
   }
   
@@ -273,7 +273,7 @@ class Tooltip extends Base {
   /** Hide the tooltip.
    */
   void hide() {
-    final DQueryEvent e = new DQueryEvent('hide.bs.tooltip');
+    final DQueryEvent e = new DQueryEvent('hide.bs.$_type');
     $element.triggerEvent(e);
     if (e.isDefaultPrevented)
       return;
@@ -298,7 +298,7 @@ class Tooltip extends Base {
       
     }
     
-    $element.trigger('hidden.bs.tooltip'); // TODO: check timing
+    $element.trigger('hidden.bs.$_type'); // TODO: check timing
   }
   
   void _fixTitle() {
