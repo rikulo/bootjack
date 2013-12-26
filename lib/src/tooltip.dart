@@ -8,8 +8,7 @@ class Tooltip extends Base {
   static const String _NAME = 'tooltip';
   static const String _DEFAULT_TEMPLATE = 
       '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>';
-  final NodeValidatorBuilder _htmlValidator=new NodeValidatorBuilder.common()
-    ..allowElement('a', attributes: ['href']);
+  final NodeValidatorBuilder _htmlValidator;
   
   /** Construct a tooltip component and wire it to [element].
    * 
@@ -38,17 +37,18 @@ class Tooltip extends Base {
    */
   Tooltip(Element element, {bool animation, String placement(Element elem), 
   String selector, String template, String trigger, String title(Element elem), 
-  int delay, int showDelay, int hideDelay, bool html, container}) : 
-  this.animation  = _bool(animation, element, 'animation', true),
-  this.html       = _bool(html,      element, 'html',      false),
-  this.showDelay  = _int(showDelay, element, 'show-delay', _int(delay, element, 'delay', 0)),
-  this.hideDelay  = _int(hideDelay, element, 'hide-delay', _int(delay, element, 'delay', 0)),
-  this.selector   = _data(selector,  element, 'selector'),
-  this.template   = _data(template,  element, 'template', _DEFAULT_TEMPLATE),
-  this.trigger    = _data(trigger,   element, 'trigger',  'hover focus'),
-  this.container  = _data(container, element, 'container'),
-  this._title     = p.fallback(title,     () => (Element elem) => elem.attributes['data-title']),
-  this._placement = p.fallback(placement, () => (Element elem) => elem.attributes['data-placement']),
+  int delay, int showDelay, int hideDelay, bool html, container, NodeValidatorBuilder htmlValidator}) : 
+  this.animation      = _bool(animation, element, 'animation', true),
+  this.html           = _bool(html,      element, 'html',      false),
+  this.showDelay      = _int(showDelay, element, 'show-delay', _int(delay, element, 'delay', 0)),
+  this.hideDelay      = _int(hideDelay, element, 'hide-delay', _int(delay, element, 'delay', 0)),
+  this.selector       = _data(selector,  element, 'selector'),
+  this.template       = _data(template,  element, 'template', _DEFAULT_TEMPLATE),
+  this.trigger        = _data(trigger,   element, 'trigger',  'hover focus'),
+  this.container      = _data(container, element, 'container'),
+  this._title         = p.fallback(title,     () => (Element elem) => elem.attributes['data-title']),
+  this._placement     = p.fallback(placement, () => (Element elem) => elem.attributes['data-placement']),
+  this._htmlValidator = htmlValidator,
   super(element, _NAME) {
     
     for (String t in this.trigger.split(' ')) {

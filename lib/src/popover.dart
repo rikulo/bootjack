@@ -21,13 +21,13 @@ class Popover extends Tooltip {
   Popover(Element element, {bool animation, String placement(Element elem), 
   String selector, String template, String trigger, String title(Element elem), 
   String content(Element elem), int delay, int showDelay, 
-  int hideDelay, bool html, container}) : 
+  int hideDelay, bool html, container, NodeValidatorBuilder htmlValidator}) : 
   this.template = _data(template, element, 'template', _DEFAULT_TEMPLATE),
   this.trigger  = _data(trigger,  element, 'trigger',  'click'),
   this._content = p.fallback(content, () => (Element elem) => elem.attributes['data-content']),
   super(element, animation: animation, placement: placement, selector: selector, 
   title: title, delay: delay, showDelay: showDelay, hideDelay: hideDelay, 
-  html: html, container: container, template: template);
+  html: html, container: container, htmlValidator: htmlValidator, template: template);
   
   /** Retrieve the wired Popover object from an element. If there is no wired
    * Popover object, a new one will be created.
