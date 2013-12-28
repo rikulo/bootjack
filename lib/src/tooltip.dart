@@ -183,7 +183,7 @@ class Tooltip extends Base {
     if (container != null)
       $(tip).appendTo(container);
     else
-      $element.after(tip);
+      $element.after('body');
     
     final Rectangle pos = _position;
     final int actualWidth = tip.offsetWidth;
