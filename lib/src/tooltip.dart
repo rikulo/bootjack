@@ -353,7 +353,10 @@ class Tooltip extends Base {
   }
   
   /// Toggle visibility of tooltip.
-  void toggle() => tip.classes.contains('in') ? hide() : show();
+  void toggle() {
+    if (tip.classes.contains('in')) hide();
+    else show();
+  }
   
   /// Destroy the component.
   void destroy() {
