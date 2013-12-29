@@ -27,7 +27,7 @@ class Popover extends Tooltip {
   this._content = p.fallback(content, () => (Element elem) => elem.attributes['data-content']),
   super(element, animation: animation, placement: placement, selector: selector, 
   title: title, delay: delay, showDelay: showDelay, hideDelay: hideDelay, 
-  html: html, container: container, template: template);
+  html: html, container: container, htmlValidator: htmlValidator, template: template);
   
   /** Retrieve the wired Popover object from an element. If there is no wired
    * Popover object, a new one will be created.
