@@ -8,6 +8,7 @@ class Tooltip extends Base {
   static const String _NAME = 'tooltip';
   static const String _DEFAULT_TEMPLATE = 
       '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>';
+  final NodeValidatorBuilder _htmlValidator;
   
   /** Construct a tooltip component and wire it to [element].
    * 
@@ -36,7 +37,7 @@ class Tooltip extends Base {
    */
   Tooltip(Element element, {bool animation, String placement(Element elem), 
   String selector, String template, String trigger, String title(Element elem), 
-  int delay, int showDelay, int hideDelay, bool html, container}) : 
+  int delay, int showDelay, int hideDelay, bool html, container, NodeValidatorBuilder htmlValidator}) : 
   this.animation  = _bool(animation, element, 'animation', true),
   this.html       = _bool(html,      element, 'html',      false),
   this.showDelay  = _int(showDelay, element, 'show-delay', _int(delay, element, 'delay', 0)),
@@ -47,6 +48,7 @@ class Tooltip extends Base {
   this.container  = _data(container, element, 'container'),
   this._title     = p.fallback(title,     () => (Element elem) => elem.attributes['data-title']),
   this._placement = p.fallback(placement, () => (Element elem) => elem.attributes['data-placement']),
+  this._htmlValidator = htmlValidator,
   super(element, _NAME) {
     
     for (String t in this.trigger.split(' ')) {
@@ -183,7 +185,7 @@ class Tooltip extends Base {
     if (container != null)
       $(tip).appendTo(container);
     else
-      $element.after(tip);
+      $element.after('body');
     
     final Rectangle pos = _position;
     final int actualWidth = tip.offsetWidth;
@@ -264,7 +266,7 @@ class Tooltip extends Base {
   void _cnt(Element elem, String value) {
     if (elem != null) {
       if (html)
-        elem.innerHtml = value;
+        elem.setInnerHtml(value, validator: _htmlValidator);
       else
         $(elem).text = value;
     }
