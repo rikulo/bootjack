@@ -3,6 +3,8 @@
 **0.6.2**
 
 * Fixed tooltip events.
+* Allow custom HTML validator in tooltip and popover. (thanks nawafnaim)
+* Minot fixes.
 
 **0.6.1**
 
