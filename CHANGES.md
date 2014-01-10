@@ -1,11 +1,14 @@
 #CHANGES
 
+**0.6.3**
+
+* Collapse component is ready.
+
 **0.6.2**
 
 * Fixed tooltip events.
 * Allow custom HTML validator in tooltip and popover. (thanks nawafnaim)
 * Minot fixes.
-* Added collapse component
 
 **0.6.1**
 
