@@ -1,5 +1,9 @@
 #CHANGES
 
+**0.6.4**
+
+* Upgrade Bootstrap resources to 3.0.3. (Thanks to sunglim)
+
 **0.6.3**
 
 * Collapse component is ready.
@@ -7,7 +11,7 @@
 **0.6.2**
 
 * Fixed tooltip events.
-* Allow custom HTML validator in tooltip and popover. (thanks nawafnaim)
+* Allow custom HTML validator in tooltip and popover. (Thanks to nawafnaim)
 * Minot fixes.
 
 **0.6.1**
