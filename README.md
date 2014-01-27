@@ -1,6 +1,6 @@
 #Bootjack
 
-[Bootjack](http://rikulo.org) is a porting of [Twitter Bootstrap](http://getbootstrap.com/) 3.0 in Dart.
+[Bootjack](http://rikulo.org) is a porting of [Twitter Bootstrap](http://getbootstrap.com/) 3.0.x in Dart.
 
 * [Home](http://rikulo.org)
 * [Tutorial](http://blog.rikulo.org/posts/2013/May/General/bootjack-and-dquery/)
