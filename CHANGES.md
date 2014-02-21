@@ -3,6 +3,7 @@
 **0.6.4**
 
 * Upgrade Bootstrap resources to 3.0.3. (Thanks to sunglim)
+* Fixed Collapse component toggle params not work issue
 
 **0.6.3**
 

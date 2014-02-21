@@ -23,7 +23,7 @@ class Collapse extends Base {
       _$parent = $(parent);
     
     
-    if (_toggle != null)
+    if (_toggle)
       this.toggle();
   }
   
