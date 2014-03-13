@@ -82,5 +82,12 @@ class Alert extends Base {
     
     $document().on('click.alert.data-api', _closeHandler, selector: _DISMISS_SELECTOR);
   }
-  
+
+  /** Register to use Alert into a ShadowDom
+   *  In your component (likes Polymer or Angular) overide the method void onShadowRoot(ShadowRoot shadowRoot)
+   *  and initialize the Alert compoment ( Alert.useInShadowDom( shadowRoot) 
+   */
+  static void useInShadowDom( ShadowRoot shadowRoot) {
+    $document(shadowRoot).on('click.alert.data-api', _closeHandler, selector: Alert._DISMISS_SELECTOR);
+  }  
 }
