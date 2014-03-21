@@ -64,8 +64,7 @@ class Tab extends Base {
       $elem.addClass('active');
       
       if (transition) {
-        if (!$elem.isEmpty)
-          $elem.first.offsetWidth; // reflow for transition
+        $elem.reflow();
         $elem.addClass('in');
       } else {
         $elem.removeClass('fade');

@@ -75,7 +75,7 @@ class Modal extends Base {
       
       $element.show();
       
-      if (transition) element.offsetWidth; // force reflow
+      if (transition) $element.reflow();
       
       element.classes.add('in');
       element.attributes['aria-hidden'] = 'false';
@@ -185,11 +185,12 @@ class Modal extends Base {
       if (fade)
         _backdropElem.classes.add('fade');
       document.body.append(_backdropElem);
-      
-      $(_backdropElem).on('click', backdrop == 'static' ? 
+
+      final $_backdropElem =
+        $(_backdropElem)..on('click', backdrop == 'static' ? 
           (QueryEvent e) => element.focus() : (QueryEvent e) => hide());
       
-      if (animate) _backdropElem.offsetWidth; // force reflow
+      if (animate) $_backdropElem.reflow();
       
       _backdropElem.classes.add('in');
       transit = true;

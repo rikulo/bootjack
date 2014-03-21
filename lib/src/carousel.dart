@@ -148,7 +148,7 @@ class Carousel extends Base {
     
     if (Transition.isUsed && element.classes.contains('slide')) {
       nextItem.classes.add(type);
-      nextItem.offsetWidth; // force reflow
+      $(nextItem).reflow(); // force reflow
       activeItem.classes.add(direction);
       nextItem.classes.add(direction);
       
