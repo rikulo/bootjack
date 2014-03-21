@@ -7,4 +7,3 @@ documentation: http://blog.rikulo.org/posts/2013/May/General/bootjack-and-dquery
 dependencies:
   browser: any
   dquery: '>=0.5.3+7'
-  rikulo_commons: '>=0.7.3'

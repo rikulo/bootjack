@@ -18,8 +18,7 @@ class Transition {
   /** Register to use Transition effect.
    */
   static void use() {
-    if (isSupported)
-      _used = true;
+    _used = true;
   }
   
   /** The event name for transition end across browser.
@@ -31,11 +30,4 @@ class Transition {
     return _end;
   }
   static String _end;
-  
-  /** Return true if CSS transition is supported in this device.
-   */
-  static bool get isSupported =>
-      p.fallback(_supported, () => _supported = !browser.msie || browser.version >= 9);
-  static bool _supported;
-  
 }
