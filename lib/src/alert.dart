@@ -44,7 +44,7 @@ class Alert extends Base {
     if ($parent.isEmpty)
       return;
     
-    final DQueryEvent e = new DQueryEvent('close.bs.alert');
+    final QueryEvent e = new QueryEvent('close.bs.alert');
     $parent.triggerEvent(e);
     
     if (e.isDefaultPrevented)
@@ -60,7 +60,7 @@ class Alert extends Base {
       _removeElement($parent);
   }
   
-  static void _closeHandler(DQueryEvent e) {
+  static void _closeHandler(QueryEvent e) {
     e.preventDefault();
     if (e.target is Element)
       _close(e.target);
@@ -80,7 +80,8 @@ class Alert extends Base {
     if (_registered) return;
     _registered = true;
     
-    $document().on('click.alert.data-api', _closeHandler, selector: _DISMISS_SELECTOR);
+    $document()
+      .on('click.alert.data-api', _closeHandler, selector: _DISMISS_SELECTOR);
   }
 
   /** Register to use Alert into a ShadowDom
@@ -88,6 +89,7 @@ class Alert extends Base {
    *  and initialize the Alert compoment ( Alert.useInShadowDom( shadowRoot) 
    */
   static void useInShadowDom( ShadowRoot shadowRoot) {
-    $document(shadowRoot).on('click.alert.data-api', _closeHandler, selector: Alert._DISMISS_SELECTOR);
+    $shadowRoot(shadowRoot)
+      .on('click.alert.data-api', _closeHandler, selector: Alert._DISMISS_SELECTOR);
   }  
 }

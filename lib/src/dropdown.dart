@@ -30,7 +30,7 @@ class Dropdown extends Base {
    */
   void toggle() => _toggle(element);
   
-  static void _toggleEvent(DQueryEvent e) {
+  static void _toggleEvent(QueryEvent e) {
     _toggle(e.currentTarget as Element);
     if (e != null)
       e.stopPropagation(); // TODO: check jQuery spec on return value false
@@ -49,7 +49,7 @@ class Dropdown extends Base {
       
       // TODO: mobile, see bootstrap
       
-      final DQueryEvent e = new DQueryEvent('show.bs.dropdown');
+      final QueryEvent e = new QueryEvent('show.bs.dropdown');
       $parent.triggerEvent(e);
       
       if (e.isDefaultPrevented)
@@ -63,7 +63,7 @@ class Dropdown extends Base {
     
   }
   
-  static void _keydown(DQueryEvent e) {
+  static void _keydown(QueryEvent e) {
     final Element elem = e.currentTarget as Element;
     
     Event oe = e.originalEvent;
@@ -135,7 +135,7 @@ class Dropdown extends Base {
       if (!parent.classes.contains('open'))
         continue;
       
-      final DQueryEvent e = new DQueryEvent('hide.bs.dropdown');
+      final QueryEvent e = new QueryEvent('hide.bs.dropdown');
       $parent.triggerEvent(e);
       if (e.isDefaultPrevented)
         continue;
@@ -175,8 +175,8 @@ class Dropdown extends Base {
     _registered = true;
     
     $document()
-    ..on('click.bs.dropdown.data-api', (DQueryEvent e) => _clearMenus())
-    ..on('click.bs.dropdown.data-api', (DQueryEvent e) => e.stopPropagation(), selector: '.dropdown form')
+    ..on('click.bs.dropdown.data-api', (QueryEvent e) => _clearMenus())
+    ..on('click.bs.dropdown.data-api', (QueryEvent e) => e.stopPropagation(), selector: '.dropdown form')
     ..on('click.bs.dropdown.data-api', _toggleEvent, selector: _TOGGLE_SELECTOR)
     ..on('keydown.bs.dropdown.data-api', _keydown, selector: "${_TOGGLE_SELECTOR}, [role=menu]");
   }

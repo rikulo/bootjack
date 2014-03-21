@@ -35,8 +35,8 @@ class Tab extends Base {
     Element previous = null;
     //final Element previous = $ul.find('.active:last a').firstIfAny; // TODO: :last is jq only
     
-    final DQueryEvent e = 
-        new DQueryEvent('show.bs.tab', data: previous);
+    final QueryEvent e = 
+        new QueryEvent('show.bs.tab', data: previous);
     
     $element.triggerEvent(e);
     
@@ -57,7 +57,7 @@ class Tab extends Base {
         Transition.isUsed && 
         $active.hasClass('fade');
     
-    final Function next = ([DQueryEvent e]) {
+    final Function next = ([QueryEvent e]) {
       $active.removeClass('active');
       $active.children('.dropdown-menu').children('.active').removeClass('active');
       
@@ -97,7 +97,7 @@ class Tab extends Base {
     if (_registered) return;
     _registered = true;
     
-    $document().on('click.tab.data-api', (DQueryEvent e) {
+    $document().on('click.tab.data-api', (QueryEvent e) {
       e.preventDefault();
       wire(e.target).show();
       

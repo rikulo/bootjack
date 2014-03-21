@@ -25,7 +25,7 @@ class Scrollspy extends Base {
   _selector = "${p.fallback(target, () => p.fallback(element.attributes['href'], () => ''))} .nav li > a",
   super(element, _NAME) {
     _$scrollElement = element is BodyElement ? $window() : $element;
-    _$scrollElement.on('scroll.scroll-spy.data-api', (DQueryEvent e) => _process());
+    _$scrollElement.on('scroll.scroll-spy.data-api', (QueryEvent e) => _process());
     refresh();
     _process();
   }
@@ -125,7 +125,7 @@ class Scrollspy extends Base {
     if (_registered) return;
     _registered = true;
     
-    $window().on('load', (DQueryEvent e) {
+    $window().on('load', (QueryEvent e) {
       for (Element elem in $('[data-spy="scroll"]')) {
         Scrollspy.wire(elem); // TODO: data option
         //$spy.scrollspy($spy.data())

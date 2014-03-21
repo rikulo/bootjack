@@ -53,13 +53,13 @@ class Tooltip extends Base {
     
     for (String t in this.trigger.split(' ')) {
       if (t == 'click') {
-        $element.on("click.$_type", (DQueryEvent event) => toggle(), selector: selector);
+        $element.on("click.$_type", (QueryEvent event) => toggle(), selector: selector);
         
       } else if (t != 'manual') {
         final String eventIn = t == 'hover' ? 'mouseenter' : 'focus';
         final String eventOut = t == 'hover' ? 'mouseleave' : 'blur';
-        $element.on("$eventIn.$_type", (DQueryEvent event) => _enter(), selector: selector);
-        $element.on("$eventOut.$_type", (DQueryEvent event) => _leave(), selector: selector);
+        $element.on("$eventIn.$_type", (QueryEvent event) => _enter(), selector: selector);
+        $element.on("$eventOut.$_type", (QueryEvent event) => _leave(), selector: selector);
         
       }
     }
@@ -167,7 +167,7 @@ class Tooltip extends Base {
     if (!hasContent || !_enabled) 
       return;
     
-    final DQueryEvent e = new DQueryEvent('show.bs.$_type');
+    final QueryEvent e = new QueryEvent('show.bs.$_type');
     $element.triggerEvent(e);
     if (e.isDefaultPrevented) 
       return;
@@ -275,7 +275,7 @@ class Tooltip extends Base {
   /** Hide the tooltip.
    */
   void hide() {
-    final DQueryEvent e = new DQueryEvent('hide.bs.$_type');
+    final QueryEvent e = new QueryEvent('hide.bs.$_type');
     $element.triggerEvent(e);
     if (e.isDefaultPrevented)
       return;
@@ -290,7 +290,7 @@ class Tooltip extends Base {
         if (tip.parent != null)
           tip.remove();
       });
-      $tip.one(Transition.end, (DQueryEvent e) {
+      $tip.one(Transition.end, (QueryEvent e) {
         if (tip.parent != null)
           tip.remove();
       });

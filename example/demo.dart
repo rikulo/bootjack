@@ -13,7 +13,7 @@ void main() {
   final Element alertPool = document.querySelector('#alert-pool');
   int i = 0;
   
-  $('#alert-spawn-btn').on('click', (DQueryEvent e) {
+  $('#alert-spawn-btn').on('click', (QueryEvent e) {
     
     alertPool.appendHtml('''
       <div class="alert${COLORS[i]} alert-dismissable fade in">
@@ -26,7 +26,7 @@ void main() {
     
   });
   
-  $('#btn').on('click', (DQueryEvent e) {
+  $('#btn').on('click', (QueryEvent e) {
     $('#btn')
     ..toggleClass('btn-info')
     ..toggleClass('btn-danger');

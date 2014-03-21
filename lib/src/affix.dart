@@ -18,8 +18,8 @@ class Affix extends Base {
   this.offsetBottom = p.fallback(offsetBottom, () => () => _DEFAULT_OFFSET),
   super(element, _NAME) {
     $(window)
-    ..on('scroll.affix.data-api', (DQueryEvent e) => checkPosition())
-    ..on('click.affix.data-api', (DQueryEvent e) {
+    ..on('scroll.affix.data-api', (QueryEvent e) => checkPosition())
+    ..on('click.affix.data-api', (QueryEvent e) {
       new Future.delayed(const Duration(milliseconds: 1), checkPosition);
     });
     checkPosition();
@@ -73,7 +73,7 @@ class Affix extends Base {
     if (_registered) return;
     _registered = true;
     
-    $window().on('load', (DQueryEvent e) {
+    $window().on('load', (QueryEvent e) {
       for (Element elem in $('[data-spy="affix"]')) {
         // TODO: pass data
         /*

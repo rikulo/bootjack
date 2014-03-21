@@ -24,7 +24,7 @@ class Modal extends Base {
   this.backdrop = backdrop,
   this.keyboard = keyboard,
   super(element, _NAME) {
-    $element.on('click.dismiss.modal', (DQueryEvent e) => hide(), selector: '[data-dismiss="modal"]');
+    $element.on('click.dismiss.modal', (QueryEvent e) => hide(), selector: '[data-dismiss="modal"]');
     if (remote != null) {
       //this.$element.find('.modal-body').load(this.options.remote)
     }
@@ -52,7 +52,7 @@ class Modal extends Base {
    */
   show() {
     
-    final DQueryEvent e = new DQueryEvent('show.bs.modal');
+    final QueryEvent e = new QueryEvent('show.bs.modal');
     $element.triggerEvent(e);
     
     if (_shown || e.isDefaultPrevented)
@@ -60,7 +60,7 @@ class Modal extends Base {
     _shown = true;
     
     if (keyboard) {
-      $element.on('keyup.dismiss.modal', (DQueryEvent e) {
+      $element.on('keyup.dismiss.modal', (QueryEvent e) {
         if ((e.originalEvent as KeyboardEvent).keyCode == 27)
           hide();
       });
@@ -83,7 +83,7 @@ class Modal extends Base {
       _enforceFocus();
       
       if (transition) {
-        $element.one(Transition.end, (DQueryEvent e) {
+        $element.one(Transition.end, (QueryEvent e) {
           $element.trigger('focus');
           $element.trigger('shown.bs.modal');
         });
@@ -102,7 +102,7 @@ class Modal extends Base {
    */
   hide() {
     
-    final DQueryEvent e = new DQueryEvent('hide.bs.modal');
+    final QueryEvent e = new QueryEvent('hide.bs.modal');
     $element.triggerEvent(e);
     
     if (!_shown || e.isDefaultPrevented)
@@ -126,14 +126,14 @@ class Modal extends Base {
     
   }
   
-  _hide(DQueryEvent e) {
+  _hide(QueryEvent e) {
     if (e != null)
       e.preventDefault();
     hide();
   }
   
   void _enforceFocus() {
-    $document().on('focusin.modal', (DQueryEvent e) {
+    $document().on('focusin.modal', (QueryEvent e) {
       EventTarget tar = e.target;
       if (element != tar && (!(tar is Node) || (tar as Node).parent != element))
         $element.trigger('focus');
@@ -148,7 +148,7 @@ class Modal extends Base {
         _hideModal();
       }
     });
-    $element.one(Transition.end, (DQueryEvent e) {
+    $element.one(Transition.end, (QueryEvent e) {
       canceled = true;
       _hideModal();
     });
@@ -176,7 +176,7 @@ class Modal extends Base {
     final bool animate = Transition.isUsed && fade;
     bool transit = false;
     
-    final DQueryEventListener listener = (DQueryEvent e) => callback();
+    final QueryEventListener listener = (QueryEvent e) => callback();
     
     if (_shown && backdrop != 'false') {
       
@@ -187,7 +187,7 @@ class Modal extends Base {
       document.body.append(_backdropElem);
       
       $(_backdropElem).on('click', backdrop == 'static' ? 
-          (DQueryEvent e) => element.focus() : (DQueryEvent e) => hide());
+          (QueryEvent e) => element.focus() : (QueryEvent e) => hide());
       
       if (animate) _backdropElem.offsetWidth; // force reflow
       
@@ -221,7 +221,7 @@ class Modal extends Base {
     if (_registered) return;
     _registered = true;
     
-    $document().on('click.modal.data-api', (DQueryEvent e) {
+    $document().on('click.modal.data-api', (QueryEvent e) {
       if (!(e.target is Element))
         return;
       
@@ -237,7 +237,7 @@ class Modal extends Base {
       // , option = $target.data('modal') ? 'toggle' : $.extend({ remote:!/#/.test(href) && href }, $target.data(), $this.data())
       Modal.wire($target.first, () => new Modal($target.first)).toggle(); // TODO: other options
       
-      $target.one('hide', (DQueryEvent e) => $(elem).trigger('focus'));
+      $target.one('hide', (QueryEvent e) => $(elem).trigger('focus'));
       
     }, selector: '[data-toggle="modal"]');
   }

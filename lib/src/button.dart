@@ -83,7 +83,7 @@ class Button extends Base {
     if (_registered) return;
     _registered = true;
     
-    $document().on('click.button.data-api', (DQueryEvent e) {
+    $document().on('click.button.data-api', (QueryEvent e) {
       if (e.target is Element) {
         final ElementQuery $btn = $(e.target).closest('.btn');
         if (!$btn.isEmpty)

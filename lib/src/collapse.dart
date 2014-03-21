@@ -52,7 +52,7 @@ class Collapse extends Base {
       return;
     
     
-    final DQueryEvent e = new DQueryEvent('show.bs.collapse');
+    final QueryEvent e = new QueryEvent('show.bs.collapse');
     $element.triggerEvent(e);
     
     if (e.isDefaultPrevented)
@@ -84,7 +84,7 @@ class Collapse extends Base {
     
     _transitioning = true;
     
-    final DQueryEventListener complete = (DQueryEvent e) {
+    final QueryEventListener complete = (QueryEvent e) {
       element.classes
       ..remove('collapsing')
       ..add('in');
@@ -107,7 +107,7 @@ class Collapse extends Base {
       return;
     
     
-    final DQueryEvent e = new DQueryEvent('hide.bs.collapse');
+    final QueryEvent e = new QueryEvent('hide.bs.collapse');
     $element.triggerEvent(e);
     
     if (e.isDefaultPrevented)
@@ -124,7 +124,7 @@ class Collapse extends Base {
     
     _transitioning = true;
     
-    final DQueryEventListener complete = (DQueryEvent e) {
+    final QueryEventListener complete = (QueryEvent e) {
       _transitioning = false;
       $element.trigger('hidden.bs.collapse');
       element.classes
@@ -163,7 +163,7 @@ class Collapse extends Base {
     if (_registered) return;
     _registered = true;
     
-    $document().on('click.bs.collapse.data-api', (DQueryEvent e) {
+    $document().on('click.bs.collapse.data-api', (QueryEvent e) {
       Element elem = e.currentTarget as Element;
       String href;
       
