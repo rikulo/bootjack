@@ -39,7 +39,7 @@ class Button extends Base {
    */
   Future setState(String state) {
     final String d = 'disabled';
-    final Map space = $element.data.space();
+    final Map space = $element.data.space;
     final bool isInput = element is InputElement;
     final String value = isInput ? (element as InputElement).value : element.innerHtml;
     
