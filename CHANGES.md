@@ -1,5 +1,9 @@
 #CHANGES
 
+**0.6.5**
+
+* Fixed tooltip position calculation
+
 **0.6.4**
 
 * Upgrade Bootstrap resources to 3.0.3. (Thanks to sunglim)

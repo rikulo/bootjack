@@ -315,7 +315,12 @@ class Tooltip extends Base {
   bool get hasContent => title != null;
   
   Rectangle get _position {
-    return element.getBoundingClientRect(); // TODO: check fallback scenario
+	Point pt = this.$element.offset;
+	Rectangle r = element.getBoundingClientRect();
+	
+	return new Rectangle(
+      p.fallback(pt.x, () => r.left),
+      p.fallback(pt.y, () => r.top), r.width, r.height);
     /*
     var el = this.$element[0]
     return $.extend({}, (typeof el.getBoundingClientRect == 'function') ? el.getBoundingClientRect() : {
