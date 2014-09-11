@@ -256,7 +256,7 @@ class Tooltip extends Base {
   }
   
   String _ratioValue(num delta, num dimension) =>
-      delta == 0 ? "${50 * (1 - delta / dimension)}%" : '';
+      delta != 0 ? "${50 * (1 - delta / dimension)}%" : '';
   
   void _setContent() {
     _cnt(tip.querySelector('.tooltip-inner'), title);

@@ -3,6 +3,7 @@
 **0.6.5**
 
 * Fixed tooltip position calculation
+* Fixed tooltip arrow position calculation
 
 **0.6.4**
 
