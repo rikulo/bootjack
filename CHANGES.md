@@ -2,7 +2,7 @@
 
 **0.6.6**
 
-* Fixed dual Modal stackoverflow error
+* Fixed dual Modal stack overflow error
 
 **0.6.5**
 
