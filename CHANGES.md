@@ -1,5 +1,9 @@
 #CHANGES
 
+**0.6.6**
+
+* Fixed dual Modal stackoverflow error
+
 **0.6.5**
 
 * Fixed tooltip position calculation

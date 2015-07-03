@@ -116,33 +116,25 @@ class Modal extends Base {
     element.classes.remove('in');
     element.attributes['aria-hidden'] = 'true';
     
-    if (Transition.isUsed && element.classes.contains('fade')) {
+    if (Transition.isUsed && element.classes.contains('fade'))
       _hideWithTransition();
-      
-    } else {
+    else
       _hideModal();
-      
-    }
-    
-  }
-  
-  _hide(QueryEvent e) {
-    if (e != null)
-      e.preventDefault();
-    hide();
   }
   
   void _enforceFocus() {
     $document().on('focusin.modal', (QueryEvent e) {
       EventTarget tar = e.target;
-      if (element != tar && (!(tar is Node) || (tar as Node).parent != element))
-        $element.trigger('focus');
+      if (!e.isPropagationStopped && element != tar && 
+          (tar is! Node || (tar as Node).parent != element))
+        $element.triggerEvent(new QueryEvent('focus')..stopPropagation());
     });
   }
   
   void _hideWithTransition() {
     bool canceled = false;
-    new Future.delayed(const Duration(milliseconds: 500)).then((_) {
+    new Future.delayed(const Duration(milliseconds: 500))
+    .then((_) {
       if (!canceled) {
         $element.off(Transition.end);
         _hideModal();

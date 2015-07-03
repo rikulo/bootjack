@@ -165,7 +165,6 @@ class Collapse extends Base {
     
     $document().on('click.bs.collapse.data-api', (QueryEvent e) {
       Element elem = e.currentTarget as Element;
-      String href;
       
       String targetStr = elem.attributes['data-target'];
       
