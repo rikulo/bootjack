@@ -184,9 +184,7 @@ class Modal extends Base {
         _backdropElem.classes.add('fade');
       document.body.append(_backdropElem);
 
-      final $_backdropElem =
-        $(_backdropElem)..on('click', backdrop == 'static' ? 
-          (QueryEvent e) => element.focus() : (QueryEvent e) => hide());
+      final $_backdropElem = $(_backdropElem);
       
       if (animate) $_backdropElem.reflow();
       
