@@ -56,7 +56,7 @@ class Modal extends Base {
     _shown = true;
     
     if (keyboard) {
-      $element.on('keyup.dismiss.modal', (QueryEvent e) {
+      $document().on('keyup.dismiss.modal', (QueryEvent e) {
         if ((e.originalEvent as KeyboardEvent).keyCode == 27)
           hide();
       });
