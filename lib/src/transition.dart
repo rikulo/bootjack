@@ -1,10 +1,10 @@
 part of bootjack;
 
-Map<String, String> _TRANS_END_EVENT_NAMES = new HashMap<String, String>.from({
+final Map<String, String> _TRANS_END_EVENT_NAMES = {
   'webkit-' : 'webkitTransitionEnd',
   'moz-'    : 'transitionend',
   'o-'      : 'oTransitionEnd otransitionend'
-});
+};
 
 /** Transition related utilities.
  */

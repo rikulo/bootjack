@@ -1,8 +1,8 @@
 part of bootjack;
 
 Map _copy(Map a, Map b) {
-  Map c = new HashMap.from(a);
+  final Map c = new Map.from(a);
   if (b != null)
-    b.forEach((key, value) => a[key] = value);
+    b.forEach((key, value) => c[key] = value);
   return c;
 }
