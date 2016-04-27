@@ -24,10 +24,6 @@ class Modal extends Base {
   this.backdrop = backdrop,
   this.keyboard = keyboard,
   super(element, _NAME) {
-    $element.on('click.dismiss.modal', (QueryEvent e) => hide(), selector: '[data-dismiss="modal"]');
-    if (remote != null) {
-      //this.$element.find('.modal-body').load(this.options.remote)
-    }
   }
   
   /** Retrieve the wired Modal object from an element. If there is no wired
@@ -60,7 +56,7 @@ class Modal extends Base {
     _shown = true;
     
     if (keyboard) {
-      $element.on('keyup.dismiss.modal', (QueryEvent e) {
+      $document().on('keyup.dismiss.modal', (QueryEvent e) {
         if ((e.originalEvent as KeyboardEvent).keyCode == 27)
           hide();
       });
@@ -93,7 +89,14 @@ class Modal extends Base {
         $element.trigger('shown.bs.modal');
         
       }
-      
+
+      $element.on('click.modal.backdrop', (QueryEvent e){
+        if($element[0] == e.target && backdrop != 'static'){
+          hide();
+        }
+      });
+
+      $element.on('click.dismiss.modal', (QueryEvent e) => hide(), selector: '[data-dismiss="modal"]');
     });
     
   }
@@ -110,6 +113,9 @@ class Modal extends Base {
     _shown = false;
     
     $element.off('keyup.dismiss.modal');
+    $element.off('click.modal.backdrop');
+    $element.off('click.dismiss.modal');
+
     
     $document().off('focusin.modal');
     
@@ -178,9 +184,7 @@ class Modal extends Base {
         _backdropElem.classes.add('fade');
       document.body.append(_backdropElem);
 
-      final $_backdropElem =
-        $(_backdropElem)..on('click', backdrop == 'static' ? 
-          (QueryEvent e) => element.focus() : (QueryEvent e) => hide());
+      final $_backdropElem = $(_backdropElem);
       
       if (animate) $_backdropElem.reflow();
       
