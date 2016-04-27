@@ -55,7 +55,7 @@ class Collapse extends Base {
     final QueryEvent e = new QueryEvent('show.bs.collapse');
     $element.triggerEvent(e);
     
-    if (e.isDefaultPrevented)
+    if (e.defaultPrevented)
       return;
     
     
@@ -110,7 +110,7 @@ class Collapse extends Base {
     final QueryEvent e = new QueryEvent('hide.bs.collapse');
     $element.triggerEvent(e);
     
-    if (e.isDefaultPrevented)
+    if (e.defaultPrevented)
       return;
     
     int size = horizontal ? $element.width : $element.height;

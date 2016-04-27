@@ -40,7 +40,7 @@ class Tab extends Base {
     
     $element.triggerEvent(e);
     
-    if (e.isDefaultPrevented) 
+    if (e.defaultPrevented)
       return;
     
     final ElementQuery $target = $(selector);

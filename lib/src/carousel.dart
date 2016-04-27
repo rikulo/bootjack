@@ -143,7 +143,7 @@ class Carousel extends Base {
     }
     
     $element.triggerEvent(e);
-    if (e.isDefaultPrevented)
+    if (e.defaultPrevented)
       return;
     
     if (Transition.isUsed && element.classes.contains('slide')) {

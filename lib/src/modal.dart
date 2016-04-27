@@ -55,7 +55,7 @@ class Modal extends Base {
     final QueryEvent e = new QueryEvent('show.bs.modal');
     $element.triggerEvent(e);
     
-    if (_shown || e.isDefaultPrevented)
+    if (_shown || e.defaultPrevented)
       return;
     _shown = true;
     
@@ -105,7 +105,7 @@ class Modal extends Base {
     final QueryEvent e = new QueryEvent('hide.bs.modal');
     $element.triggerEvent(e);
     
-    if (!_shown || e.isDefaultPrevented)
+    if (!_shown || e.defaultPrevented)
       return;
     _shown = false;
     
@@ -125,7 +125,7 @@ class Modal extends Base {
   void _enforceFocus() {
     $document().on('focusin.modal', (QueryEvent e) {
       EventTarget tar = e.target;
-      if (!e.isPropagationStopped && element != tar && 
+      if (!e.propagationStopped && element != tar &&
           (tar is! Node || (tar as Node).parent != element))
         $element.triggerEvent(new QueryEvent('focus')..stopPropagation());
     });

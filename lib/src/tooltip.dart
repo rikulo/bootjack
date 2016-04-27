@@ -169,7 +169,7 @@ class Tooltip extends Base {
     
     final QueryEvent e = new QueryEvent('show.bs.$_type');
     $element.triggerEvent(e);
-    if (e.isDefaultPrevented) 
+    if (e.defaultPrevented)
       return;
     
     _setContent();
@@ -277,7 +277,7 @@ class Tooltip extends Base {
   void hide() {
     final QueryEvent e = new QueryEvent('hide.bs.$_type');
     $element.triggerEvent(e);
-    if (e.isDefaultPrevented)
+    if (e.defaultPrevented)
       return;
     
     tip.classes.remove('in');

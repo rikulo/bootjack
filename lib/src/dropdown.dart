@@ -52,7 +52,7 @@ class Dropdown extends Base {
       final QueryEvent e = new QueryEvent('show.bs.dropdown');
       $parent.triggerEvent(e);
       
-      if (e.isDefaultPrevented)
+      if (e.defaultPrevented)
         return;
       
       parent.classes.toggle('open');
@@ -137,7 +137,7 @@ class Dropdown extends Base {
       
       final QueryEvent e = new QueryEvent('hide.bs.dropdown');
       $parent.triggerEvent(e);
-      if (e.isDefaultPrevented)
+      if (e.defaultPrevented)
         continue;
       
       $parent.removeClass('open');

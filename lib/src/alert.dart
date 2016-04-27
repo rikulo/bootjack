@@ -47,7 +47,7 @@ class Alert extends Base {
     final QueryEvent e = new QueryEvent('close.bs.alert');
     $parent.triggerEvent(e);
     
-    if (e.isDefaultPrevented)
+    if (e.defaultPrevented)
       return;
     
     final Element parent = $parent.first;
