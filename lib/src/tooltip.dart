@@ -337,7 +337,7 @@ class Tooltip extends Base {
   
   /// The tooltip Element.
   Element get tip =>
-      p.fallback(_tip, () => _tip = new Element.html(template));
+      p.fallback(_tip, () => _tip = new Element.html(template, treeSanitizer: NodeTreeSanitizer.trusted));
   Element _tip;
   
   Element get _arrow =>

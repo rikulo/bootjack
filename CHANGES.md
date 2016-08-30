@@ -3,6 +3,7 @@
 **0.6.6**
 
 * Fixed dual Modal stack overflow error
+* Fixed create element error on Firefox 31
 
 **0.6.5**
 
