@@ -37,14 +37,17 @@ class Tooltip extends Base {
    */
   Tooltip(Element element, {bool animation, String placement(Element elem), 
   String selector, String template, String trigger, String title(Element elem), 
-  int delay, int showDelay, int hideDelay, bool html, container, NodeValidatorBuilder htmlValidator}) : 
+  int delay, int showDelay, int hideDelay, bool html, container,
+  NodeValidatorBuilder htmlValidator, 
+  String defaultTemplate: _DEFAULT_TEMPLATE,
+  String defaultTrigger: 'hover focus'}) : 
   this.animation  = _bool(animation, element, 'animation', true),
   this.html       = _bool(html,      element, 'html',      false),
   this.showDelay  = _int(showDelay, element, 'show-delay', _int(delay, element, 'delay', 0)),
   this.hideDelay  = _int(hideDelay, element, 'hide-delay', _int(delay, element, 'delay', 0)),
   this.selector   = _data(selector,  element, 'selector'),
-  this.template   = _data(template,  element, 'template', _DEFAULT_TEMPLATE),
-  this.trigger    = _data(trigger,   element, 'trigger',  'hover focus'),
+  this.template   = _data(template,  element, 'template', defaultTemplate),
+  this.trigger    = _data(trigger,   element, 'trigger',  defaultTrigger),
   this.container  = _data(container, element, 'container'),
   this._title     = p.fallback(title,     () => (Element elem) => elem.attributes['data-title']),
   this._placement = p.fallback(placement, () => (Element elem) => elem.attributes['data-placement']),

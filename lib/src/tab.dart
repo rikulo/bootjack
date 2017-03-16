@@ -57,7 +57,7 @@ class Tab extends Base {
         Transition.isUsed && 
         $active.hasClass('fade');
     
-    final Function next = ([QueryEvent e]) {
+    final next = ([QueryEvent e]) {
       $active.removeClass('active');
       $active.children('.dropdown-menu').children('.active').removeClass('active');
       

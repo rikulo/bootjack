@@ -6,21 +6,21 @@ import 'package:dquery/dquery.dart';
 /** Load a component from Element data space if available, otherwise create
  * one.
  */
-wire(Element element, String name, create()) =>
-     fallback($(element).data.get(name), create); // create shall save it back
+T wire<T>(Element element, String name, T create()) =>
+     fallback($(element).data.get(name) as T, create); // create shall save it back
 
 /** Equivalent to || operator in JavaScript.
  */
-fallback(a, b(), [c(), d()]) => 
+T fallback<T>(T a, T b(), [T c(), T d()]) =>
     c == null ? _fallback(a, b) :
     d == null ? _fallback(_fallback(a, b), c) :
     _fallback(_fallback(_fallback(a, b), c), d);
 
-_fallback(a, b()) => a != null ? a : b();
+T _fallback<T>(T a, T b()) => a != null ? a : b();
 
 /** Equivalent to && operator in JavaScript.
  */
-movein(a, b()) => a == null ? null : b();
+T movein<T>(T a, T b()) => a == null ? null : b();
 
 /** Retrieve the value of data-target attribute of href attribute on given
  * [element].

@@ -13,7 +13,7 @@ class Popover extends Tooltip {
    * are:
    * 
    * + The default [placement] is 'right'.
-   * + The default [trigger] is 'click'.
+   * + The [defaultTrigger] is 'click'.
    * + In addition to [title], which is rendered in popover header, you can also 
    * specify [content], to be rendered in popover body. The [html] flag applies
    * to both of them.
@@ -21,13 +21,15 @@ class Popover extends Tooltip {
   Popover(Element element, {bool animation, String placement(Element elem), 
   String selector, String template, String trigger, String title(Element elem), 
   String content(Element elem), int delay, int showDelay, 
-  int hideDelay, bool html, container, NodeValidatorBuilder htmlValidator}) : 
-  this.template = _data(template, element, 'template', _DEFAULT_TEMPLATE),
-  this.trigger  = _data(trigger,  element, 'trigger',  'click'),
+  int hideDelay, bool html, container, NodeValidatorBuilder htmlValidator,
+  String defaultTemplate: _DEFAULT_TEMPLATE,
+  String defaultTrigger: 'click'}) : 
   this._content = p.fallback(content, () => (Element elem) => elem.attributes['data-content']),
   super(element, animation: animation, placement: placement, selector: selector, 
   title: title, delay: delay, showDelay: showDelay, hideDelay: hideDelay, 
-  html: html, container: container, htmlValidator: htmlValidator, template: template);
+  html: html, container: container, htmlValidator: htmlValidator,
+  template: template, trigger: trigger,
+  defaultTemplate: defaultTemplate, defaultTrigger: defaultTrigger);
   
   /** Retrieve the wired Popover object from an element. If there is no wired
    * Popover object, a new one will be created.
@@ -47,13 +49,6 @@ class Popover extends Tooltip {
   @override
   Element get _arrow =>
       p.fallback(_arr, () => _arr = tip.querySelector('.arrow'));
-  Element _arr;
-  
-  /// The html template for popover.
-  final String template;
-  
-  /// The trigger condition. Default: 'click'.
-  final String trigger;
   
   /// The content message of the popover.
   String get content => p.fallback(_content(element), 
