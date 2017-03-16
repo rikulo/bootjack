@@ -33,7 +33,7 @@ class Modal extends Base {
    * the default constructor with no optional parameter value is used.
    */
   static Modal wire(Element element, [Modal create()]) =>
-      p.wire(element, _NAME, p.fallback(create, () => () => new Modal(element)));
+      p.wire(element, _NAME, create ?? (() => new Modal(element)));
   
   /** Toggle the visibility state of the Modal.
    */

@@ -7,15 +7,16 @@ import 'package:dquery/dquery.dart';
  * one.
  */
 T wire<T>(Element element, String name, T create()) =>
-     fallback($(element).data.get(name) as T, create); // create shall save it back
+     ($(element).data.get(name) as T) ?? create(); // create shall save it back
 
 /** Equivalent to || operator in JavaScript.
  */
+@deprecated
 T fallback<T>(T a, T b(), [T c(), T d()]) =>
     c == null ? _fallback(a, b) :
     d == null ? _fallback(_fallback(a, b), c) :
     _fallback(_fallback(_fallback(a, b), c), d);
-
+@deprecated
 T _fallback<T>(T a, T b()) => a != null ? a : b();
 
 /** Equivalent to && operator in JavaScript.
@@ -26,7 +27,7 @@ T movein<T>(T a, T b()) => a == null ? null : b();
  * [element].
  */
 String getDataTarget(Element element) =>
-    fallback(element.attributes['data-target'], () => element.attributes['href']);
+    element.attributes['data-target'] ?? element.attributes['href'];
 // selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') //strip for ie7 // skipped
 
 /** Add [className] to [element] CSS classes if [value] is true, Remove it 

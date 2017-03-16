@@ -21,7 +21,7 @@ class Alert extends Base {
    * the default constructor with no optional parameter value is used.
    */
   static Alert wire(Element element, [Alert create()]) =>
-      p.wire(element, _NAME, p.fallback(create, () => () => new Alert(element)));
+      p.wire(element, _NAME, create ?? (() => new Alert(element)));
   
   /** Detach the Alert component from DOM.
    */

@@ -22,7 +22,7 @@ class Scrollspy extends Base {
   this.offset = offset,
   _body = document.body,
   _$body = $(document.body),
-  _selector = "${p.fallback(target, () => p.fallback(element.attributes['href'], () => ''))} .nav li > a",
+  _selector = "${target ?? element.attributes['href'] ?? ''} .nav li > a",
   super(element, _NAME) {
     _$scrollElement = element is BodyElement ? $window() : $element;
     _$scrollElement.on('scroll.scroll-spy.data-api', (QueryEvent e) => _process());
@@ -35,7 +35,7 @@ class Scrollspy extends Base {
    * 
    */
   static Scrollspy wire(Element element, [Scrollspy create()]) =>
-      p.wire(element, _NAME, p.fallback(create, () => () => new Scrollspy(element)));
+      p.wire(element, _NAME, create ?? (() => new Scrollspy(element)));
   
   final ElementQuery _$body;
   final Element _body;

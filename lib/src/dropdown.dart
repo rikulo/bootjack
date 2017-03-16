@@ -24,7 +24,7 @@ class Dropdown extends Base {
    * the default constructor with no optional parameter value is used.
    */
   static Dropdown wire(Element element, [Dropdown create()]) =>
-      p.wire(element, _NAME, p.fallback(create, () => () => new Dropdown(element)));
+      p.wire(element, _NAME, create ?? (() => new Dropdown(element)));
   
   /** Toggle the open/close state of the Dropdown.
    */

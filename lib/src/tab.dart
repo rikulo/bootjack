@@ -20,7 +20,7 @@ class Tab extends Base {
    * the default constructor with no optional parameter value is used.
    */
   static Tab wire(Element element, [Tab create()]) =>
-      p.wire(element, _NAME, p.fallback(create, () => () => new Tab(element)));
+      p.wire(element, _NAME, create ?? (() => new Tab(element)));
   
   /** Show the tab.
    */

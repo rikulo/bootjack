@@ -34,7 +34,7 @@ class Collapse extends Base {
    * the default constructor with no optional parameter value is used.
    */
   static Collapse wire(Element element, [Collapse create()]) =>
-      p.wire(element, _NAME, p.fallback(create, () => () => new Collapse(element)));
+      p.wire(element, _NAME, create ?? (() => new Collapse(element)));
   
   
   final bool _toggle;
@@ -43,8 +43,8 @@ class Collapse extends Base {
   bool get transitioning => _transitioning;
   bool _transitioning = false;
   
-  bool get horizontal => p.fallback(_horizontal, 
-      () => _horizontal = element.classes.contains('width'));
+  bool get horizontal => _horizontal
+      ?? (_horizontal = element.classes.contains('width'));
   bool _horizontal;
   
   void show() {

@@ -25,7 +25,7 @@ class Transition {
    */
   static String get end {
     if (_end == null) {
-      _end = p.fallback(_TRANS_END_EVENT_NAMES[Device.cssPrefix], () => 'transitionend');
+      _end = _TRANS_END_EVENT_NAMES[Device.cssPrefix] ?? 'transitionend';
     }
     return _end;
   }

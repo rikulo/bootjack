@@ -24,7 +24,7 @@ class Popover extends Tooltip {
   int hideDelay, bool html, container, NodeValidatorBuilder htmlValidator,
   String defaultTemplate: _DEFAULT_TEMPLATE,
   String defaultTrigger: 'click'}) : 
-  this._content = p.fallback(content, () => (Element elem) => elem.attributes['data-content']),
+  this._content = content ?? ((Element elem) => elem.attributes['data-content']),
   super(element, animation: animation, placement: placement, selector: selector, 
   title: title, delay: delay, showDelay: showDelay, hideDelay: hideDelay, 
   html: html, container: container, htmlValidator: htmlValidator,
@@ -38,7 +38,7 @@ class Popover extends Tooltip {
    * the default constructor with no optional parameter value is used.
    */
   static Popover wire(Element element, [Popover create()]) =>
-      p.wire(element, _NAME, p.fallback(create, () => () => new Popover(element)));
+      p.wire(element, _NAME, create ?? (() => new Popover(element)));
   
   @override
   String get _type => _NAME;
@@ -47,12 +47,11 @@ class Popover extends Tooltip {
   String get _placementDefault => 'right';
   
   @override
-  Element get _arrow =>
-      p.fallback(_arr, () => _arr = tip.querySelector('.arrow'));
+  Element get _arrow => _arr ?? (_arr = tip.querySelector('.arrow'));
   
   /// The content message of the popover.
-  String get content => p.fallback(_content(element), 
-      () => element.attributes['data-content'], () => _contentDefault);
+  String get content => _content(element)
+      ?? element.attributes['data-content'] ?? _contentDefault;
   
   String get _contentDefault => '';
   final _ToString _content;

@@ -110,10 +110,10 @@ class Carousel extends Base {
   void slide(String type, [Element next]) {
     final Element activeItem = active;
     final List<Element> items = $element.find('.item');
-    final Element nextItem = p.fallback(next, () => 
-        type == 'next' ? p.fallback(activeItem.nextElementSibling, () => items.first) : 
-        type == 'prev' ? p.fallback(activeItem.previousElementSibling, () => items.last) : 
-        null);
+    final Element nextItem = next ??
+        (type == 'next' ? activeItem.nextElementSibling ?? items.first :
+         type == 'prev' ? activeItem.previousElementSibling ?? items.last :
+         null);
     final String direction = type == 'next' ? 'left' : 'right';
     /*
         , isCycling = this.interval

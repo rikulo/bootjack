@@ -49,8 +49,8 @@ class Tooltip extends Base {
   this.template   = _data(template,  element, 'template', defaultTemplate),
   this.trigger    = _data(trigger,   element, 'trigger',  defaultTrigger),
   this.container  = _data(container, element, 'container'),
-  this._title     = p.fallback(title,     () => (Element elem) => elem.attributes['data-title']),
-  this._placement = p.fallback(placement, () => (Element elem) => elem.attributes['data-placement']),
+  this._title     = title ?? ((Element elem) => elem.attributes['data-title']),
+  this._placement = placement ?? ((Element elem) => elem.attributes['data-placement']),
   this._htmlValidator = htmlValidator,
   super(element, _NAME) {
     
@@ -83,7 +83,7 @@ class Tooltip extends Base {
    * the default constructor with no optional parameter value is used.
    */
   static Tooltip wire(Element element, [Tooltip create()]) =>
-      p.wire(element, _NAME, p.fallback(create, () => () => new Tooltip(element)));
+      p.wire(element, _NAME, create ?? (() => new Tooltip(element)));
   
   String get _type => _NAME;
   String get _placementDefault => 'top';
@@ -179,7 +179,7 @@ class Tooltip extends Base {
     if (animation)
       tip.classes.add('fade');
     
-    final String placement = p.fallback(_placement(element), () => _placementDefault);
+    final String placement = _placement(element) ?? _placementDefault;
     
     tip.remove();
     tip.style.top = tip.style.left = '0';
@@ -321,9 +321,7 @@ class Tooltip extends Base {
 	Point pt = this.$element.offset;
 	Rectangle r = element.getBoundingClientRect();
 	
-	return new Rectangle(
-      p.fallback(pt.x, () => r.left),
-      p.fallback(pt.y, () => r.top), r.width, r.height);
+	return new Rectangle(pt.x ?? r.left, pt.y ?? r.top, r.width, r.height);
     /*
     var el = this.$element[0]
     return $.extend({}, (typeof el.getBoundingClientRect == 'function') ? el.getBoundingClientRect() : {
@@ -335,16 +333,14 @@ class Tooltip extends Base {
   
   /// The message to show in tooltip.
   String get title =>
-      p.fallback(element.attributes['data-original-title'], 
-          () => _title(element), () => _titleDefault);
+      element.attributes['data-original-title'] ?? _title(element) ?? _titleDefault;
   
   /// The tooltip Element.
   Element get tip =>
-      p.fallback(_tip, () => _tip = new Element.html(template, treeSanitizer: NodeTreeSanitizer.trusted));
+      _tip ?? (_tip = new Element.html(template, treeSanitizer: NodeTreeSanitizer.trusted));
   Element _tip;
   
-  Element get _arrow =>
-      p.fallback(_arr, () => _arr = tip.querySelector('.tooltip-arrow'));
+  Element get _arrow => _arr ?? (_arr = tip.querySelector('.tooltip-arrow'));
   Element _arr;
   
   /// Enable tooptip.
@@ -380,7 +376,7 @@ class Tooltip extends Base {
 typedef String _ToString(Element elem);
 
 _data(value, Element elem, String name, [defaultValue]) =>
-    p.fallback(value, () => elem.attributes["data-$name"], () => defaultValue);
+    value ?? elem.attributes["data-$name"] ?? defaultValue;
 
 int _int(int value, Element elem, String name, [int defaultValue]) {
   if (value != null)

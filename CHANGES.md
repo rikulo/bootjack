@@ -1,5 +1,9 @@
 #CHANGES
 
+**0.6.7**
+
+* `fallback()` deprecated. Please use the `??` operator instead.
+
 **0.6.6**
 
 * Fixed dual Modal stack overflow error
