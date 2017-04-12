@@ -156,7 +156,7 @@ class Carousel extends Base {
         nextItem.classes..remove('type')..remove(direction)..add('active');
         activeItem.classes..remove('type')..remove(direction);
         _sliding = false;
-        new Future.delayed(const Duration(), () {
+        Timer.run(() {
           $element.trigger('slid.bs.carousel');
         });
       });

@@ -135,7 +135,7 @@ class Tooltip extends Base {
     _hoverIn = true;
     final p.Token token = _timeout = new p.Token();
     
-    new Future.delayed(new Duration(milliseconds: showDelay)).then((_) {
+    new Timer(new Duration(milliseconds: showDelay), () {
       if (token != _timeout)
         return;
       if (_hoverIn == true)
@@ -153,7 +153,7 @@ class Tooltip extends Base {
     
     _hoverIn = false;
     
-    new Future.delayed(new Duration(milliseconds: hideDelay)).then((_) {
+    new Timer(new Duration(milliseconds: hideDelay), () {
       if (token != _timeout)
         return;
       if (_hoverIn == false)
@@ -288,7 +288,7 @@ class Tooltip extends Base {
     if (Transition.isUsed && tip.classes.contains('fade')) {
       ElementQuery $tip = $(tip);
       
-      new Future.delayed(const Duration(milliseconds: 500), () {
+      new Timer(const Duration(milliseconds: 500), () {
         $tip.off(Transition.end);
         if (tip.parent != null)
           tip.remove();

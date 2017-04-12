@@ -52,7 +52,7 @@ class Button extends Base {
       element.innerHtml = newStateText;
     
     // push to event loop to allow forms to submit
-    return new Future.delayed(const Duration(), () {
+    return new Future.delayed(Duration.ZERO, () {
       if (state == 'loadingText') {
         element.classes.add(d);
         element.attributes[d] = d;

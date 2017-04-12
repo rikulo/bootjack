@@ -20,7 +20,7 @@ class Affix extends Base {
     $(window)
     ..on('scroll.affix.data-api', (QueryEvent e) => checkPosition())
     ..on('click.affix.data-api', (QueryEvent e) {
-      new Future.delayed(const Duration(milliseconds: 1), checkPosition);
+      new Timer(const Duration(milliseconds: 1), checkPosition);
     });
     checkPosition();
   }

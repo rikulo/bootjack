@@ -139,8 +139,7 @@ class Modal extends Base {
   
   void _hideWithTransition() {
     bool canceled = false;
-    new Future.delayed(const Duration(milliseconds: 500))
-    .then((_) {
+    new Timer(const Duration(milliseconds: 500), () {
       if (!canceled) {
         $element.off(Transition.end);
         _hideModal();
