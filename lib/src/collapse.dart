@@ -63,7 +63,7 @@ class Collapse extends Base {
       ElementQuery panels = _$parent.children('.panel');
       if (panels.isNotEmpty) {
         for (Element panel in panels) {
-          for (Element elem in $(panel).children('.in')) {
+          for (Element elem in $(panel).children('.in, .collapsing')) {
             Collapse active = $(elem).data.get(_NAME);
             
             if (active != null && active.transitioning) return;

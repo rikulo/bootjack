@@ -1,5 +1,9 @@
 #CHANGES
 
+**0.6.8**
+
+* Fixed Collapse doesn't stop open when other panel opening
+
 **0.6.7**
 
 * `fallback()` deprecated. Please use the `??` operator instead.
