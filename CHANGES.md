@@ -1,5 +1,8 @@
 #CHANGES
 
+**1.0.0**
+* Dart 2 required
+
 **0.6.8**
 
 * Fixed Collapse doesn't stop open when other panel opening

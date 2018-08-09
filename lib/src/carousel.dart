@@ -4,7 +4,7 @@ part of bootjack;
  */
 class Carousel extends Base {
   
-  static const String _NAME = 'carousel';
+  static const _name = 'carousel';
   
   /// The time interval between sliding.
   final int interval;
@@ -16,7 +16,7 @@ class Carousel extends Base {
   Carousel(Element element, {int interval: 5000, String pause: 'hover'}) :
   this.interval = interval,
   this.pauseCondition = pause,
-  super(element, _NAME) {
+  super(element, _name) {
     _indicators = element.querySelector('.carousel-indicators');
     if (pause == 'hover') {
       $element

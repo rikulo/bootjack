@@ -7,7 +7,7 @@ part of bootjack;
  */
 class Modal extends Base {
   
-  static const String _NAME = 'modal';
+  static const _name = 'modal';
   
   /**
    * 
@@ -23,7 +23,7 @@ class Modal extends Base {
   Modal(Element element, {String backdrop: 'true', bool keyboard: true, String remote}) :
   this.backdrop = backdrop,
   this.keyboard = keyboard,
-  super(element, _NAME) {
+  super(element, _name) {
   }
   
   /** Retrieve the wired Modal object from an element. If there is no wired
@@ -33,7 +33,7 @@ class Modal extends Base {
    * the default constructor with no optional parameter value is used.
    */
   static Modal wire(Element element, [Modal create()]) =>
-      p.wire(element, _NAME, create ?? (() => new Modal(element)));
+      p.wire(element, _name, create ?? (() => new Modal(element)));
   
   /** Toggle the visibility state of the Modal.
    */

@@ -6,12 +6,12 @@ part of bootjack;
  */
 class Tab extends Base {
   
-  static const String _NAME = 'tab';
+  static const _name = 'tab';
   
   /** Construct a Tab object and wire it to [element].
    */
   Tab(Element element) : 
-  super(element, _NAME);
+  super(element, _name);
   
   /** Retrieve the wired Tab object from an element. If there is no wired
    * Tab object, a new one will be created.
@@ -20,7 +20,7 @@ class Tab extends Base {
    * the default constructor with no optional parameter value is used.
    */
   static Tab wire(Element element, [Tab create()]) =>
-      p.wire(element, _NAME, create ?? (() => new Tab(element)));
+      p.wire(element, _name, create ?? (() => new Tab(element)));
   
   /** Show the tab.
    */
@@ -32,11 +32,10 @@ class Tab extends Base {
     if ($parent.hasClass('active'))
       return;
     
-    Element previous = null;
+    Element previous;
     //final Element previous = $ul.find('.active:last a').firstIfAny; // TODO: :last is jq only
     
-    final QueryEvent e = 
-        new QueryEvent('show.bs.tab', data: previous);
+    final e = new QueryEvent('show.bs.tab', data: previous);
     
     $element.triggerEvent(e);
     

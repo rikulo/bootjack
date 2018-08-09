@@ -5,18 +5,18 @@ part of bootjack;
  */
 class Affix extends Base {
   
-  static const String _NAME = 'affix';
+  static const _name = 'affix';
   
-  static const int _DEFAULT_OFFSET = 10;
+  static const _defaultOffset = 10;
   final _AsInt offsetTop, offsetBottom;
   
   /** 
    * 
    */
   Affix(Element element, {int offsetTop(), int offsetBottom()}) : 
-  this.offsetTop = offsetTop ?? (() => _DEFAULT_OFFSET),
-  this.offsetBottom = offsetBottom ?? (() => _DEFAULT_OFFSET),
-  super(element, _NAME) {
+  this.offsetTop = offsetTop ?? (() => _defaultOffset),
+  this.offsetBottom = offsetBottom ?? (() => _defaultOffset),
+  super(element, _name) {
     $(window)
     ..on('scroll.affix.data-api', (QueryEvent e) => checkPosition())
     ..on('click.affix.data-api', (QueryEvent e) {
@@ -29,7 +29,7 @@ class Affix extends Base {
    * 
    */
   static Affix wire(Element element, [Affix create()]) =>
-      p.wire(element, _NAME, create ?? (() => new Affix(element)));
+      p.wire(element, _name, create ?? (() => new Affix(element)));
   
   /**
    * 
@@ -38,8 +38,8 @@ class Affix extends Base {
     if (p.isHidden(element))
       return;
     
-    final int offsetTop = this.offsetTop() ?? _DEFAULT_OFFSET;
-    final int offsetBottom = this.offsetBottom() ?? _DEFAULT_OFFSET;
+    final int offsetTop = this.offsetTop() ?? _defaultOffset;
+    final int offsetBottom = this.offsetBottom() ?? _defaultOffset;
     
     final int scrollHeight = $document().height;
     final int scrollTop = window.pageYOffset;

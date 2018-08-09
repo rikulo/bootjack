@@ -4,7 +4,7 @@ part of bootjack;
  */
 class Button extends Base {
   
-  static const String _NAME = 'button';
+  static const _name = 'button';
   
   /** The default text setting of button.
    */
@@ -23,7 +23,7 @@ class Button extends Base {
    */
   Button(Element element, {Map<String, String> texts}) : 
   this.texts = _copy(DEFAULT_TEXTS, texts), 
-  super(element, _NAME);
+  super(element, _name);
   
   /** Retrieve the wired Button object from an element. If there is no wired
    * Button object, a new one will be created.
@@ -32,7 +32,7 @@ class Button extends Base {
    * the default constructor with no optional parameter value is used.
    */
   static Button wire(Element element, [Button create()]) => 
-      p.wire(element, _NAME, create ?? (() => new Button(element)));
+      p.wire(element, _name, create ?? (() => new Button(element)));
   
   /** Set the button state, which will change the button text according to [texts]
    * setting.
@@ -52,7 +52,7 @@ class Button extends Base {
       element.innerHtml = newStateText;
     
     // push to event loop to allow forms to submit
-    return new Future.delayed(Duration.ZERO, () {
+    return new Future.delayed(Duration.zero, () {
       if (state == 'loadingText') {
         element.classes.add(d);
         element.attributes[d] = d;

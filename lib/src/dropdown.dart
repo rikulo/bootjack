@@ -6,13 +6,13 @@ part of bootjack;
  */
 class Dropdown extends Base {
   
-  static const String _NAME = 'dropdown';
-  static const String _TOGGLE_SELECTOR ='[data-toggle=dropdown]'; 
+  static const _name = 'dropdown';
+  static const _toggleSelector ='[data-toggle=dropdown]';
   
   /** Construct a Dropdown object and wire it to [element].
    */
   Dropdown(Element element) : 
-  super(element, _NAME) {
+  super(element, _name) {
     Dropdown.use();
     $element.on('click.bs.dropdown', _toggleEvent);
   }
@@ -24,7 +24,7 @@ class Dropdown extends Base {
    * the default constructor with no optional parameter value is used.
    */
   static Dropdown wire(Element element, [Dropdown create()]) =>
-      p.wire(element, _NAME, create ?? (() => new Dropdown(element)));
+      p.wire(element, _name, create ?? (() => new Dropdown(element)));
   
   /** Toggle the open/close state of the Dropdown.
    */
@@ -86,7 +86,7 @@ class Dropdown extends Base {
     
     if (!isActive || (isActive && keyCode == 27)) {
       if (keyCode == 27) 
-        $(parent).find(_TOGGLE_SELECTOR)[0].focus();
+        $(parent).find(_toggleSelector)[0].focus();
       
       elem.click();
       return;
@@ -129,7 +129,7 @@ class Dropdown extends Base {
   
   static void _clearMenus() {
     // TODO: mobile, see bootstrap
-    for (Element elem in $(_TOGGLE_SELECTOR)) {
+    for (Element elem in $(_toggleSelector)) {
       final Element parent = _getParent(elem);
       final ElementQuery $parent = $(parent);
       if (!parent.classes.contains('open'))
@@ -177,8 +177,8 @@ class Dropdown extends Base {
     $document()
     ..on('click.bs.dropdown.data-api', (QueryEvent e) => _clearMenus())
     ..on('click.bs.dropdown.data-api', (QueryEvent e) => e.stopPropagation(), selector: '.dropdown form')
-    ..on('click.bs.dropdown.data-api', _toggleEvent, selector: _TOGGLE_SELECTOR)
-    ..on('keydown.bs.dropdown.data-api', _keydown, selector: "${_TOGGLE_SELECTOR}, [role=menu]");
+    ..on('click.bs.dropdown.data-api', _toggleEvent, selector: _toggleSelector)
+    ..on('keydown.bs.dropdown.data-api', _keydown, selector: "${_toggleSelector}, [role=menu]");
   }
   
 }

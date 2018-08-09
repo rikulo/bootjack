@@ -7,7 +7,7 @@ part of bootjack;
  */
 class Scrollspy extends Base {
   
-  static const String _NAME = 'popover';
+  static const _name = 'popover';
   
   final String _selector;
   
@@ -23,7 +23,7 @@ class Scrollspy extends Base {
   _body = document.body,
   _$body = $(document.body),
   _selector = "${target ?? element.attributes['href'] ?? ''} .nav li > a",
-  super(element, _NAME) {
+  super(element, _name) {
     _$scrollElement = element is BodyElement ? $window() : $element;
     _$scrollElement.on('scroll.scroll-spy.data-api', (QueryEvent e) => _process());
     refresh();
@@ -35,7 +35,7 @@ class Scrollspy extends Base {
    * 
    */
   static Scrollspy wire(Element element, [Scrollspy create()]) =>
-      p.wire(element, _NAME, create ?? (() => new Scrollspy(element)));
+      p.wire(element, _name, create ?? (() => new Scrollspy(element)));
   
   final ElementQuery _$body;
   final Element _body;
@@ -82,7 +82,7 @@ class Scrollspy extends Base {
       return;
     }
     
-    _Anchor panc = null;
+    _Anchor panc;
     for (_Anchor anc in _anchors) {
       // start with 1st and 2nd
       if (panc != null && _activeTarget != panc.target && 

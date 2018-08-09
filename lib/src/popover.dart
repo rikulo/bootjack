@@ -4,8 +4,8 @@ part of bootjack;
  */
 class Popover extends Tooltip {
   
-  static const String _NAME = 'popover';
-  static const String _DEFAULT_TEMPLATE = 
+  static const _name = 'popover';
+  static const _defalutTemplate =
       '<div class="popover"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>';
   
   /** Construct a Popover component and wire it to [element].. See [Tooltip] 
@@ -22,7 +22,7 @@ class Popover extends Tooltip {
   String selector, String template, String trigger, String title(Element elem), 
   String content(Element elem), int delay, int showDelay, 
   int hideDelay, bool html, container, NodeValidatorBuilder htmlValidator,
-  String defaultTemplate: _DEFAULT_TEMPLATE,
+  String defaultTemplate: _defalutTemplate,
   String defaultTrigger: 'click'}) : 
   this._content = content ?? ((Element elem) => elem.attributes['data-content']),
   super(element, animation: animation, placement: placement, selector: selector, 
@@ -38,10 +38,10 @@ class Popover extends Tooltip {
    * the default constructor with no optional parameter value is used.
    */
   static Popover wire(Element element, [Popover create()]) =>
-      p.wire(element, _NAME, create ?? (() => new Popover(element)));
+      p.wire(element, _name, create ?? (() => new Popover(element)));
   
   @override
-  String get _type => _NAME;
+  String get _type => _name;
   
   @override
   String get _placementDefault => 'right';

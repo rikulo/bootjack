@@ -4,14 +4,14 @@ part of bootjack;
  */
 class Alert extends Base {
   
-  static const String _NAME = 'alert';
-  static const String _DISMISS_SELECTOR = '[data-dismiss="alert"]';
+  static const _name = 'alert';
+  static const _dissmissSelector = '[data-dismiss="alert"]';
   
   /** Construct an Alert object and wire it to [element].
    */
   Alert(Element element) :  
-  super(element, _NAME) {
-    $(element).on('click', _closeHandler, selector: _DISMISS_SELECTOR);
+  super(element, _name) {
+    $(element).on('click', _closeHandler, selector: _dissmissSelector);
   }
   
   /** Retrieve the wired Alert object from an element. If there is no wired
@@ -21,7 +21,7 @@ class Alert extends Base {
    * the default constructor with no optional parameter value is used.
    */
   static Alert wire(Element element, [Alert create()]) =>
-      p.wire(element, _NAME, create ?? (() => new Alert(element)));
+      p.wire(element, _name, create ?? (() => new Alert(element)));
   
   /** Detach the Alert component from DOM.
    */
@@ -81,7 +81,7 @@ class Alert extends Base {
     _registered = true;
     
     $document()
-      .on('click.alert.data-api', _closeHandler, selector: _DISMISS_SELECTOR);
+      .on('click.alert.data-api', _closeHandler, selector: _dissmissSelector);
   }
 
   /** Register to use Alert into a ShadowDom
@@ -90,6 +90,6 @@ class Alert extends Base {
    */
   static void useInShadowDom( ShadowRoot shadowRoot) {
     $shadowRoot(shadowRoot)
-      .on('click.alert.data-api', _closeHandler, selector: Alert._DISMISS_SELECTOR);
+      .on('click.alert.data-api', _closeHandler, selector: Alert._dissmissSelector);
   }  
 }

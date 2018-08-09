@@ -5,8 +5,8 @@ part of bootjack;
  */
 class Tooltip extends Base {
   
-  static const String _NAME = 'tooltip';
-  static const String _DEFAULT_TEMPLATE = 
+  static const _name = 'tooltip';
+  static const _defaultTemplate =
       '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>';
   final NodeValidatorBuilder _htmlValidator;
   
@@ -39,7 +39,7 @@ class Tooltip extends Base {
   String selector, String template, String trigger, String title(Element elem), 
   int delay, int showDelay, int hideDelay, bool html, container,
   NodeValidatorBuilder htmlValidator, 
-  String defaultTemplate: _DEFAULT_TEMPLATE,
+  String defaultTemplate: _defaultTemplate,
   String defaultTrigger: 'hover focus'}) : 
   this.animation  = _bool(animation, element, 'animation', true),
   this.html       = _bool(html,      element, 'html',      false),
@@ -52,7 +52,7 @@ class Tooltip extends Base {
   this._title     = title ?? ((Element elem) => elem.attributes['data-title']),
   this._placement = placement ?? ((Element elem) => elem.attributes['data-placement']),
   this._htmlValidator = htmlValidator,
-  super(element, _NAME) {
+  super(element, _name) {
     
     for (String t in this.trigger.split(' ')) {
       if (t == 'click') {
@@ -83,9 +83,9 @@ class Tooltip extends Base {
    * the default constructor with no optional parameter value is used.
    */
   static Tooltip wire(Element element, [Tooltip create()]) =>
-      p.wire(element, _NAME, create ?? (() => new Tooltip(element)));
+      p.wire(element, _name, create ?? (() => new Tooltip(element)));
   
-  String get _type => _NAME;
+  String get _type => _name;
   String get _placementDefault => 'top';
   String get _titleDefault => '';
   final _ToString _placement, _title;

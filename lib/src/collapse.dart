@@ -2,7 +2,7 @@ part of bootjack;
 
 class Collapse extends Base {
   
-  static const String _NAME = 'collapse';
+  static const _name = 'collapse';
   
   /** Construct a collapse component and wire it to [element].
    * 
@@ -16,7 +16,7 @@ class Collapse extends Base {
    */
   Collapse(Element element, {bool toggle, String parent}) :
   this._toggle  = _data(toggle, element, 'toggle', true),
-  super(element, _NAME) {
+  super(element, _name) {
     if (parent == null)
       parent = element.attributes["data-parent"];
     if (parent != null)
@@ -34,7 +34,7 @@ class Collapse extends Base {
    * the default constructor with no optional parameter value is used.
    */
   static Collapse wire(Element element, [Collapse create()]) =>
-      p.wire(element, _NAME, create ?? (() => new Collapse(element)));
+      p.wire(element, _name, create ?? (() => new Collapse(element)));
   
   
   final bool _toggle;
@@ -64,12 +64,12 @@ class Collapse extends Base {
       if (panels.isNotEmpty) {
         for (Element panel in panels) {
           for (Element elem in $(panel).children('.in, .collapsing')) {
-            Collapse active = $(elem).data.get(_NAME);
+            Collapse active = $(elem).data.get(_name);
             
             if (active != null && active.transitioning) return;
             
             Collapse.wire(elem).hide();
-            $(elem).data.set(_NAME, null);
+            $(elem).data.set(_name, null);
           }
           
         }
@@ -177,7 +177,7 @@ class Collapse extends Base {
       
       ElementQuery $target = $(targetStr);
       Element target = $target[0];
-      Collapse collapse = $target.data.get(_NAME);
+      Collapse collapse = $target.data.get(_name);
       String parent = elem.attributes['data-parent'];
       ElementQuery $parent = $(parent);
       
