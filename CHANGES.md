@@ -1,5 +1,8 @@
 #CHANGES
 
+**1.0.1**
+* Fixed type errors for Dart 2
+
 **1.0.0**
 * Dart 2 required
 

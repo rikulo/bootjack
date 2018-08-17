@@ -263,7 +263,7 @@ class Tooltip extends Base {
   
   void _setContent() {
     _cnt(tip.querySelector('.tooltip-inner'), title);
-    tip.classes.removeAll(['fade', 'in', 'top', 'bottom', 'left', 'right']);
+    tip.classes.removeAll(const <String>['fade', 'in', 'top', 'bottom', 'left', 'right']);
   }
   
   void _cnt(Element elem, String value) {

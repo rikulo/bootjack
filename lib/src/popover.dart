@@ -63,7 +63,7 @@ class Popover extends Tooltip {
   void _setContent() {
     _cnt(tip.querySelector('.popover-title'), title);
     _cnt(tip.querySelector('.popover-content'), content);
-    tip.classes.removeAll(['fade', 'top', 'bottom', 'left', 'right', 'in']);
+    tip.classes.removeAll(const <String>['fade', 'top', 'bottom', 'left', 'right', 'in']);
   }
   
 }
