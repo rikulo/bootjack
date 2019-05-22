@@ -220,10 +220,10 @@ class Modal extends Base {
     $document().on('click.modal.data-api', (QueryEvent e) {
       if (!(e.target is Element))
         return;
-      
-      final Element elem = e.target as Element;
+
+      final elem = e.currentTarget as Element;
       //final String href = elem.attributes['href'];
-      final ElementQuery $target = $(p.getDataTarget(elem));
+      final $target = $(p.getDataTarget(elem));
       
       e.preventDefault();
       
