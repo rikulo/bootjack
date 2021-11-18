@@ -19,30 +19,30 @@ class Tab extends Base {
    * + [create] - If provided, it will be used for Tab creation. Otherwise 
    * the default constructor with no optional parameter value is used.
    */
-  static Tab wire(Element element, [Tab create()]) =>
-      p.wire(element, _name, create ?? (() => new Tab(element)));
+  static Tab wire(Element element, [Tab create()?]) =>
+      p.wire(element, _name, create ?? (() => Tab(element)));
   
   /** Show the tab.
    */
   void show() {
-    final ElementQuery $ul = $element.closest('ul:not(.dropdown-menu)');
-    final String selector = p.getDataTarget(element); // TODO: should cache in construction?
-    final ElementQuery $parent = $element.parent('li');
+    final $ul = $element.closest('ul:not(.dropdown-menu)'),
+      selector = p.getDataTarget(element), // TODO: should cache in construction?
+      $parent = $element.parent('li');
     
     if ($parent.hasClass('active'))
       return;
     
-    Element previous;
+    Element? previous;
     //final Element previous = $ul.find('.active:last a').firstIfAny; // TODO: :last is jq only
     
-    final e = new QueryEvent('show.bs.tab', data: previous);
+    final e = QueryEvent('show.bs.tab', data: previous);
     
     $element.triggerEvent(e);
     
     if (e.defaultPrevented)
       return;
     
-    final ElementQuery $target = $(selector);
+    final $target = $(selector);
     _activate($parent, $ul);
     _activate($target, $target.parent(), () {
       $element.trigger('shown.bs.tab', data: previous);
@@ -50,13 +50,12 @@ class Tab extends Base {
     
   }
   
-  void _activate(ElementQuery $elem, ElementQuery $container, [void callback()]) {
-    final ElementQuery $active = $container.children('.active');
-    final bool transition = callback != null && 
-        Transition.isUsed && 
-        $active.hasClass('fade');
+  void _activate(ElementQuery $elem, ElementQuery $container, [void callback()?]) {
+    final $active = $container.children('.active'),
+      transition = callback != null
+        && Transition.isUsed && $active.hasClass('fade');
     
-    final next = ([QueryEvent e]) {
+    final next = ([QueryEvent? e]) {
       $active.removeClass('active');
       $active.children('.dropdown-menu').children('.active').removeClass('active');
       
@@ -72,9 +71,7 @@ class Tab extends Base {
       if (!$elem.parent('.dropdown-menu').isEmpty)
         $elem.closest('li.dropdown').addClass('active');
       
-      if (callback != null)
-        callback();
-      
+      callback?.call();
     };
     
     if (transition)
@@ -97,7 +94,7 @@ class Tab extends Base {
     
     $document().on('click.tab.data-api', (QueryEvent e) {
       e.preventDefault();
-      wire(e.target).show();
+      wire(e.target as Element).show();
       
     }, selector: '[data-toggle="tab"], [data-toggle="pill"]');
   }

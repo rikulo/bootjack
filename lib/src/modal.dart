@@ -20,7 +20,7 @@ class Modal extends Base {
   
   /** Construct a Modal object and wire it to [element].
    */
-  Modal(Element element, {String backdrop: 'true', bool keyboard: true, String remote}) :
+  Modal(Element element, {String backdrop: 'true', bool keyboard: true, String? remote}) :
   this.backdrop = backdrop,
   this.keyboard = keyboard,
   super(element, _name) {
@@ -32,8 +32,8 @@ class Modal extends Base {
    * + [create] - If provided, it will be used for Modal creation. Otherwise 
    * the default constructor with no optional parameter value is used.
    */
-  static Modal wire(Element element, [Modal create()]) =>
-      p.wire(element, _name, create ?? (() => new Modal(element)));
+  static Modal wire(Element element, [Modal create()?]) =>
+      p.wire(element, _name, create ?? (() => Modal(element)));
   
   /** Toggle the visibility state of the Modal.
    */
@@ -48,7 +48,7 @@ class Modal extends Base {
    */
   show() {
     
-    final QueryEvent e = new QueryEvent('show.bs.modal');
+    final e = QueryEvent('show.bs.modal');
     $element.triggerEvent(e);
     
     if (_shown || e.defaultPrevented)
@@ -64,10 +64,10 @@ class Modal extends Base {
     
     _backdrop(() {
       
-      final bool transition = Transition.isUsed && element.classes.contains('fade');
+      final transition = Transition.isUsed && element.classes.contains('fade');
       
       if (element.parent == null)
-        document.body.append(element);
+        document.body?.append(element);
       
       $element.show();
       
@@ -105,18 +105,18 @@ class Modal extends Base {
    */
   hide() {
     
-    final QueryEvent e = new QueryEvent('hide.bs.modal');
+    final e = QueryEvent('hide.bs.modal');
     $element.triggerEvent(e);
     
     if (!_shown || e.defaultPrevented)
       return;
+
     _shown = false;
     
     $element.off('keyup.dismiss.modal');
     $element.off('click.modal.backdrop');
     $element.off('click.dismiss.modal');
 
-    
     $document().off('focusin.modal');
     
     element.classes.remove('in');
@@ -130,16 +130,16 @@ class Modal extends Base {
   
   void _enforceFocus() {
     $document().on('focusin.modal', (QueryEvent e) {
-      EventTarget tar = e.target;
+      final tar = e.target;
       if (!e.propagationStopped && element != tar &&
-          (tar is! Node || (tar as Node).parent != element))
-        $element.triggerEvent(new QueryEvent('focus')..stopPropagation());
+          (tar is! Node || tar.parent != element))
+        $element.triggerEvent(QueryEvent('focus')..stopPropagation());
     });
   }
   
   void _hideWithTransition() {
-    bool canceled = false;
-    new Timer(const Duration(milliseconds: 500), () {
+    var canceled = false;
+    Timer(const Duration(milliseconds: 500), () {
       if (!canceled) {
         $element.off(Transition.end);
         _hideModal();
@@ -159,53 +159,46 @@ class Modal extends Base {
     });
   }
   
-  Element _backdropElem;
+  Element? _backdropElem;
   
   void _removeBackdrop() {
-    if (_backdropElem != null)
-      _backdropElem.remove();
+    _backdropElem?.remove();
     _backdropElem = null;
   }
   
-  void _backdrop([void callback()]) {
+  void _backdrop([void callback()?]) {
     
-    final bool fade = element.classes.contains('fade');
-    final bool animate = Transition.isUsed && fade;
-    bool transit = false;
+    final fade = element.classes.contains('fade'),
+      animate = Transition.isUsed && fade;
+    var transit = false;
     
-    final QueryEventListener listener = (QueryEvent e) => callback();
-    
+    var backdropElem = _backdropElem;
     if (_shown && backdrop != 'false') {
       
-      _backdropElem = new DivElement();
-      _backdropElem.classes.add('modal-backdrop');
+      backdropElem = _backdropElem = DivElement();
+      backdropElem.classes.add('modal-backdrop');
       if (fade)
-        _backdropElem.classes.add('fade');
-      document.body.append(_backdropElem);
+        backdropElem.classes.add('fade');
+      document.body?.append(backdropElem);
 
       final $_backdropElem = $(_backdropElem);
       
       if (animate) $_backdropElem.reflow();
       
-      _backdropElem.classes.add('in');
+      backdropElem.classes.add('in');
       transit = true;
       
-    } else if (!_shown && _backdropElem != null) {
-      _backdropElem.classes.remove('in');
+    } else if (!_shown && backdropElem != null) {
+      backdropElem.classes.remove('in');
       transit = true;
-      
     }
     
     if (callback != null) {
       if (animate && transit) {
-        $(_backdropElem).one(Transition.end, listener);
-        
-      } else {
+        $(_backdropElem).one(Transition.end, (QueryEvent e) => callback());
+      } else
         callback();
-        
-      }
     }
-    
   }
   
   // Data API //
@@ -231,7 +224,7 @@ class Modal extends Base {
         return;
       
       // , option = $target.data('modal') ? 'toggle' : $.extend({ remote:!/#/.test(href) && href }, $target.data(), $this.data())
-      Modal.wire($target.first, () => new Modal($target.first)).toggle(); // TODO: other options
+      Modal.wire($target.first, () => Modal($target.first)).toggle(); // TODO: other options
       
       $target.one('hide', (QueryEvent e) => $(elem).trigger('focus'));
       

@@ -18,13 +18,13 @@ class Scrollspy extends Base {
   
   /** Construct a Scrollspy object and wire it to [element].
    */
-  Scrollspy(Element element, {String target, int offset: 10}) : 
+  Scrollspy(Element element, {String? target, int offset: 10}) :
   this.offset = offset,
   _body = document.body,
   _$body = $(document.body),
   _selector = "${target ?? element.attributes['href'] ?? ''} .nav li > a",
+  _$scrollElement = element is BodyElement ? $window() : $(element),
   super(element, _name) {
-    _$scrollElement = element is BodyElement ? $window() : $element;
     _$scrollElement.on('scroll.scroll-spy.data-api', (QueryEvent e) => _process());
     refresh();
     _process();
@@ -34,16 +34,16 @@ class Scrollspy extends Base {
    * Scrollspy object, a new one will be created.
    * 
    */
-  static Scrollspy wire(Element element, [Scrollspy create()]) =>
-      p.wire(element, _name, create ?? (() => new Scrollspy(element)));
+  static Scrollspy wire(Element element, [Scrollspy create()?]) =>
+      p.wire(element, _name, create ?? (() => Scrollspy(element)));
   
   final ElementQuery _$body;
-  final Element _body;
+  final Element? _body;
   DQuery _$scrollElement;
-  String _activeTarget;
+  String? _activeTarget;
   
-  final List<_Anchor> _anchors = new List<_Anchor>();
-  static final RegExp _ANC_EXP = new RegExp(r'^#\w'); // TODO: may simplify?
+  final _anchors = <_Anchor>[];
+  static final _ANC_EXP = RegExp(r'^#\w'); // TODO: may simplify?
   
   /** Refresh the cached y-position values of spied items.
    */
@@ -51,15 +51,15 @@ class Scrollspy extends Base {
     
     _anchors.clear();
     
-    for (Element e in _$body.find(_selector)) {
-      final String href = p.getDataTarget(e);
+    for (final e in _$body.find(_selector)) {
+      final href = p.getDataTarget(e)!;
       if (!_ANC_EXP.hasMatch(href))
         continue;
       
-      final ElementQuery $href = $(href);
+      final $href = $(href);
       if (!$href.isEmpty) {
-        final int offset = $href.first.offsetTop + (element is BodyElement ? 0 : element.scrollTop);
-        _anchors.add(new _Anchor(offset, href));
+        final offset = $href.first.offsetTop + (element is BodyElement ? 0 : element.scrollTop);
+        _anchors.add(_Anchor(offset, href));
       }
     }
     
@@ -71,19 +71,19 @@ class Scrollspy extends Base {
     if (_anchors.isEmpty)
       return;
     
-    final int scrollTop = _$scrollElement.scrollTop + this.offset;
-    int scrollHeight = _$scrollElement is ElementQuery ? 
-        element.scrollHeight : _body.scrollHeight;
-    final int maxScroll = scrollHeight - _$scrollElement.height;
-    final String lastTarget = _anchors.last.target;
+    final scrollTop = _$scrollElement.scrollTop! + this.offset,
+      scrollHeight = _$scrollElement is ElementQuery ?
+          element.scrollHeight : _body?.scrollHeight,
+      maxScroll = scrollHeight! - _$scrollElement.height!,
+      lastTarget = _anchors.last.target;
     
     if (scrollTop >= maxScroll) {
       _activate(lastTarget);
       return;
     }
     
-    _Anchor panc;
-    for (_Anchor anc in _anchors) {
+    _Anchor? panc;
+    for (final anc in _anchors) {
       // start with 1st and 2nd
       if (panc != null && _activeTarget != panc.target && 
           scrollTop >= panc.offset && scrollTop <= anc.offset)
@@ -98,13 +98,14 @@ class Scrollspy extends Base {
   void _activate(String target) {
     if (_activeTarget == target)
       return;
+
     _activeTarget = target;
     
     $(_selector).parent('.active').removeClass('active');
     
-    final String selector = '$_selector[data-target="$target"], $_selector[href="$target"]';
-    
-    ElementQuery $active = $(selector).parent('li');
+    final selector = '$_selector[data-target="$target"], $_selector[href="$target"]';
+    var $active = $(selector).parent('li');
+
     $active.addClass('active');
     
     if (!$active.parent('.dropdown-menu').isEmpty) {
@@ -124,13 +125,14 @@ class Scrollspy extends Base {
   static void use() {
     if (_registered) return;
     _registered = true;
-    
-    $window().on('load', (QueryEvent e) {
-      for (Element elem in $('[data-spy="scroll"]')) {
+
+    //Don't depend on load event due to dart.js load by defer
+    //$window().on('load', (QueryEvent e) {
+      for (final elem in $('[data-spy="scroll"]')) {
         Scrollspy.wire(elem); // TODO: data option
         //$spy.scrollspy($spy.data())
       }
-    });
+    //});
   }
   
 }

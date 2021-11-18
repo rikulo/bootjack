@@ -18,18 +18,18 @@ class Popover extends Tooltip {
    * specify [content], to be rendered in popover body. The [html] flag applies
    * to both of them.
    */
-  Popover(Element element, {bool animation, String placement(Element elem), 
-  String selector, String template, String trigger, String title(Element elem), 
-  String content(Element elem), int delay, int showDelay, 
-  int hideDelay, bool html, container, NodeValidatorBuilder htmlValidator,
-  String defaultTemplate: _defalutTemplate,
-  String defaultTrigger: 'click'}) : 
-  this._content = content ?? ((Element elem) => elem.attributes['data-content']),
+  Popover(Element element, {bool? animation, String? placement(Element elem)?,
+    String? selector, String? template, String? trigger, String? title(Element elem)?,
+    String? content(Element elem)?, int? delay, int? showDelay,
+    int? hideDelay, bool? html, container, NodeValidatorBuilder? htmlValidator,
+    String defaultTemplate: _defalutTemplate,
+    String defaultTrigger: 'click'}) :
+    this._content = content ?? ((Element elem) => elem.attributes['data-content']),
   super(element, animation: animation, placement: placement, selector: selector, 
-  title: title, delay: delay, showDelay: showDelay, hideDelay: hideDelay, 
-  html: html, container: container, htmlValidator: htmlValidator,
-  template: template, trigger: trigger,
-  defaultTemplate: defaultTemplate, defaultTrigger: defaultTrigger);
+    title: title, delay: delay, showDelay: showDelay, hideDelay: hideDelay,
+    html: html, container: container, htmlValidator: htmlValidator,
+    template: template, trigger: trigger,
+    defaultTemplate: defaultTemplate, defaultTrigger: defaultTrigger);
   
   /** Retrieve the wired Popover object from an element. If there is no wired
    * Popover object, a new one will be created.
@@ -37,8 +37,8 @@ class Popover extends Tooltip {
    * + [create] - If provided, it will be used for Popover creation. Otherwise 
    * the default constructor with no optional parameter value is used.
    */
-  static Popover wire(Element element, [Popover create()]) =>
-      p.wire(element, _name, create ?? (() => new Popover(element)));
+  static Popover wire(Element element, [Popover create()?]) =>
+      p.wire(element, _name, create ?? (() => Popover(element)));
   
   @override
   String get _type => _name;
@@ -47,10 +47,10 @@ class Popover extends Tooltip {
   String get _placementDefault => 'right';
   
   @override
-  Element get _arrow => _arr ?? (_arr = tip.querySelector('.arrow'));
+  Element get _arrow => _arr ??= tip.querySelector('.arrow')!;
   
   /// The content message of the popover.
-  String get content => _content(element)
+  String? get content => _content(element)
       ?? element.attributes['data-content'] ?? _contentDefault;
   
   String get _contentDefault => '';
@@ -61,8 +61,8 @@ class Popover extends Tooltip {
   
   @override
   void _setContent() {
-    _cnt(tip.querySelector('.popover-title'), title);
-    _cnt(tip.querySelector('.popover-content'), content);
+    _cnt(tip.querySelector('.popover-title'), title!);
+    _cnt(tip.querySelector('.popover-content'), content!);
     tip.classes.removeAll(const <String>['fade', 'top', 'bottom', 'left', 'right', 'in']);
   }
   

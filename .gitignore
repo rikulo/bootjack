@@ -24,3 +24,5 @@ out
 packages
 packages/
 pubspec.lock
+bootjack.iml
+.dart_tool

@@ -8,7 +8,7 @@ class Button extends Base {
   
   /** The default text setting of button.
    */
-  static final Map<String, String> DEFAULT_TEXTS = {
+  static final DEFAULT_TEXTS = <String, String>{
     'loadingText': 'loading...'
   };
   
@@ -21,7 +21,7 @@ class Button extends Base {
    * 
    * + [texts] - determines Button text corresponding to the state.
    */
-  Button(Element element, {Map<String, String> texts}) : 
+  Button(Element element, {Map<String, String>? texts}) :
   this.texts = _copy(DEFAULT_TEXTS, texts), 
   super(element, _name);
   
@@ -31,28 +31,28 @@ class Button extends Base {
    * + [create] - If provided, it will be used for Button creation. Otherwise 
    * the default constructor with no optional parameter value is used.
    */
-  static Button wire(Element element, [Button create()]) => 
-      p.wire(element, _name, create ?? (() => new Button(element)));
+  static Button wire(Element element, [Button create()?]) =>
+      p.wire(element, _name, create ?? (() => Button(element)));
   
   /** Set the button state, which will change the button text according to [texts]
    * setting.
    */
   Future setState(String state) {
-    final String d = 'disabled';
-    final space = $element.data.space;
-    final bool isInput = element is InputElement;
-    final String value = isInput ? (element as InputElement).value : element.innerHtml;
+    final d = 'disabled',
+      space = $element.data.space!,
+      isInput = element is InputElement,
+      value = isInput ? (element as InputElement).value : element.innerHtml;
     
     state = "${state}Text";
     space.putIfAbsent('resetText', () => value);
-    final String newStateText = (space[state] as String) ?? texts[state];
+    final newStateText = (space[state] as String?) ?? texts[state];
     if (isInput)
       (element as InputElement).value = newStateText;
     else
       element.innerHtml = newStateText;
     
     // push to event loop to allow forms to submit
-    return new Future.delayed(Duration.zero, () {
+    return Future.delayed(Duration.zero, () {
       if (state == 'loadingText') {
         element.classes.add(d);
         element.attributes[d] = d;
@@ -68,8 +68,8 @@ class Button extends Base {
    * other associated buttons will react accordingly.
    */
   void toggle() {
-    ElementQuery $parent = $element.closest('[data-toggle="buttons-radio"]');
-    if (!$parent.isEmpty)
+    final $parent = $element.closest('[data-toggle="buttons-radio"]');
+    if ($parent.isNotEmpty)
       $parent.find('.active').removeClass('active');
     element.classes.toggle('active');
   }
@@ -85,8 +85,8 @@ class Button extends Base {
     
     $document().on('click.button.data-api', (QueryEvent e) {
       if (e.target is Element) {
-        final ElementQuery $btn = $(e.target).closest('.btn');
-        if (!$btn.isEmpty)
+        final $btn = $(e.target).closest('.btn');
+        if ($btn.isNotEmpty)
           Button.wire($btn.first).toggle();
       }
       

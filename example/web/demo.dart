@@ -10,17 +10,17 @@ void main() {
   
   Bootjack.useDefault(); // use all
   
-  final Element alertPool = document.querySelector('#alert-pool');
-  int i = 0;
+  final alertPool = document.querySelector('#alert-pool')!;
+  var i = 0;
   
   $('#alert-spawn-btn').on('click', (QueryEvent e) {
-    
+
     alertPool.appendHtml('''
       <div class="alert${COLORS[i]} alert-dismissable fade in">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         Oh snap! A new <code>alert</code> spawned.
       </div>
-    ''');
+    ''', treeSanitizer: NodeTreeSanitizer.trusted);
     
     i = (i + 1) % 4;
     

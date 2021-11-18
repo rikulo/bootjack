@@ -23,8 +23,8 @@ class Dropdown extends Base {
    * + [create] - If provided, it will be used for Dropdown creation. Otherwise 
    * the default constructor with no optional parameter value is used.
    */
-  static Dropdown wire(Element element, [Dropdown create()]) =>
-      p.wire(element, _name, create ?? (() => new Dropdown(element)));
+  static Dropdown wire(Element element, [Dropdown create()?]) =>
+      p.wire(element, _name, create ?? (() => Dropdown(element)));
   
   /** Toggle the open/close state of the Dropdown.
    */
@@ -32,16 +32,16 @@ class Dropdown extends Base {
   
   static void _toggleEvent(QueryEvent e) {
     _toggle(e.currentTarget as Element);
-    if (e != null)
-      e.stopPropagation(); // TODO: check jQuery spec on return value false
+    e.stopPropagation(); // TODO: check jQuery spec on return value false
   }
   
   static void _toggle(Element elem) {
     if (elem.matches('.disabled, :disabled'))
       return;
-    final Element parent = _getParent(elem);
-    final ElementQuery $parent = $(parent);
-    final bool isActive = parent.classes.contains('open');
+
+    final parent = _getParent(elem)!,
+      $parent = $(parent),
+      isActive = parent.classes.contains('open');
     
     _clearMenus();
     
@@ -49,7 +49,7 @@ class Dropdown extends Base {
       
       // TODO: mobile, see bootstrap
       
-      final QueryEvent e = new QueryEvent('show.bs.dropdown');
+      final e = QueryEvent('show.bs.dropdown');
       $parent.triggerEvent(e);
       
       if (e.defaultPrevented)
@@ -64,13 +64,13 @@ class Dropdown extends Base {
   }
   
   static void _keydown(QueryEvent e) {
-    final Element elem = e.currentTarget as Element;
-    
-    Event oe = e.originalEvent;
-    if (!(oe is KeyboardEvent))
+    final elem = e.currentTarget as Element,
+      oe = e.originalEvent;
+
+    if (oe is! KeyboardEvent)
       return;
-    final KeyboardEvent ke = oe;
-    final int keyCode = ke.keyCode;
+
+    final keyCode = oe.keyCode;
     
     if (keyCode != 38 && keyCode != 40 && keyCode != 27)
       return;
@@ -81,8 +81,8 @@ class Dropdown extends Base {
     if (elem.matches('.disabled, :disabled'))
       return;
     
-    final Element parent = _getParent(elem);
-    final bool isActive = parent.classes.contains('open');
+    final parent = _getParent(elem)!,
+      isActive = parent.classes.contains('open');
     
     if (!isActive || (isActive && keyCode == 27)) {
       if (keyCode == 27) 
@@ -93,10 +93,10 @@ class Dropdown extends Base {
     }
     
 //    final ElementQuery $items = $('[role=menu] li:not(.divider):visible a', parent); css selector doesn't support :visible.
-    List<Element> $items = new List<Element>();
-    for (Element e in  $('[role=menu] li:not(.divider)', parent)) {
+    final $items = <Element>[];
+    for (final e in  $('[role=menu] li:not(.divider)', parent)) {
       if (!p.isHidden(e)) {
-        Element a = e.querySelector('a');
+        final a = e.querySelector('a');
         if (a != null)
           $items.add(a);
       }
@@ -104,8 +104,8 @@ class Dropdown extends Base {
     
     if ($items.isEmpty)
       return;
-    
-    int index = _indexWhere($items, (Element e) => e.matches(':focus'));
+
+    var index = _indexWhere($items, (Element e) => e.matches(':focus'));
     if (keyCode == 38 && index > 0)
       index--; // up
     else if (keyCode == 40 && index < $items.length - 1)
@@ -119,7 +119,7 @@ class Dropdown extends Base {
   
   static int _indexWhere(List<Element> elems, bool f(Element elem)) {
     int i = 0;
-    for (Element e in elems) {
+    for (final e in elems) {
       if (f(e))
         return i;
       i++;
@@ -129,13 +129,14 @@ class Dropdown extends Base {
   
   static void _clearMenus() {
     // TODO: mobile, see bootstrap
-    for (Element elem in $(_toggleSelector)) {
-      final Element parent = _getParent(elem);
-      final ElementQuery $parent = $(parent);
-      if (!parent.classes.contains('open'))
+    for (final elem in $(_toggleSelector)) {
+      final parent = _getParent(elem),
+        $parent = $(parent);
+
+      if (parent == null || !parent.classes.contains('open'))
         continue;
       
-      final QueryEvent e = new QueryEvent('hide.bs.dropdown');
+      final e = QueryEvent('hide.bs.dropdown');
       $parent.triggerEvent(e);
       if (e.defaultPrevented)
         continue;
@@ -145,19 +146,18 @@ class Dropdown extends Base {
     }
   }
   
-  static Element _getParent(Element elem) {
-    String selector = p.getDataTarget(elem);
-    
+  static Element? _getParent(Element elem) {
+    var selector = p.getDataTarget(elem);
     if (selector == null) {
       selector = elem.attributes['href'];
-      if (selector != null && new RegExp(r'#').hasMatch(selector)) {
+      if (selector != null && RegExp(r'#').hasMatch(selector)) {
         selector = selector.replaceAll(new RegExp(r'.*(?=#[^\s]*$'), ''); //strip for ie7
       }
     }
     
     if (selector != null) {
       try {
-        final ElementQuery p = $(selector);
+        final p = $(selector);
         if (!p.isEmpty)
           return p.first;
       } catch (e) {}

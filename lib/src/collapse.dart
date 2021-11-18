@@ -14,14 +14,13 @@ class Collapse extends Base {
    * this dependent on the accordion-group class)
    * 
    */
-  Collapse(Element element, {bool toggle, String parent}) :
+  Collapse(Element element, {bool? toggle, String? parent}) :
   this._toggle  = _data(toggle, element, 'toggle', true),
   super(element, _name) {
     if (parent == null)
       parent = element.attributes["data-parent"];
     if (parent != null)
       _$parent = $(parent);
-    
     
     if (_toggle)
       this.toggle();
@@ -33,40 +32,38 @@ class Collapse extends Base {
    * + [create] - If provided, it will be used for Collapse creation. Otherwise 
    * the default constructor with no optional parameter value is used.
    */
-  static Collapse wire(Element element, [Collapse create()]) =>
-      p.wire(element, _name, create ?? (() => new Collapse(element)));
+  static Collapse wire(Element element, [Collapse create()?]) =>
+      p.wire(element, _name, create ?? (() => Collapse(element)));
   
   
   final bool _toggle;
-  ElementQuery _$parent;
+  ElementQuery? _$parent;
   
   bool get transitioning => _transitioning;
   bool _transitioning = false;
   
-  bool get horizontal => _horizontal
-      ?? (_horizontal = element.classes.contains('width'));
-  bool _horizontal;
+  bool get horizontal => _horizontal ??= element.classes.contains('width');
+  bool? _horizontal;
   
   void show() {
     if (transitioning || element.classes.contains('in'))
       return;
-    
-    
-    final QueryEvent e = new QueryEvent('show.bs.collapse');
+
+    final e = QueryEvent('show.bs.collapse');
     $element.triggerEvent(e);
     
     if (e.defaultPrevented)
       return;
-    
-    
-    if (_$parent != null) {
-      ElementQuery panels = _$parent.children('.panel');
+
+    final $parent = _$parent;
+    if ($parent != null) {
+      final panels = $parent.children('.panel');
       if (panels.isNotEmpty) {
-        for (Element panel in panels) {
-          for (Element elem in $(panel).children('.in, .collapsing')) {
-            Collapse active = $(elem).data.get(_name);
-            
-            if (active != null && active.transitioning) return;
+        for (final panel in panels) {
+          for (final elem in $(panel).children('.in, .collapsing')) {
+            final active = $(elem).data.get(_name) as Collapse?;
+            if (active?.transitioning ?? false)
+              return;
             
             Collapse.wire(elem).hide();
             $(elem).data.set(_name, null);
@@ -84,7 +81,7 @@ class Collapse extends Base {
     
     _transitioning = true;
     
-    final QueryEventListener complete = (QueryEvent e) {
+    final complete = (QueryEvent? e) {
       element.classes
       ..remove('collapsing')
       ..add('in');
@@ -112,8 +109,8 @@ class Collapse extends Base {
     
     if (e.defaultPrevented)
       return;
-    
-    int size = horizontal ? $element.width : $element.height;
+
+    final size = horizontal ? $element.width : $element.height;
     _size = "${size}px";
     element.offsetHeight;
     
@@ -124,7 +121,7 @@ class Collapse extends Base {
     
     _transitioning = true;
     
-    final QueryEventListener complete = (QueryEvent e) {
+    final complete = (QueryEvent? e) {
       _transitioning = false;
       $element.trigger('hidden.bs.collapse');
       element.classes
@@ -165,42 +162,41 @@ class Collapse extends Base {
     
     $document().on('click.bs.collapse.data-api', (QueryEvent e) {
       Element elem = e.currentTarget as Element;
-      
-      String targetStr = elem.attributes['data-target'];
-      
+
+      var targetStr = elem.attributes['data-target'];
       if (targetStr == null) {
         e.preventDefault();
-        String href = elem.attributes['href'];
+        final href = elem.attributes['href'];
         if (href != null)
-          targetStr = href.replaceAll(new RegExp(r'.*(?=#[^\s]+$)'), ''); //strip for ie7
+          targetStr = href.replaceAll(RegExp(r'.*(?=#[^\s]+$)'), ''); //strip for ie7
       }
-      
-      ElementQuery $target = $(targetStr);
-      Element target = $target[0];
-      Collapse collapse = $target.data.get(_name);
-      String parent = elem.attributes['data-parent'];
-      ElementQuery $parent = $(parent);
+
+      final $target = $(targetStr),
+        target = $target[0],
+        collapse = $target.data.get(_name) as Collapse?,
+        parent = elem.attributes['data-parent'],
+        $parent = $(parent);
       
       if (collapse == null || !collapse.transitioning) {
         if (parent != null) {
-          ElementQuery collapses = $parent.find(
+          final collapses = $parent.find(
               '[data-toggle=collapse][data-parent="$parent"]');
-          for (Element e in collapses) {
+          for (final e in collapses) {
             if (e == elem) continue;
             e.classes.add('collapsed');
             
           }
         }
-        p.setClass(elem, 'collapsed', target.classes.contains('in'));
+        elem.classes.toggle('collapsed', target.classes.contains('in'));
       }
       
       if (collapse != null) {
         collapse.toggle();
       } else {
-        String parentAtr = elem.attributes['data-parent'];
-        String toggleAtr = elem.attributes['data-toggle'];
+        final parentAtr = elem.attributes['data-parent'],
+          toggleAtr = elem.attributes['data-toggle'];
         
-        new Collapse(target, toggle: toggleAtr != null ? true: null, parent: parentAtr);
+        Collapse(target, toggle: toggleAtr != null ? true: null, parent: parentAtr);
       }
       
     }, selector: '[data-toggle=collapse]');

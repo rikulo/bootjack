@@ -1,6 +1,6 @@
 part of bootjack;
 
-final Map<String, String> _TRANS_END_EVENT_NAMES = {
+const _transEndEventNames = <String, String>{
   'webkit-' : 'webkitTransitionEnd',
   'moz-'    : 'transitionend',
   'o-'      : 'oTransitionEnd otransitionend'
@@ -23,11 +23,8 @@ class Transition {
   
   /** The event name for transition end across browser.
    */
-  static String get end {
-    if (_end == null) {
-      _end = _TRANS_END_EVENT_NAMES[Device.cssPrefix] ?? 'transitionend';
-    }
-    return _end;
-  }
-  static String _end;
+  static String get end
+    => _end ??= _transEndEventNames[Device.cssPrefix] ?? 'transitionend';
+
+  static String? _end;
 }

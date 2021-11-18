@@ -20,8 +20,8 @@ class Alert extends Base {
    * + [create] - If provided, it will be used for Alert creation. Otherwise 
    * the default constructor with no optional parameter value is used.
    */
-  static Alert wire(Element element, [Alert create()]) =>
-      p.wire(element, _name, create ?? (() => new Alert(element)));
+  static Alert wire(Element element, [Alert create()?]) =>
+      p.wire(element, _name, create ?? (() => Alert(element)));
   
   /** Detach the Alert component from DOM.
    */
@@ -30,31 +30,31 @@ class Alert extends Base {
   }
   
   static void _close(Element elem) {
-    final String selector = p.getDataTarget(elem);
+    final selector = p.getDataTarget(elem);
     
-    ElementQuery $parent;
+    ElementQuery? $parent;
     
     try {
       $parent = $(selector);
     } catch(e) {}
     
-    if ($parent == null || $parent.isEmpty)
+    if ($parent?.isEmpty ?? true)
       $parent = elem.classes.contains('alert') ? $(elem) : $(elem.parent);
     
-    if ($parent.isEmpty)
+    if ($parent!.isEmpty)
       return;
     
-    final QueryEvent e = new QueryEvent('close.bs.alert');
+    final e = QueryEvent('close.bs.alert');
     $parent.triggerEvent(e);
     
     if (e.defaultPrevented)
       return;
     
-    final Element parent = $parent.first;
+    final parent = $parent.first;
     parent.classes.remove('in');
     
     if (Transition.isUsed && parent.classes.contains('fade'))
-      $parent.on(Transition.end, (e) => _removeElement($parent));
+      $parent.on(Transition.end, (e) => _removeElement($parent!));
     
     else
       _removeElement($parent);
@@ -62,8 +62,9 @@ class Alert extends Base {
   
   static void _closeHandler(QueryEvent e) {
     e.preventDefault();
-    if (e.target is Element)
-      _close(e.target);
+    final target = e.target;
+    if (target is Element)
+      _close(target);
   }
   
   static void _removeElement(ElementQuery $elem) {

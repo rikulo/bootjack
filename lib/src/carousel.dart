@@ -25,7 +25,7 @@ class Carousel extends Base {
     }
   }
   
-  Element _indicators;
+  Element? _indicators;
   
   /** Return true if the Carousel is currently sliding.
    */
@@ -37,19 +37,19 @@ class Carousel extends Base {
   bool get paused => _paused;
   bool _paused = false;
   
-  Element get active => element.querySelector('.item.active');
-  ElementQuery _$items;
+  Element? get active => element.querySelector('.item.active');
+  ElementQuery? _$items;
   
   int get activeIndex {
-    Element a = active;
-    _$items = $(a.parent).children();
-    return _$items.indexOf(a);
+    final a = active;
+    _$items = $(a?.parent).children();
+    return a != null ? _$items!.indexOf(a): -1;
   }
   
   void to(int pos) {
-    int index = activeIndex;
-    
-    if (pos > (_$items.length - 1) || pos < 0)
+    final index = activeIndex,
+      $items = _$items;;
+    if (pos > (_$items!.length - 1) || pos < 0 || $items == null)
       return;
     
     if (_sliding) {
@@ -63,8 +63,7 @@ class Carousel extends Base {
       cycle();
     }
     
-    slide(pos > index ? 'next' : 'prev', _$items[pos]);
-    
+    slide(pos > index ? 'next' : 'prev', $items[pos]);
   }
   
   void cycle() {
@@ -87,7 +86,7 @@ class Carousel extends Base {
   }
   
   void _pause() {
-    if (!$element.find('.next, .prev').isEmpty && Transition.isUsed) {
+    if ($element.find('.next, .prev').isNotEmpty && Transition.isUsed) {
       $element.trigger(Transition.end);
       _cycle();
     }
@@ -107,14 +106,14 @@ class Carousel extends Base {
       slide('prev');
   }
   
-  void slide(String type, [Element next]) {
-    final Element activeItem = active;
-    final List<Element> items = $element.find('.item');
-    final Element nextItem = next ??
-        (type == 'next' ? activeItem.nextElementSibling ?? items.first :
-         type == 'prev' ? activeItem.previousElementSibling ?? items.last :
+  void slide(String type, [Element? next]) {
+    final activeItem = active,
+      items = $element.find('.item'),
+      nextItem = next ??
+        (type == 'next' ? activeItem?.nextElementSibling ?? items.first :
+         type == 'prev' ? activeItem?.previousElementSibling ?? items.last :
          null);
-    final String direction = type == 'next' ? 'left' : 'right';
+    final direction = type == 'next' ? 'left' : 'right';
     /*
         , isCycling = this.interval
     */
@@ -124,26 +123,27 @@ class Carousel extends Base {
     isCycling && this.pause()
     */
     
-    QueryEvent e = new QueryEvent('slide.bs.carousel', data: {
+    final e = QueryEvent('slide.bs.carousel', data: {
       'relatedTarget': nextItem,
       'direction': direction
     });
     
-    if (nextItem.classes.contains('active'))
+    if (nextItem == null || nextItem.classes.contains('active'))
       return;
-    
-    if (_indicators != null) {
-      $(_indicators).find('.active').removeClass('active');
+
+    final indicators = _indicators;
+    if (indicators != null) {
+      $(indicators).find('.active').removeClass('active');
       $element.one('slid.bs.carousel', (QueryEvent e) {
-        final List<Element> elems = _indicators.children;
-        final int index = activeIndex;
+        final elems = indicators.children,
+          index = activeIndex;
         if (index > -1 && index < elems.length)
           elems[index].classes.add('active');
       });
     }
     
     $element.triggerEvent(e);
-    if (e.defaultPrevented)
+    if (e.defaultPrevented || activeItem == null)
       return;
     
     if (Transition.isUsed && element.classes.contains('slide')) {
@@ -153,8 +153,10 @@ class Carousel extends Base {
       nextItem.classes.add(direction);
       
       $element.one(Transition.end, (QueryEvent e) {
-        nextItem.classes..remove('type')..remove(direction)..add('active');
-        activeItem.classes..remove('type')..remove(direction);
+        nextItem.classes
+          ..removeAll(['type', direction])
+          ..add('active');
+        activeItem.classes.removeAll(['type', direction]);
         _sliding = false;
         Timer.run(() {
           $element.trigger('slid.bs.carousel');

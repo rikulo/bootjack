@@ -13,14 +13,14 @@ class Affix extends Base {
   /** 
    * 
    */
-  Affix(Element element, {int offsetTop(), int offsetBottom()}) : 
+  Affix(Element element, {int? offsetTop()?, int? offsetBottom()?}) :
   this.offsetTop = offsetTop ?? (() => _defaultOffset),
   this.offsetBottom = offsetBottom ?? (() => _defaultOffset),
   super(element, _name) {
     $(window)
     ..on('scroll.affix.data-api', (QueryEvent e) => checkPosition())
     ..on('click.affix.data-api', (QueryEvent e) {
-      new Timer(const Duration(milliseconds: 1), checkPosition);
+      Timer(const Duration(milliseconds: 1), checkPosition);
     });
     checkPosition();
   }
@@ -28,8 +28,8 @@ class Affix extends Base {
   /**
    * 
    */
-  static Affix wire(Element element, [Affix create()]) =>
-      p.wire(element, _name, create ?? (() => new Affix(element)));
+  static Affix wire(Element element, [Affix create()?]) =>
+      p.wire(element, _name, create ?? (() => Affix(element)));
   
   /**
    * 
@@ -38,16 +38,14 @@ class Affix extends Base {
     if (p.isHidden(element))
       return;
     
-    final int offsetTop = this.offsetTop() ?? _defaultOffset;
-    final int offsetBottom = this.offsetBottom() ?? _defaultOffset;
-    
-    final int scrollHeight = $document().height;
-    final int scrollTop = window.pageYOffset;
-    final int positionTop = element.offsetTop;
-    
-    String affix = _unpin != null && scrollTop + _unpin <= positionTop ? 'false' : 
-      offsetBottom != null && (positionTop + element.offsetHeight >= scrollHeight - offsetBottom) ? 'bottom' :
-      offsetTop != null && scrollTop <= offsetTop ? 'top' : 'false';
+    final offsetTop = this.offsetTop() ?? _defaultOffset,
+      offsetBottom = this.offsetBottom() ?? _defaultOffset,
+      scrollHeight = $document().height!,
+      scrollTop = window.pageYOffset,
+      positionTop = element.offsetTop,
+      affix = _unpin != null && scrollTop + _unpin! <= positionTop ? 'false' :
+        (positionTop + element.offsetHeight >= scrollHeight - offsetBottom) ? 'bottom' :
+        scrollTop <= offsetTop ? 'top' : 'false';
     
     if (_affixed == affix)
       return;
@@ -62,8 +60,8 @@ class Affix extends Base {
     
   }
   
-  String _affixed;
-  int _unpin;
+  String? _affixed;
+  int? _unpin;
   
   static bool _registered = false;
   
@@ -72,9 +70,10 @@ class Affix extends Base {
   static void use() {
     if (_registered) return;
     _registered = true;
-    
-    $window().on('load', (QueryEvent e) {
-      for (Element elem in $('[data-spy="affix"]')) {
+
+    //Don't depend on load event due to dart.js load by defer
+    //$window().on('load', (QueryEvent e) {
+      for (final elem in $('[data-spy="affix"]')) {
         // TODO: pass data
         /*
         data.offset = data.offset || {}
@@ -83,12 +82,12 @@ class Affix extends Base {
         */
         Affix.wire(elem);
       }
-    });
+    //});
   }
   
 }
 
-typedef int _AsInt();
+typedef int? _AsInt();
 
 /*
  // AFFIX PLUGIN DEFINITION
