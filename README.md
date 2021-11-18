@@ -4,7 +4,7 @@
 
 * [Home](http://rikulo.org)
 * [Tutorial](http://blog.rikulo.org/posts/2013/May/General/bootjack-and-dquery/)
-* [API Reference](http://www.dartdocs.org/documentation/bootjack/1.0.0/index.html)
+* [API Reference](https://pub.dev/documentation/bootjack/latest/)
 * [Git Repository](https://github.com/rikulo/bootjack)
 * [Discussion](http://stackoverflow.com/questions/tagged/rikulo)
 * [Issues](https://github.com/rikulo/bootjack/issues)
