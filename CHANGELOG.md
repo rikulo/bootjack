@@ -1,5 +1,8 @@
 #CHANGES
 
+**2.0.1**
+* Fixed tooltip and popover position
+
 **2.0.0**
 * Migrate to null safety
 

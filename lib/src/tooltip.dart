@@ -184,14 +184,12 @@ class Tooltip extends Base {
     tip.remove();
     tip.style.top = tip.style.left = '0';
     tip.style.display = 'block';
+    tip.classes.add(placement);
     
     if (container != null)
       $(tip).appendTo(container);
     else
       $element.after(tip);
-
-    //set placement before check tip width/height
-    tip.classes.addAll([placement, 'in']);
 
     final pos = _position,
       actualWidth = tip.offsetWidth,
@@ -221,13 +219,19 @@ class Tooltip extends Base {
   }
   
   void _applyPlacement(int top, int left, String placement) {
-    final width = tip.offsetWidth,
+    final $tip = $(tip),
+      width = tip.offsetWidth,
       height = tip.offsetHeight;
+
+    // manually read margins because getBoundingClientRect includes difference
+    var marginTop = int.tryParse(_trimSuffix($tip.css('margin-top'), 'px') ?? '') ?? 10,
+      marginLeft = int.tryParse(_trimSuffix($tip.css('margin-left'), 'px') ?? '') ?? 10;
 
     var replace = false;
     
-    _offset(top, left);
-    
+    _offset(top + marginTop, left + marginLeft);
+
+    tip.classes.add('in');
 
     var actualWidth = tip.offsetWidth,
       actualHeight = tip.offsetHeight;
@@ -250,7 +254,6 @@ class Tooltip extends Base {
       
     } else {
       _arrow.style.top = _ratioValue(actualHeight - height, actualHeight);
-      
     }
     
     if (replace)
