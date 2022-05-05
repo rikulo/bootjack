@@ -32,7 +32,7 @@ class Collapse extends Base {
    * + [create] - If provided, it will be used for Collapse creation. Otherwise 
    * the default constructor with no optional parameter value is used.
    */
-  static Collapse wire(Element element, [Collapse create()?]) =>
+  static Collapse? wire(Element element, [Collapse? create()?]) =>
       p.wire(element, _name, create ?? (() => Collapse(element)));
   
   
@@ -65,7 +65,7 @@ class Collapse extends Base {
             if (active?.transitioning ?? false)
               return;
             
-            Collapse.wire(elem).hide();
+            Collapse.wire(elem)!.hide();
             $(elem).data.set(_name, null);
           }
           

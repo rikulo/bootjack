@@ -37,7 +37,7 @@ class Popover extends Tooltip {
    * + [create] - If provided, it will be used for Popover creation. Otherwise 
    * the default constructor with no optional parameter value is used.
    */
-  static Popover wire(Element element, [Popover create()?]) =>
+  static Popover? wire(Element element, [Popover? create()?]) =>
       p.wire(element, _name, create ?? (() => Popover(element)));
   
   @override

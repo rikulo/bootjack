@@ -28,7 +28,7 @@ class Affix extends Base {
   /**
    * 
    */
-  static Affix wire(Element element, [Affix create()?]) =>
+  static Affix? wire(Element element, [Affix? create()?]) =>
       p.wire(element, _name, create ?? (() => Affix(element)));
   
   /**

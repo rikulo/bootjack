@@ -34,7 +34,7 @@ class Scrollspy extends Base {
    * Scrollspy object, a new one will be created.
    * 
    */
-  static Scrollspy wire(Element element, [Scrollspy create()?]) =>
+  static Scrollspy? wire(Element element, [Scrollspy? create()?]) =>
       p.wire(element, _name, create ?? (() => Scrollspy(element)));
   
   final ElementQuery _$body;

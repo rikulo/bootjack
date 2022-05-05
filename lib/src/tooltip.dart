@@ -82,7 +82,7 @@ class Tooltip extends Base {
    * + [create] - If provided, it will be used for Tooltip creation. Otherwise 
    * the default constructor with no optional parameter value is used.
    */
-  static Tooltip wire(Element element, [Tooltip create()?]) =>
+  static Tooltip? wire(Element element, [Tooltip? create()?]) =>
       p.wire(element, _name, create ?? (() => Tooltip(element)));
   
   String get _type => _name;

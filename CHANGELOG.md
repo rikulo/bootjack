@@ -2,6 +2,7 @@
 
 **2.0.1**
 * Fixed tooltip and popover position
+* Support return null for wire function
 
 **2.0.0**
 * Migrate to null safety

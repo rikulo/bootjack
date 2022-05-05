@@ -32,7 +32,7 @@ class Modal extends Base {
    * + [create] - If provided, it will be used for Modal creation. Otherwise 
    * the default constructor with no optional parameter value is used.
    */
-  static Modal wire(Element element, [Modal create()?]) =>
+  static Modal? wire(Element element, [Modal? create()?]) =>
       p.wire(element, _name, create ?? (() => Modal(element)));
   
   /** Toggle the visibility state of the Modal.
@@ -224,7 +224,7 @@ class Modal extends Base {
         return;
       
       // , option = $target.data('modal') ? 'toggle' : $.extend({ remote:!/#/.test(href) && href }, $target.data(), $this.data())
-      Modal.wire($target.first, () => Modal($target.first)).toggle(); // TODO: other options
+      Modal.wire($target.first, () => Modal($target.first))!.toggle(); // TODO: other options
       
       $target.one('hide', (QueryEvent e) => $(elem).trigger('focus'));
       

@@ -19,7 +19,7 @@ class Tab extends Base {
    * + [create] - If provided, it will be used for Tab creation. Otherwise 
    * the default constructor with no optional parameter value is used.
    */
-  static Tab wire(Element element, [Tab create()?]) =>
+  static Tab? wire(Element element, [Tab? create()?]) =>
       p.wire(element, _name, create ?? (() => Tab(element)));
   
   /** Show the tab.
@@ -94,7 +94,7 @@ class Tab extends Base {
     
     $document().on('click.tab.data-api', (QueryEvent e) {
       e.preventDefault();
-      wire(e.target as Element).show();
+      wire(e.target as Element)!.show();
       
     }, selector: '[data-toggle="tab"], [data-toggle="pill"]');
   }

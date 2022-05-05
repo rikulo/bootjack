@@ -31,7 +31,7 @@ class Button extends Base {
    * + [create] - If provided, it will be used for Button creation. Otherwise 
    * the default constructor with no optional parameter value is used.
    */
-  static Button wire(Element element, [Button create()?]) =>
+  static Button? wire(Element element, [Button? create()?]) =>
       p.wire(element, _name, create ?? (() => Button(element)));
   
   /** Set the button state, which will change the button text according to [texts]
@@ -87,7 +87,7 @@ class Button extends Base {
       if (e.target is Element) {
         final $btn = $(e.target).closest('.btn');
         if ($btn.isNotEmpty)
-          Button.wire($btn.first).toggle();
+          Button.wire($btn.first)!.toggle();
       }
       
     }, selector: '[data-toggle^=button]');
