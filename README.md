@@ -1,9 +1,7 @@
 # Bootjack
 
-[Bootjack](http://rikulo.org) is a porting of [Twitter Bootstrap](http://getbootstrap.com/) 3.0.x in Dart.
+Bootjack is a porting of [Twitter Bootstrap](http://getbootstrap.com/) 3.0.x in Dart.
 
-* [Home](http://rikulo.org)
-* [Tutorial](http://blog.rikulo.org/posts/2013/May/General/bootjack-and-dquery/)
 * [API Reference](https://pub.dev/documentation/bootjack/latest/)
 * [Git Repository](https://github.com/rikulo/bootjack)
 * [Discussion](http://stackoverflow.com/questions/tagged/rikulo)
@@ -55,7 +53,7 @@ That's right. All you need to do in Dart is to tell Bootjack you are using Dropd
 	Dropdown dd = Dropdown.wire(element);
 	dd.toggle();
 
-Check more [examples](https://github.com/rikulo/bootjack/tree/master/example) and the [API reference](http://api.rikulo.org/bootjack/latest/bootjack.html) for more features. Also, you can read the reference of [Bootstrap](http://getbootstrap.com/getting-started/).
+Check more [examples](https://github.com/rikulo/bootjack/tree/master/example) and the [API reference](https://pub.dev/documentation/bootjack/latest/) for more features. Also, you can read the reference of [Bootstrap](http://getbootstrap.com/getting-started/).
 
 ## Notes to Contributors
 
