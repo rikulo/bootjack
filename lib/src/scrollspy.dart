@@ -18,7 +18,7 @@ class Scrollspy extends Base {
   
   /** Construct a Scrollspy object and wire it to [element].
    */
-  Scrollspy(Element element, {String? target, int offset: 10}) :
+  Scrollspy(Element element, {String? target, int offset = 10}) :
   this.offset = offset,
   _body = document.body,
   _$body = $(document.body),

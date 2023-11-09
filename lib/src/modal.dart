@@ -20,7 +20,7 @@ class Modal extends Base {
   
   /** Construct a Modal object and wire it to [element].
    */
-  Modal(Element element, {String backdrop: 'true', bool keyboard: true, String? remote}) :
+  Modal(Element element, {String backdrop = 'true', bool keyboard = true, String? remote}) :
   this.backdrop = backdrop,
   this.keyboard = keyboard,
   super(element, _name) {

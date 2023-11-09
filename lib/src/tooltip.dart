@@ -39,8 +39,8 @@ class Tooltip extends Base {
     String? selector, String? template, String? trigger, String? title(Element elem)?,
     int? delay, int? showDelay, int? hideDelay, bool? html, container,
     NodeValidatorBuilder? htmlValidator,
-    String defaultTemplate: _defaultTemplate,
-    String defaultTrigger: 'hover focus'}) :
+    String defaultTemplate = _defaultTemplate,
+    String defaultTrigger = 'hover focus'}) :
   this.animation  = _bool(animation, element, 'animation', true)!,
   this.html       = _bool(html,      element, 'html',      false)!,
   this.showDelay  = _int(showDelay, element, 'show-delay', _int(delay, element, 'delay', 0)!)!,

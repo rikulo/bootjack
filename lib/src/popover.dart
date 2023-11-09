@@ -22,8 +22,8 @@ class Popover extends Tooltip {
     String? selector, String? template, String? trigger, String? title(Element elem)?,
     String? content(Element elem)?, int? delay, int? showDelay,
     int? hideDelay, bool? html, container, NodeValidatorBuilder? htmlValidator,
-    String defaultTemplate: _defalutTemplate,
-    String defaultTrigger: 'click'}) :
+    String defaultTemplate = _defalutTemplate,
+    String defaultTrigger = 'click'}) :
     this._content = content ?? ((Element elem) => elem.attributes['data-content']),
   super(element, animation: animation, placement: placement, selector: selector, 
     title: title, delay: delay, showDelay: showDelay, hideDelay: hideDelay,

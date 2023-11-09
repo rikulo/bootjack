@@ -1,5 +1,8 @@
 #CHANGES
 
+**3.0.0**
+* Dart 3 required
+
 **2.0.1**
 * Fixed tooltip and popover position
 * Support return null for wire function

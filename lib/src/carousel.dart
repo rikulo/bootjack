@@ -13,7 +13,7 @@ class Carousel extends Base {
    */
   final String pauseCondition;
   
-  Carousel(Element element, {int interval: 5000, String pause: 'hover'}) :
+  Carousel(Element element, {int interval = 5000, String pause = 'hover'}) :
   this.interval = interval,
   this.pauseCondition = pause,
   super(element, _name) {
