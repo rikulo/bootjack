@@ -181,7 +181,8 @@ class Tooltip extends Base {
     
     final placement = _placement(element) ?? _placementDefault;
     
-    tip.remove();
+    if (tip.parent != null)
+      tip.remove();
     tip.style.top = tip.style.left = '0';
     tip.style.display = 'block';
     tip.classes.add(placement);
@@ -304,9 +305,8 @@ class Tooltip extends Base {
           tip.remove();
       });
       
-    } else {
+    } else if (tip.parent != null) {
       tip.remove();
-      
     }
     
     $element.trigger('hidden.bs.$_type'); // TODO: check timing

@@ -1,4 +1,6 @@
 #CHANGES
+**3.0.1**
+* Fixed error when hide tooltip
 
 **3.0.0**
 * Dart 3 required
