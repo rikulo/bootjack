@@ -22,8 +22,8 @@ class Scrollspy extends Base {
   this.offset = offset,
   _body = document.body,
   _$body = $(document.body),
-  _selector = "${target ?? element.attributes['href'] ?? ''} .nav li > a",
-  _$scrollElement = element is BodyElement ? $window() : $(element),
+  _selector = "${target ?? element.getAttribute('href') ?? ''} .nav li > a",
+  _$scrollElement = element.isA<HTMLBodyElement>() ? $window() : $(element),
   super(element, _name) {
     _$scrollElement.on('scroll.scroll-spy.data-api', (QueryEvent e) => _process());
     refresh();
@@ -58,8 +58,9 @@ class Scrollspy extends Base {
       
       final $href = $(href);
       if (!$href.isEmpty) {
-        final offset = $href.first.offsetTop + (element is BodyElement ? 0 : element.scrollTop);
-        _anchors.add(_Anchor(offset, href));
+        final offset = ($href.first as HTMLElement).offsetTop 
+          + (element.isA<HTMLBodyElement>() ? 0 : element.scrollTop);
+        _anchors.add(_Anchor(offset.toInt(), href));
       }
     }
     

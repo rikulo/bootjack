@@ -40,25 +40,25 @@ class Button extends Base {
   Future setState(String state) {
     final d = 'disabled',
       space = $element.data.space!,
-      isInput = element is InputElement,
-      value = isInput ? (element as InputElement).value : element.innerHtml;
+      isInput = element.isA<HTMLInputElement>(),
+      value = isInput ? (element as HTMLInputElement).value : element.innerHTML;
     
     state = "${state}Text";
     space.putIfAbsent('resetText', () => value);
-    final newStateText = (space[state] as String?) ?? texts[state];
+    final newStateText = (space[state] as String?) ?? texts[state] ?? '';
     if (isInput)
-      (element as InputElement).value = newStateText;
+      (element as HTMLInputElement).value = newStateText;
     else
-      element.innerHtml = newStateText;
+      element.innerHTML = newStateText.toJS;
     
     // push to event loop to allow forms to submit
     return Future.delayed(Duration.zero, () {
       if (state == 'loadingText') {
-        element.classes.add(d);
-        element.attributes[d] = d;
+        element.classList.add(d);
+        element.setAttribute(d, d);
       } else {
-        element.classes.remove(d);
-        element.attributes.remove(d);
+        element.classList.remove(d);
+        element.removeAttribute(d);
       }
     });
     
@@ -71,7 +71,7 @@ class Button extends Base {
     final $parent = $element.closest('[data-toggle="buttons-radio"]');
     if ($parent.isNotEmpty)
       $parent.find('.active').removeClass('active');
-    element.classes.toggle('active');
+    element.classList.toggle('active');
   }
   
   // Data API //

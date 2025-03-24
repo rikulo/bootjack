@@ -1,7 +1,8 @@
 library bootjack;
 
-import 'dart:html';
-import 'dart:html_common';
+import 'dart:js_interop';
+import 'dart:math';
+import 'package:web/web.dart';
 import 'dart:async';
 
 import 'package:dquery/dquery.dart';
@@ -27,13 +28,13 @@ part 'src/transition.dart';
 abstract class Base {
   
   /// The element which component wires to.
-  final Element element;
+  final HTMLElement element;
   
   /// The dquery object of [element]. Equivalent to $(element).
   final ElementQuery $element;
   
   Base(Element element, String name) : 
-  this.element = element,
+  this.element = element as HTMLElement,
   $element = $(element) {
     $element.data.set(name, this);
   }

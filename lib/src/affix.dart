@@ -16,7 +16,7 @@ class Affix extends Base {
   Affix(Element element, {int? offsetTop()?, int? offsetBottom()?}) :
   this.offsetTop = offsetTop ?? (() => _defaultOffset),
   this.offsetBottom = offsetBottom ?? (() => _defaultOffset),
-  super(element, _name) {
+  super(element as HTMLElement, _name) {
     $(window)
     ..on('scroll.affix.data-api', (QueryEvent e) => checkPosition())
     ..on('click.affix.data-api', (QueryEvent e) {
@@ -41,7 +41,7 @@ class Affix extends Base {
     final offsetTop = this.offsetTop() ?? _defaultOffset,
       offsetBottom = this.offsetBottom() ?? _defaultOffset,
       scrollHeight = $document().height!,
-      scrollTop = window.pageYOffset,
+      scrollTop = window.scrollY,
       positionTop = element.offsetTop,
       affix = _unpin != null && scrollTop + _unpin! <= positionTop ? 'false' :
         (positionTop + element.offsetHeight >= scrollHeight - offsetBottom) ? 'bottom' :
@@ -52,7 +52,7 @@ class Affix extends Base {
     _affixed = affix;
     _unpin = affix == 'bottom' ? positionTop - scrollTop : null;
     
-    element.classes
+    element.classList
     ..remove('affix')
     ..remove('affix-top')
     ..remove('affix-bottom')
@@ -61,7 +61,7 @@ class Affix extends Base {
   }
   
   String? _affixed;
-  int? _unpin;
+  num? _unpin;
   
   static bool _registered = false;
   

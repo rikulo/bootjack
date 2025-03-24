@@ -64,17 +64,17 @@ class Modal extends Base {
     
     _backdrop(() {
       
-      final transition = Transition.isUsed && element.classes.contains('fade');
+      final transition = Transition.isUsed && element.classList.contains('fade');
       
-      if (element.parent == null)
+      if (element.parentElement == null)
         document.body?.append(element);
       
       $element.show();
       
       if (transition) $element.reflow();
       
-      element.classes.add('in');
-      element.attributes['aria-hidden'] = 'false';
+      element.classList.add('in');
+      element.setAttribute('aria-hidden', 'false');
       
       _enforceFocus();
       
@@ -119,10 +119,10 @@ class Modal extends Base {
 
     $document().off('focusin.modal');
     
-    element.classes.remove('in');
-    element.attributes['aria-hidden'] = 'true';
+    element.classList.remove('in');
+    element.setAttribute('aria-hidden', 'true');
     
-    if (Transition.isUsed && element.classes.contains('fade'))
+    if (Transition.isUsed && element.classList.contains('fade'))
       _hideWithTransition();
     else
       _hideModal();
@@ -132,7 +132,7 @@ class Modal extends Base {
     $document().on('focusin.modal', (QueryEvent e) {
       final tar = e.target;
       if (!e.propagationStopped && element != tar &&
-          (tar is! Node || tar.parent != element))
+          (tar is! Node || tar.parentElement != element))
         $element.triggerEvent(QueryEvent('focus')..stopPropagation());
     });
   }
@@ -168,28 +168,28 @@ class Modal extends Base {
   
   void _backdrop([void callback()?]) {
     
-    final fade = element.classes.contains('fade'),
+    final fade = element.classList.contains('fade'),
       animate = Transition.isUsed && fade;
     var transit = false;
     
     var backdropElem = _backdropElem;
     if (_shown && backdrop != 'false') {
       
-      backdropElem = _backdropElem = DivElement();
-      backdropElem.classes.add('modal-backdrop');
+      backdropElem = _backdropElem = HTMLDivElement();
+      backdropElem.classList.add('modal-backdrop');
       if (fade)
-        backdropElem.classes.add('fade');
+        backdropElem.classList.add('fade');
       document.body?.append(backdropElem);
 
       final $_backdropElem = $(_backdropElem);
       
       if (animate) $_backdropElem.reflow();
       
-      backdropElem.classes.add('in');
+      backdropElem.classList.add('in');
       transit = true;
       
     } else if (!_shown && backdropElem != null) {
-      backdropElem.classes.remove('in');
+      backdropElem.classList.remove('in');
       transit = true;
     }
     
@@ -211,7 +211,7 @@ class Modal extends Base {
     _registered = true;
     
     $document().on('click.modal.data-api', (QueryEvent e) {
-      if (!(e.target is Element))
+      if (!e.target.isA<Element>())
         return;
 
       final elem = e.currentTarget as Element;

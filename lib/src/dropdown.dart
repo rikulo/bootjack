@@ -41,7 +41,7 @@ class Dropdown extends Base {
 
     final parent = _getParent(elem)!,
       $parent = $(parent),
-      isActive = parent.classes.contains('open');
+      isActive = parent.classList.contains('open');
     
     _clearMenus();
     
@@ -55,10 +55,10 @@ class Dropdown extends Base {
       if (e.defaultPrevented)
         return;
       
-      parent.classes.toggle('open');
+      parent.classList.toggle('open');
       $(parent).trigger('shown.bs.dropdown');
       
-      elem.focus();
+      (elem as HTMLElement).focus();
     }
     
   }
@@ -82,13 +82,13 @@ class Dropdown extends Base {
       return;
     
     final parent = _getParent(elem)!,
-      isActive = parent.classes.contains('open');
+      isActive = parent.classList.contains('open');
     
     if (!isActive || (isActive && keyCode == 27)) {
       if (keyCode == 27) 
-        $(parent).find(_toggleSelector)[0].focus();
+        ($(parent).find(_toggleSelector)[0] as HTMLElement).focus();
       
-      elem.click();
+      (elem as HTMLElement).click();
       return;
     }
     
@@ -113,7 +113,7 @@ class Dropdown extends Base {
     if (index == -1)
       index = 0;
     
-    $($items[index])[0].focus();
+    ($($items[index])[0] as HTMLElement).focus();
     
   }
   
@@ -133,7 +133,7 @@ class Dropdown extends Base {
       final parent = _getParent(elem),
         $parent = $(parent);
 
-      if (parent == null || !parent.classes.contains('open'))
+      if (parent == null || !parent.classList.contains('open'))
         continue;
       
       final e = QueryEvent('hide.bs.dropdown');
@@ -149,9 +149,9 @@ class Dropdown extends Base {
   static Element? _getParent(Element elem) {
     var selector = p.getDataTarget(elem);
     if (selector == null) {
-      selector = elem.attributes['href'];
+      selector = elem.getAttribute('href');
       if (selector != null && RegExp(r'#').hasMatch(selector)) {
-        selector = selector.replaceAll(new RegExp(r'.*(?=#[^\s]*$'), ''); //strip for ie7
+        selector = selector.replaceAll(RegExp(r'.*(?=#[^\s]*$'), ''); //strip for ie7
       }
     }
     
@@ -162,7 +162,7 @@ class Dropdown extends Base {
           return p.first;
       } catch (e) {}
     }
-    return elem.parent;
+    return elem.parentElement;
   }
   
   // Data API //

@@ -8,7 +8,7 @@ class Tooltip extends Base {
   static const _name = 'tooltip';
   static const _defaultTemplate =
       '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>';
-  final NodeValidatorBuilder? _htmlValidator;
+  final bool _trustedHtml;
   
   /** Construct a tooltip component and wire it to [element].
    * 
@@ -38,7 +38,7 @@ class Tooltip extends Base {
   Tooltip(Element element, {bool? animation, String? placement(Element elem)?,
     String? selector, String? template, String? trigger, String? title(Element elem)?,
     int? delay, int? showDelay, int? hideDelay, bool? html, container,
-    NodeValidatorBuilder? htmlValidator,
+    bool? trustedHtml,
     String defaultTemplate = _defaultTemplate,
     String defaultTrigger = 'hover focus'}) :
   this.animation  = _bool(animation, element, 'animation', true)!,
@@ -49,9 +49,9 @@ class Tooltip extends Base {
   this.template   = _data(template,  element, 'template', defaultTemplate),
   this.trigger    = _data(trigger,   element, 'trigger',  defaultTrigger),
   this.container  = _data(container, element, 'container'),
-  this._title     = title ?? ((Element elem) => elem.dataset['title']),
-  this._placement = placement ?? ((Element elem) => elem.dataset['placement']),
-  this._htmlValidator = htmlValidator,
+  this._title     = title ?? ((Element elem) => elem.getAttribute('data-title')),
+  this._placement = placement ?? ((Element elem) => elem.getAttribute('data-placement')),
+  this._trustedHtml = trustedHtml ?? false,
   super(element, _name) {
     
     for (final t in this.trigger.split(' ')) {
@@ -177,15 +177,15 @@ class Tooltip extends Base {
     
     _setContent();
     if (animation)
-      tip.classes.add('fade');
+      tip.classList.add('fade');
     
     final placement = _placement(element) ?? _placementDefault;
     
-    if (tip.parent != null)
+    if (tip.parentElement != null)
       tip.remove();
     tip.style.top = tip.style.left = '0';
     tip.style.display = 'block';
-    tip.classes.add(placement);
+    tip.classList.add(placement);
     
     if (container != null)
       $(tip).appendTo(container);
@@ -232,7 +232,7 @@ class Tooltip extends Base {
     
     _offset(top + marginTop, left + marginLeft);
 
-    tip.classes.add('in');
+    tip.classList.add('in');
 
     var actualWidth = tip.offsetWidth,
       actualHeight = tip.offsetHeight;
@@ -270,14 +270,17 @@ class Tooltip extends Base {
   
   void _setContent() {
     _cnt(tip.querySelector('.tooltip-inner'), title!);
-    tip.classes.removeAll(const <String>['fade', 'in', 'top', 'bottom', 'left', 'right']);
+    _removeClasses(tip, const {'fade', 'in', 'top', 'bottom', 'left', 'right'});
   }
   
   void _cnt(Element? elem, String value) {
     if (elem != null) {
-      if (html)
-        elem.setInnerHtml(value, validator: _htmlValidator);
-      else
+      if (html) {
+        if (_trustedHtml)
+          elem.setHTMLUnsafe(value.toJS);
+        else
+          elem.innerHTML = value.toJS;
+      } else
         $(elem).text = value;
     }
   }
@@ -290,22 +293,22 @@ class Tooltip extends Base {
     if (e.defaultPrevented)
       return;
     
-    tip.classes.remove('in');
+    tip.classList.remove('in');
     
-    if (Transition.isUsed && tip.classes.contains('fade')) {
+    if (Transition.isUsed && tip.classList.contains('fade')) {
       final $tip = $(tip);
       
       Timer(const Duration(milliseconds: 500), () {
         $tip.off(Transition.end);
-        if (tip.parent != null)
+        if (tip.parentElement != null)
           tip.remove();
       });
       $tip.one(Transition.end, (QueryEvent e) {
-        if (tip.parent != null)
+        if (tip.parentElement != null)
           tip.remove();
       });
       
-    } else if (tip.parent != null) {
+    } else if (tip.parentElement != null) {
       tip.remove();
     }
     
@@ -313,10 +316,10 @@ class Tooltip extends Base {
   }
   
   void _fixTitle() {
-    final title = element.attributes['title'];
+    final title = element.getAttribute('title');
     if (title != null && !title.isEmpty) {
-      element.attributes['data-original-title'] = title;
-      element.attributes['title'] = '';
+      element.setAttribute('data-original-title', title);
+      element.removeAttribute('title');
     }
   }
   
@@ -339,15 +342,16 @@ class Tooltip extends Base {
   
   /// The message to show in tooltip.
   String? get title =>
-      element.attributes['data-original-title'] ?? _title(element) ?? _titleDefault;
+      element.getAttribute('data-original-title') ?? _title(element) ?? _titleDefault;
   
   /// The tooltip Element.
-  Element get tip =>
-      _tip ??= Element.html(template, treeSanitizer: NodeTreeSanitizer.trusted);
-  Element? _tip;
+  HTMLElement get tip =>
+      _tip ??= _createHtml(template, trusted: true);
+  HTMLElement? _tip;
   
-  Element get _arrow => _arr ??= tip.querySelector('.tooltip-arrow')!;
-  Element? _arr;
+  HTMLElement get _arrow 
+    => _arr ??= tip.querySelector('.tooltip-arrow') as HTMLElement;
+  HTMLElement? _arr;
   
   /// Enable tooptip.
   void enable() {
@@ -366,7 +370,7 @@ class Tooltip extends Base {
   
   /// Toggle visibility of tooltip.
   void toggle() {
-    if (tip.classes.contains('in')) hide();
+    if (tip.classList.contains('in')) hide();
     else show();
   }
   
@@ -382,17 +386,34 @@ class Tooltip extends Base {
 typedef String? _ToString(Element elem);
 
 _data(value, Element elem, String name, [defaultValue]) =>
-    value ?? elem.dataset[name] ?? defaultValue;
+    value ?? elem.getAttribute('data-$name') ?? defaultValue;
 
 int? _int(int? value, Element elem, String name, [int? defaultValue]) {
-  return value ?? int.tryParse(elem.dataset[name] ?? '') ?? defaultValue;
+  return value 
+    ?? int.tryParse(elem.getAttribute('data-$name') ?? '') 
+    ?? defaultValue;
 }
 
 bool? _bool(bool? value, Element elem, String name, [bool? defaultValue]) {
   if (value != null)
     return value;
-  final v = elem.dataset[name];
+  final v = elem.getAttribute('data-$name');
   return v == 'true' ? true : v == 'false' ? false : defaultValue;
 }
 
+HTMLElement _createHtml(String html, {bool trusted = false}) {
+  final cnt = HTMLDivElement();
+  if (trusted)
+    cnt.setHTMLUnsafe(html.toJS);
+  else
+    cnt.innerHTML = html.toJS;
 
+  return JSImmutableListWrapper(cnt.childNodes).where((e) 
+    => e.isA<HTMLElement>()).single as HTMLElement;
+}
+
+void _removeClasses(HTMLElement element, Set<String> names) {
+  final list = element.classList;
+  for (final name in names)
+    list.remove(name);
+}

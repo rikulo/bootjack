@@ -42,7 +42,7 @@ class Carousel extends Base {
   
   int get activeIndex {
     final a = active;
-    _$items = $(a?.parent).children();
+    _$items = $(a?.parentElement).children();
     return a != null ? _$items!.indexOf(a): -1;
   }
   
@@ -128,7 +128,7 @@ class Carousel extends Base {
       'direction': direction
     });
     
-    if (nextItem == null || nextItem.classes.contains('active'))
+    if (nextItem == null || nextItem.classList.contains('active'))
       return;
 
     final indicators = _indicators;
@@ -138,7 +138,7 @@ class Carousel extends Base {
         final elems = indicators.children,
           index = activeIndex;
         if (index > -1 && index < elems.length)
-          elems[index].classes.add('active');
+          elems.item(index)?.classList.add('active');
       });
     }
     
@@ -146,17 +146,20 @@ class Carousel extends Base {
     if (e.defaultPrevented || activeItem == null)
       return;
     
-    if (Transition.isUsed && element.classes.contains('slide')) {
-      nextItem.classes.add(type);
+    if (Transition.isUsed && element.classList.contains('slide')) {
+      nextItem.classList.add(type);
       $(nextItem).reflow(); // force reflow
-      activeItem.classes.add(direction);
-      nextItem.classes.add(direction);
+      activeItem.classList.add(direction);
+      nextItem.classList.add(direction);
       
       $element.one(Transition.end, (QueryEvent e) {
-        nextItem.classes
-          ..removeAll(['type', direction])
+        nextItem.classList
+          ..remove('type')
+          ..remove(direction)
           ..add('active');
-        activeItem.classes.removeAll(['type', direction]);
+        activeItem.classList
+          ..remove('type')
+          ..remove(direction);
         _sliding = false;
         Timer.run(() {
           $element.trigger('slid.bs.carousel');
@@ -164,8 +167,8 @@ class Carousel extends Base {
       });
       
     } else {
-      activeItem.classes.remove('active');
-      nextItem.classes.add('active');
+      activeItem.classList.remove('active');
+      nextItem.classList.add('active');
       _sliding = false;
       $element.trigger('slid.bs.carousel');
       

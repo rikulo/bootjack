@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart';
 import 'package:dquery/dquery.dart';
 import 'package:bootjack/bootjack.dart';
 

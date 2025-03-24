@@ -39,7 +39,7 @@ class Alert extends Base {
     } catch(e) {}
     
     if ($parent?.isEmpty ?? true)
-      $parent = elem.classes.contains('alert') ? $(elem) : $(elem.parent);
+      $parent = elem.classList.contains('alert') ? $(elem) : $(elem.parentElement);
     
     if ($parent!.isEmpty)
       return;
@@ -51,9 +51,9 @@ class Alert extends Base {
       return;
     
     final parent = $parent.first;
-    parent.classes.remove('in');
+    parent.classList.remove('in');
     
-    if (Transition.isUsed && parent.classes.contains('fade'))
+    if (Transition.isUsed && parent.classList.contains('fade'))
       $parent.on(Transition.end, (e) => _removeElement($parent!));
     
     else

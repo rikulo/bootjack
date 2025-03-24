@@ -1,6 +1,6 @@
 library bootjack_plugin;
 
-import 'dart:html';
+import 'package:web/web.dart';
 import 'package:dquery/dquery.dart';
 
 /** Load a component from Element data space if available, otherwise create
@@ -13,7 +13,7 @@ T wire<T>(Element element, String name, T create()) =>
  * [element].
  */
 String? getDataTarget(Element element) =>
-    element.attributes['data-target'] ?? element.attributes['href'];
+    element.getAttribute('data-target') ?? element.getAttribute('href');
 // selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') //strip for ie7 // skipped
 
 /**
@@ -22,7 +22,7 @@ String? getDataTarget(Element element) =>
 bool isHidden(Element e) {
   //if (e.style.display != 'none' && e.style.visibility != 'hidden')
   //refer to jquery
-  return e.offsetWidth <= 0 && e.offsetHeight <= 0;
+  return (e as HTMLElement).offsetWidth <= 0 && e.offsetHeight <= 0;
 }
 
 /** A token object for identification with recognizable toString() output for

@@ -21,13 +21,13 @@ class Popover extends Tooltip {
   Popover(Element element, {bool? animation, String? placement(Element elem)?,
     String? selector, String? template, String? trigger, String? title(Element elem)?,
     String? content(Element elem)?, int? delay, int? showDelay,
-    int? hideDelay, bool? html, container, NodeValidatorBuilder? htmlValidator,
+    int? hideDelay, bool? html, container, bool? trustedHtml,
     String defaultTemplate = _defalutTemplate,
     String defaultTrigger = 'click'}) :
-    this._content = content ?? ((Element elem) => elem.attributes['data-content']),
+    this._content = content ?? ((Element elem) => elem.getAttribute('data-content')),
   super(element, animation: animation, placement: placement, selector: selector, 
     title: title, delay: delay, showDelay: showDelay, hideDelay: hideDelay,
-    html: html, container: container, htmlValidator: htmlValidator,
+    html: html, container: container, trustedHtml: trustedHtml,
     template: template, trigger: trigger,
     defaultTemplate: defaultTemplate, defaultTrigger: defaultTrigger);
   
@@ -47,11 +47,11 @@ class Popover extends Tooltip {
   String get _placementDefault => 'right';
   
   @override
-  Element get _arrow => _arr ??= tip.querySelector('.arrow')!;
+  HTMLElement get _arrow => _arr ??= tip.querySelector('.arrow') as HTMLElement;
   
   /// The content message of the popover.
   String? get content => _content(element)
-      ?? element.attributes['data-content'] ?? _contentDefault;
+      ?? element.getAttribute('data-content') ?? _contentDefault;
   
   String get _contentDefault => '';
   final _ToString _content;
@@ -63,7 +63,7 @@ class Popover extends Tooltip {
   void _setContent() {
     _cnt(tip.querySelector('.popover-title'), title!);
     _cnt(tip.querySelector('.popover-content'), content!);
-    tip.classes.removeAll(const <String>['fade', 'top', 'bottom', 'left', 'right', 'in']);
+    _removeClasses(tip, const {'fade', 'top', 'bottom', 'left', 'right', 'in'});
   }
   
 }

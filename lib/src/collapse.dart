@@ -18,7 +18,7 @@ class Collapse extends Base {
   this._toggle  = _data(toggle, element, 'toggle', true),
   super(element, _name) {
     if (parent == null)
-      parent = element.attributes["data-parent"];
+      parent = element.getAttribute("data-parent");
     if (parent != null)
       _$parent = $(parent);
     
@@ -42,11 +42,11 @@ class Collapse extends Base {
   bool get transitioning => _transitioning;
   bool _transitioning = false;
   
-  bool get horizontal => _horizontal ??= element.classes.contains('width');
+  bool get horizontal => _horizontal ??= element.classList.contains('width');
   bool? _horizontal;
   
   void show() {
-    if (transitioning || element.classes.contains('in'))
+    if (transitioning || element.classList.contains('in'))
       return;
 
     final e = QueryEvent('show.bs.collapse');
@@ -74,7 +74,7 @@ class Collapse extends Base {
     }
     
     
-    element.classes
+    element.classList
     ..remove('collapse')
     ..add('collapsing');
     _size = '0';
@@ -82,7 +82,7 @@ class Collapse extends Base {
     _transitioning = true;
     
     final complete = (QueryEvent? e) {
-      element.classes
+      element.classList
       ..remove('collapsing')
       ..add('in');
       _size = 'auto';
@@ -100,11 +100,12 @@ class Collapse extends Base {
   }
   
   void hide() {
-    if (transitioning || !element.classes.contains('in'))
+    final element = this.element;
+    if (transitioning || !element.classList.contains('in'))
       return;
     
     
-    final QueryEvent e = new QueryEvent('hide.bs.collapse');
+    final e = QueryEvent('hide.bs.collapse');
     $element.triggerEvent(e);
     
     if (e.defaultPrevented)
@@ -114,7 +115,7 @@ class Collapse extends Base {
     _size = "${size}px";
     element.offsetHeight;
     
-    element.classes
+    element.classList
     ..add('collapsing')
     ..remove('collapse')
     ..remove('in');
@@ -124,7 +125,7 @@ class Collapse extends Base {
     final complete = (QueryEvent? e) {
       _transitioning = false;
       $element.trigger('hidden.bs.collapse');
-      element.classes
+      element.classList
       ..remove('collapsing')
       ..add('collapse');
     };
@@ -146,7 +147,7 @@ class Collapse extends Base {
   }
   
   void toggle() {
-    if (element.classes.contains('in'))
+    if (element.classList.contains('in'))
       hide();
     else
       show();
@@ -163,10 +164,10 @@ class Collapse extends Base {
     $document().on('click.bs.collapse.data-api', (QueryEvent e) {
       Element elem = e.currentTarget as Element;
 
-      var targetStr = elem.attributes['data-target'];
+      var targetStr = elem.getAttribute('data-target');
       if (targetStr == null) {
         e.preventDefault();
-        final href = elem.attributes['href'];
+        final href = elem.getAttribute('href');
         if (href != null)
           targetStr = href.replaceAll(RegExp(r'.*(?=#[^\s]+$)'), ''); //strip for ie7
       }
@@ -174,7 +175,7 @@ class Collapse extends Base {
       final $target = $(targetStr),
         target = $target[0],
         collapse = $target.data.get(_name) as Collapse?,
-        parent = elem.attributes['data-parent'],
+        parent = elem.getAttribute('data-parent'),
         $parent = $(parent);
       
       if (collapse == null || !collapse.transitioning) {
@@ -183,18 +184,18 @@ class Collapse extends Base {
               '[data-toggle=collapse][data-parent="$parent"]');
           for (final e in collapses) {
             if (e == elem) continue;
-            e.classes.add('collapsed');
+            e.classList.add('collapsed');
             
           }
         }
-        elem.classes.toggle('collapsed', target.classes.contains('in'));
+        elem.classList.toggle('collapsed', target.classList.contains('in'));
       }
       
       if (collapse != null) {
         collapse.toggle();
       } else {
-        final parentAtr = elem.attributes['data-parent'],
-          toggleAtr = elem.attributes['data-toggle'];
+        final parentAtr = elem.getAttribute('data-parent'),
+          toggleAtr = elem.getAttribute('data-toggle');
         
         Collapse(target, toggle: toggleAtr != null ? true: null, parent: parentAtr);
       }
