@@ -7,8 +7,4 @@ environment:
   sdk: '>=3.7.0 <4.0.0'
 dependencies:
   web: '>=1.0.0'
-  dquery: 
-    path: ../dquery
-    # git:
-    #   url: https://github.com/rikulo/dquery
-    #   ref: dart3.7
+  dquery: any
