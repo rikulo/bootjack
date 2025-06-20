@@ -1,4 +1,7 @@
 #CHANGES
+**4.0.1**
+* Fixed animation when close Collapse
+
 **4.0.0**
 * Dart 3.7 required
 

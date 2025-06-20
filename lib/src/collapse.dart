@@ -77,7 +77,9 @@ class Collapse extends Base {
     element.classList
     ..remove('collapse')
     ..add('collapsing');
+    
     _size = '0';
+    _reflow(element);
     
     _transitioning = true;
     
@@ -112,13 +114,14 @@ class Collapse extends Base {
       return;
 
     final size = horizontal ? $element.width : $element.height;
-    _size = "${size}px";
-    element.offsetHeight;
     
     element.classList
     ..add('collapsing')
     ..remove('collapse')
     ..remove('in');
+
+    _size = "${size}px";
+    _reflow(element);
     
     _transitioning = true;
     
@@ -204,4 +207,9 @@ class Collapse extends Base {
     
   }
   
+}
+
+void _reflow(Element? element) {
+  if ((element as HTMLElement?)?.offsetWidth != null)
+    _reflow(null);
 }
