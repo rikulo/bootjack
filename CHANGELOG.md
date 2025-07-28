@@ -1,6 +1,7 @@
 #CHANGES
 **4.0.1**
 * Fixed animation when close Collapse
+* Fixed setHTMLUnsafe errors
 
 **4.0.0**
 * Dart 3.7 required

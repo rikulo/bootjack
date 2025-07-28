@@ -403,9 +403,14 @@ bool? _bool(bool? value, Element elem, String name, [bool? defaultValue]) {
 
 HTMLElement _createHtml(String html, {bool trusted = false}) {
   final cnt = HTMLDivElement();
-  if (trusted)
-    cnt.setHTMLUnsafe(html.toJS);
-  else
+  if (trusted) {
+    try {
+      cnt.setHTMLUnsafe(html.toJS);
+    } catch (e) {
+      // Fallback for browsers that do not support setHTMLUnsafe
+      cnt.innerHTML = html.toJS;
+    }
+  } else
     cnt.innerHTML = html.toJS;
 
   return JSImmutableListWrapper(cnt.childNodes).where((e) 
