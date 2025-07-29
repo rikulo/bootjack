@@ -27,7 +27,7 @@ class Popover extends Tooltip {
     this._content = content ?? ((Element elem) => elem.getAttribute('data-content')),
   super(element, animation: animation, placement: placement, selector: selector, 
     title: title, delay: delay, showDelay: showDelay, hideDelay: hideDelay,
-    html: html, container: container, trustedHtml: trustedHtml,
+    html: html, container: container,
     template: template, trigger: trigger,
     defaultTemplate: defaultTemplate, defaultTrigger: defaultTrigger);
   

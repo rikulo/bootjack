@@ -8,7 +8,6 @@ class Tooltip extends Base {
   static const _name = 'tooltip';
   static const _defaultTemplate =
       '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>';
-  final bool _trustedHtml;
   
   /** Construct a tooltip component and wire it to [element].
    * 
@@ -38,7 +37,6 @@ class Tooltip extends Base {
   Tooltip(Element element, {bool? animation, String? placement(Element elem)?,
     String? selector, String? template, String? trigger, String? title(Element elem)?,
     int? delay, int? showDelay, int? hideDelay, bool? html, container,
-    bool? trustedHtml,
     String defaultTemplate = _defaultTemplate,
     String defaultTrigger = 'hover focus'}) :
   this.animation  = _bool(animation, element, 'animation', true)!,
@@ -51,7 +49,6 @@ class Tooltip extends Base {
   this.container  = _data(container, element, 'container'),
   this._title     = title ?? ((Element elem) => elem.getAttribute('data-title')),
   this._placement = placement ?? ((Element elem) => elem.getAttribute('data-placement')),
-  this._trustedHtml = trustedHtml ?? false,
   super(element, _name) {
     
     for (final t in this.trigger.split(' ')) {
@@ -276,10 +273,7 @@ class Tooltip extends Base {
   void _cnt(Element? elem, String value) {
     if (elem != null) {
       if (html) {
-        if (_trustedHtml)
-          elem.setHTMLUnsafe(value.toJS);
-        else
-          elem.innerHTML = value.toJS;
+        setUncheckedInnerHtml(elem, value);
       } else
         $(elem).text = value;
     }
