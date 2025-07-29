@@ -346,7 +346,7 @@ class Tooltip extends Base {
   
   /// The tooltip Element.
   HTMLElement get tip =>
-      _tip ??= _createHtml(template, trusted: true);
+      _tip ??= createUncheckedHtml(template);
   HTMLElement? _tip;
   
   HTMLElement get _arrow 
@@ -399,22 +399,6 @@ bool? _bool(bool? value, Element elem, String name, [bool? defaultValue]) {
     return value;
   final v = elem.getAttribute('data-$name');
   return v == 'true' ? true : v == 'false' ? false : defaultValue;
-}
-
-HTMLElement _createHtml(String html, {bool trusted = false}) {
-  final cnt = HTMLDivElement();
-  if (trusted) {
-    try {
-      cnt.setHTMLUnsafe(html.toJS);
-    } catch (e) {
-      // Fallback for browsers that do not support setHTMLUnsafe
-      cnt.innerHTML = html.toJS;
-    }
-  } else
-    cnt.innerHTML = html.toJS;
-
-  return JSImmutableListWrapper(cnt.childNodes).where((e) 
-    => e.isA<HTMLElement>()).single as HTMLElement;
 }
 
 void _removeClasses(HTMLElement element, Set<String> names) {

@@ -2,6 +2,7 @@ library bootjack;
 
 import 'dart:js_interop';
 import 'dart:math';
+import 'package:rikulo_commons/html.dart';
 import 'package:web/web.dart';
 import 'dart:async';
 
